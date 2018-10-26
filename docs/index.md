@@ -1,1 +1,1 @@
-![Logo](Team-iPatch/teamlogo.jpeg)
+![Logo](teamlogo.jpeg)
