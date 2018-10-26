@@ -1,5 +1,4 @@
 # TEAM iPATCH
 
-![Team Logo](teamlogo.jpeg)
-
-Please give 100/100 thanks
+This readme is empty for now.
+Will be updated as we make the game.
