@@ -1,2 +1,12 @@
-[Assessment 1 docs](./Assessment-1/assessment1.html)
-![Logo](teamlogo.jpeg)
+![Logo](teamlogo.jpeg) We are Team iPatch, and we are working on a top-down shooter pirate game
+
+# ASSESSMENT DOCUMENTS
+
+[Assessment 1 Documents](./Assessment-1/assessment1.html)
+
+# THE GAME
+
+![Skull](http://bestanimations.com/Humans/SkullBones/skull-bones-animated-gif-1.gif)
+
+:skull_and_crossbones: The university of York has been overrun by pirates, with Derwent as the stronghold for the enemy forces. Will you be the one to stop them? :skull_and_crossbones:
+
