@@ -1,1 +1,6 @@
-[Test file](test.txt)
++ [Requirements](req1.pdf)
++ [Method Selection and Planning](plan1.pdf)
+..+ [Assessment 2 Gantt Chart](gantt1.png)
+..+ [Full Plan Gantt Chart](gantt2.jpeg)
++ [Architecture](arch1.pdf)
++ [Risk Assessment and Mitigation](risk1.pdf)
