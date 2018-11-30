@@ -47,8 +47,7 @@ public class Main extends SimpleApplication {
     }
 
     @Override
-    public void simpleInitApp() 
-    {
+    public void simpleInitApp() {
 	flyCam.setEnabled(false);
 	bulletAppState = new BulletAppState();
 	bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
