@@ -1,3 +1,5 @@
+package mygame;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,6 +10,7 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -20,24 +23,35 @@ import java.io.IOException;
  * @author cpl512
  */
 public class BulletControl extends AbstractControl {
-    //Any local variables should be encapsulated by getters/setters so they
-    //appear in the SDK properties window and can be edited.
-    //Right-click a local variable to encapsulate it with getters and setters.
+    
+    private final float speed = 110f;
+    public Vector3f direction;
+    float lifeExpectancy = 2f; //Seconds before it is erased
+    float lifetime;
+    boolean isEnemy;
 
+    public BulletControl(Vector3f direction, boolean isEnemy) {
+        this.direction = direction.normalize();
+        this.direction.multLocal(speed);
+        this.lifetime = 0;
+        this.isEnemy = isEnemy;
+    }
+    
     @Override
     protected void controlUpdate(float tpf) {
-        //TODO: add code that controls Spatial,
-        //e.g. spatial.rotate(tpf,tpf,tpf);
+        spatial.move(direction.mult(tpf));
+        lifetime += tpf;
+        if (lifetime > lifeExpectancy) {
+            spatial.removeFromParent();
+        }
     }
     
     @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {
-        //Only needed for rendering-related operations,
-        //not called when spatial is culled.
-    }
+    protected void controlRender(RenderManager rm, ViewPort vp) {}
     
+    @Override
     public Control cloneForSpatial(Spatial spatial) {
-        BulletControl control = new BulletControl();
+        BulletControl control = new BulletControl(direction, isEnemy);
         //TODO: copy parameters to new Control
         return control;
     }

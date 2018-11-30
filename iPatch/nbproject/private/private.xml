@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/cpl512/jME/BasicGame/src/mygame/Main.java</file>
-            <file>file:/C:/Users/cpl512/jME/BasicGame/src/mygame/ControlState.java</file>
+            <file>file:/home/chris/jME/Team-iPatch/iPatch/src/mygame/ControlState.java</file>
+            <file>file:/home/chris/jME/Team-iPatch/iPatch/src/mygame/Main.java</file>
+            <file>file:/home/chris/jME/Team-iPatch/iPatch/src/mygame/ShootControl.java</file>
+            <file>file:/home/chris/jME/Team-iPatch/iPatch/src/mygame/BulletControl.java</file>
         </group>
     </open-files>
 </project-private>
