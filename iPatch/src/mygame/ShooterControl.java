@@ -4,16 +4,22 @@
  * and open the template in the editor.
  */
 package mygame;
+import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
+import com.jme3.scene.shape.Sphere;
 import java.io.IOException;
 
 /**
@@ -22,12 +28,33 @@ import java.io.IOException;
  */
 public class ShooterControl extends AbstractControl {
     Vector3f direction;
-    boolean isEnemy;    
+    boolean isEnemy;
+    private static final Sphere sphere;
+    SimpleApplication app;
+    private BulletControl bulletControl;
     
-    public ShooterControl(Vector3f direction, boolean isEnemy) {
+    static {
+        sphere = new Sphere(8, 8, 0.4f, true, false);
+    }
+    
+    
+    
+    public ShooterControl(Vector3f direction, boolean isEnemy, Application app) {
         this.direction = direction;
         this.isEnemy = isEnemy;
+        this.app = (SimpleApplication)app;
     }
+    
+    public void shootBullet(){
+        Geometry bullet_geo = new Geometry("cannon ball", sphere);
+        Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        bullet_geo.setMaterial(mat);
+        app.getRootNode().attachChild(bullet_geo);
+        bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
+        bulletControl = new BulletControl(direction, isEnemy);
+        bullet_geo.addControl(bulletControl);
+    }
+    
     @Override
     protected void controlUpdate(float tpf) {}
     
@@ -39,7 +66,7 @@ public class ShooterControl extends AbstractControl {
     
     @Override
     public Control cloneForSpatial(Spatial spatial) {
-        ShooterControl control = new ShooterControl(direction, isEnemy);
+        ShooterControl control = new ShooterControl(direction, isEnemy, app);
         //TODO: copy parameters to new Control
         return control;
     }

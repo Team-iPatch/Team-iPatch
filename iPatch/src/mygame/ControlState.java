@@ -37,8 +37,8 @@ public class ControlState extends BaseAppState {
     private InputManager inputManager;
     private BetterCharacterControl controller;
     private float speed;
-    private AppSettings settings;
-    
+    private AppSettings settings; 
+   
     @Override 
     protected void initialize(Application app) 
     {
@@ -52,7 +52,8 @@ public class ControlState extends BaseAppState {
 	this.settings = app.getContext().getSettings();
 	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
 	chaseCam.setSmoothMotion(true);
-        
+        ShooterControl shooterControl = new ShooterControl(Vector3f.UNIT_X, true, app);
+        this.player.addControl(shooterControl);
         this.settings.setFrameRate(60);
         this.app.restart();
 	
@@ -105,13 +106,14 @@ public class ControlState extends BaseAppState {
     private void initKeys()
     {
 	inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
-	inputManager.addMapping("Backward", new KeyTrigger(KeyInput.KEY_S));
-	inputManager.addMapping("RotLeft", new KeyTrigger(KeyInput.KEY_A));
-	inputManager.addMapping("RotRight", new KeyTrigger(KeyInput.KEY_D));
+	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
+	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
+	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
 	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("Shoot",     new KeyTrigger(KeyInput.KEY_SPACE));
 	
 	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
-	inputManager.addListener(actionListener, "ChangeRes");
+	inputManager.addListener(actionListener, "ChangeRes", "Shoot");
     }
 	
     private final ActionListener actionListener = new ActionListener()
@@ -119,10 +121,12 @@ public class ControlState extends BaseAppState {
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) 
 	{
-	    if(name.equals("ChangeRes"))
-	    {
+	    if(name.equals("ChangeRes")) {
 		changeResolution();
 	    }
+            if(name.equals("Shoot")) {
+                player.getControl(ShooterControl.class ).shootBullet();
+            }
 	}
     };
     private final AnalogListener analogListener = new AnalogListener()
@@ -130,16 +134,14 @@ public class ControlState extends BaseAppState {
 	@Override
 	public void onAnalog(String name, float value, float tpf)
 	{
-	    if(name.equals("RotLeft"))
-	    {
+	    if(name.equals("RotLeft")) {
 		Vector3f dir = controller.getViewDirection();
 		Quaternion quat = new Quaternion();
 		quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
 		quat.multLocal(dir);
 		controller.setViewDirection(dir);
 	    }
-	    if(name.equals("RotRight"))
-	    {
+	    if(name.equals("RotRight")) {
 		Vector3f dir = controller.getViewDirection();
 		Quaternion quat = new Quaternion();
 		quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
@@ -149,6 +151,7 @@ public class ControlState extends BaseAppState {
 	    if (name.equals("Forward"))
                 if (speed < 15)
                     speed += 1;
+            
 	    if (name.equals("Backward")) 
                 if(speed>1)
                     speed -= 0.1;

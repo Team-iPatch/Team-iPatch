@@ -26,20 +26,19 @@ public class BulletControl extends AbstractControl {
     
     private final float speed = 110f;
     public Vector3f direction;
-    float lifeExpectancy = 2f; //Seconds before it is erased
+    float lifeExpectancy = 5f; //Seconds before it is erased
     float lifetime;
     boolean isEnemy;
 
     public BulletControl(Vector3f direction, boolean isEnemy) {
-        this.direction = direction.normalize();
-        this.direction.multLocal(speed);
+        this.direction = direction;
         this.lifetime = 0;
         this.isEnemy = isEnemy;
     }
     
     @Override
     protected void controlUpdate(float tpf) {
-        spatial.move(direction.mult(tpf));
+        spatial.move(direction.mult(tpf*speed));
         lifetime += tpf;
         if (lifetime > lifeExpectancy) {
             spatial.removeFromParent();
