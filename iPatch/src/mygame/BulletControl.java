@@ -24,14 +24,14 @@ import java.io.IOException;
  */
 public class BulletControl extends AbstractControl {
     
-    private final float speed = 110f;
+    private final float speed = 50f;
     public Vector3f direction;
     float lifeExpectancy = 5f; //Seconds before it is erased
     float lifetime;
     boolean isEnemy;
 
     public BulletControl(Vector3f direction, boolean isEnemy) {
-        this.direction = direction;
+        this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.isEnemy = isEnemy;
     }
