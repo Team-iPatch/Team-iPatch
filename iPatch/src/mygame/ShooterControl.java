@@ -6,6 +6,9 @@
 package mygame;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -50,9 +53,20 @@ public class ShooterControl extends AbstractControl {
         Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         bullet_geo.setMaterial(mat);
         app.getRootNode().attachChild(bullet_geo);
-        bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
+        
+	
+	bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
         bulletControl = new BulletControl(direction, isEnemy);
         bullet_geo.addControl(bulletControl);
+	
+	//================PROBLEMATIC CODE================
+	/*
+	RigidBodyControl bullet_phys = new RigidBodyControl(0f);
+	bullet_phys.setKinematic(true);
+	bullet_geo.addControl(bullet_phys);
+	app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bullet_phys);
+	*/
+	//================PROBLEMATIC CODE================
     }
     
     @Override

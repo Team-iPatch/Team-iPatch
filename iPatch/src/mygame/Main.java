@@ -42,10 +42,11 @@ public class Main extends SimpleApplication {
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
+	
 	//app.getStateManager().attach(new ControlState());
 	
     }
-
+    
     @Override
     public void simpleInitApp() {
 	flyCam.setEnabled(false);
@@ -77,6 +78,10 @@ public class Main extends SimpleApplication {
         RigidBodyControl box_phys = new RigidBodyControl(0f);
         box_geom.addControl(box_phys);
         
+	Spatial baddie = EnemyGenerator.EnemyGenerator(assetManager, bulletAppState, "Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
+	rootNode.attachChild(baddie);
+	baddie.addControl(new EnemyControl(bulletAppState, 10));
+	
 	bulletAppState.getPhysicsSpace().add(character);
 	bulletAppState.getPhysicsSpace().add(landscape);
 	bulletAppState.getPhysicsSpace().add(box_phys);
