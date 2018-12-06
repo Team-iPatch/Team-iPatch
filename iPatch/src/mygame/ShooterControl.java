@@ -7,6 +7,7 @@ package mygame;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
@@ -35,6 +36,7 @@ public class ShooterControl extends AbstractControl {
     private static final Sphere sphere;
     SimpleApplication app;
     private BulletControl bulletControl;
+    PhysicsSpace physicsSpace;
     
     static {
         sphere = new Sphere(8, 8, 0.4f, true, false);
@@ -46,6 +48,7 @@ public class ShooterControl extends AbstractControl {
         this.direction = direction;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
+        this.physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
     }
     
     public void shootBullet(){
@@ -56,17 +59,15 @@ public class ShooterControl extends AbstractControl {
         
 	
 	bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
-        bulletControl = new BulletControl(direction, isEnemy);
-        bullet_geo.addControl(bulletControl);
-	
+        
 	//================PROBLEMATIC CODE================
-	/*
-	RigidBodyControl bullet_phys = new RigidBodyControl(0f);
-	bullet_phys.setKinematic(true);
+	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
 	bullet_geo.addControl(bullet_phys);
-	app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(bullet_phys);
-	*/
-	//================PROBLEMATIC CODE================
+	physicsSpace.add(bullet_phys);
+	bullet_phys.setKinematic(true);
+        bulletControl = new BulletControl(direction, isEnemy,
+                                          physicsSpace, bullet_phys);
+        bullet_geo.addControl(bulletControl);
     }
     
     @Override

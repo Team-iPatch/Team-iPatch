@@ -6,6 +6,8 @@ package mygame;
  * and open the template in the editor.
  */
 
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -24,23 +26,28 @@ import java.io.IOException;
  */
 public class BulletControl extends AbstractControl {
     
-    private final float speed = 50f;
+    private final float speed = 40f;
     public Vector3f direction;
     float lifeExpectancy = 5f; //Seconds before it is erased
     float lifetime;
     boolean isEnemy;
+    PhysicsSpace physicsSpace;
+    RigidBodyControl bullet_phys; //Remove the physics control on deletion
 
-    public BulletControl(Vector3f direction, boolean isEnemy) {
+    public BulletControl(Vector3f direction, boolean isEnemy,
+                        PhysicsSpace physicsSpace, RigidBodyControl bullet_phys) {
         this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.isEnemy = isEnemy;
+        this.physicsSpace = physicsSpace;
+        this.bullet_phys = bullet_phys;
     }
     
-    @Override
     protected void controlUpdate(float tpf) {
         spatial.move(direction.mult(tpf*speed));
         lifetime += tpf;
         if (lifetime > lifeExpectancy) {
+            physicsSpace.remove(bullet_phys);
             spatial.removeFromParent();
         }
     }
@@ -50,7 +57,8 @@ public class BulletControl extends AbstractControl {
     
     @Override
     public Control cloneForSpatial(Spatial spatial) {
-        BulletControl control = new BulletControl(direction, isEnemy);
+        BulletControl control = new BulletControl(direction, isEnemy,
+                                                  physicsSpace, bullet_phys);
         //TODO: copy parameters to new Control
         return control;
     }
