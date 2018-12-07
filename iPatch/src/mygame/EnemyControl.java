@@ -89,12 +89,14 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-	if(!event.getNodeA().getName().equals("Scene") && !event.getNodeB().getName().equals("Scene")){
-	    System.out.print("nodeA: " + event.getNodeA().getName().toString() + "    nodeB: " + event.getNodeB().getName().toString() + "\n");
-	}
 	if(event.getNodeA().getName().equals("baddie") || event.getNodeB().getName().equals("baddie")){
 	    if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
 		this.hp -= 5;
+		
+		if(event.getNodeA().getName().equals("cannon ball"))
+		    event.getNodeA().getControl(BulletControl.class).destroy();
+		if(event.getNodeB().getName().equals("cannon ball"))
+		    event.getNodeB().getControl(BulletControl.class).destroy();
 	    }
 	}
 	
