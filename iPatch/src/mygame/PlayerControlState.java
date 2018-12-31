@@ -9,7 +9,6 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -29,7 +28,7 @@ import com.jme3.system.AppSettings;
  *
  * @author Blue 
  */
-public class ControlState extends BaseAppState {
+public class PlayerControlState extends BaseAppState {
 
     private SimpleApplication app;
     private Node rootNode;
@@ -38,6 +37,7 @@ public class ControlState extends BaseAppState {
     private BetterCharacterControl controller;
     private float speed;
     private AppSettings settings; 
+    private Integer points;
    
     @Override 
     protected void initialize(Application app) 
@@ -50,6 +50,7 @@ public class ControlState extends BaseAppState {
 	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
 	this.settings = app.getContext().getSettings();
+        this.points = 0;
 	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
 	chaseCam.setSmoothMotion(true);
         ShooterControl shooterControl = new ShooterControl(controller.getViewDirection(), true, app);
@@ -60,6 +61,14 @@ public class ControlState extends BaseAppState {
 	System.out.print(this.app.getCamera().getWidth() + " " + this.app.getCamera().getHeight());
 	
 	initKeys();
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+    
+    public void incrementPoints(int inc){
+        points += inc;
     }
 
     @Override

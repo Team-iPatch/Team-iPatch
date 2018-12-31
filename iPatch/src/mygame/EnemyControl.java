@@ -6,8 +6,6 @@
 package mygame;
 
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -89,14 +87,12 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
+	if(!event.getNodeA().getName().equals("Scene") && !event.getNodeB().getName().equals("Scene")){
+	    System.out.print("nodeA: " + event.getNodeA().getName() + "    nodeB: " + event.getNodeB().getName() + "\n");
+	}
 	if(event.getNodeA().getName().equals("baddie") || event.getNodeB().getName().equals("baddie")){
 	    if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
 		this.hp -= 5;
-		
-		if(event.getNodeA().getName().equals("cannon ball"))
-		    event.getNodeA().getControl(BulletControl.class).destroy();
-		if(event.getNodeB().getName().equals("cannon ball"))
-		    event.getNodeB().getControl(BulletControl.class).destroy();
 	    }
 	}
 	

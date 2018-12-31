@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/blue/Documents/jMonkeyProjects/Team-iPatch/iPatch/src/mygame/BulletControl.java</file>
-            <file>file:/home/blue/Documents/jMonkeyProjects/Team-iPatch/iPatch/src/mygame/ControlState.java</file>
-            <file>file:/home/blue/Documents/jMonkeyProjects/Team-iPatch/iPatch/src/mygame/ShooterControl.java</file>
-            <file>file:/home/blue/Documents/jMonkeyProjects/Team-iPatch/iPatch/src/mygame/Main.java</file>
-            <file>file:/home/blue/Documents/jMonkeyProjects/Team-iPatch/iPatch/src/mygame/EnemyGenerator.java</file>
+            <file>file:/home/chris/jmonkeyplatform/jMEworkspace/Team-iPatch/iPatch/src/mygame/BulletControl.java</file>
+            <file>file:/home/chris/jmonkeyplatform/jMEworkspace/Team-iPatch/iPatch/src/mygame/Main.java</file>
+            <file>file:/home/chris/jmonkeyplatform/jMEworkspace/Team-iPatch/iPatch/src/mygame/EnemyControl.java</file>
+            <file>file:/home/chris/jmonkeyplatform/jMEworkspace/Team-iPatch/iPatch/src/mygame/PlayerControlState.java</file>
         </group>
     </open-files>
 </project-private>

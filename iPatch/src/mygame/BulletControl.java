@@ -47,13 +47,9 @@ public class BulletControl extends AbstractControl {
         spatial.move(direction.mult(tpf*speed));
         lifetime += tpf;
         if (lifetime > lifeExpectancy) {
-            destroy();
+            physicsSpace.remove(bullet_phys);
+            spatial.removeFromParent();
         }
-    }
-    
-    public void destroy(){
-	physicsSpace.remove(bullet_phys);
-	spatial.removeFromParent();
     }
     
     @Override
