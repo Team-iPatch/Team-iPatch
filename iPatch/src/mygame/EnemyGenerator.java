@@ -17,22 +17,23 @@ import com.jme3.scene.Spatial;
  * @author blue
  */
 public class EnemyGenerator {
-    AssetManager assetManager;
-    BulletAppState bulletAppState;
-    EnemyGenerator(AssetManager assetManager, BulletAppState bulletAppState) {
-        this.bulletAppState = bulletAppState;
-        this.assetManager = assetManager;
-    }
-    
-    public Spatial generateEnemy(String modelLocation, Vector3f translation, float radius, float height, int hp){
-        Spatial enemy = this.assetManager.loadModel(modelLocation);
-	enemy.setLocalTranslation(translation);
-	BetterCharacterControl enemyControl = new BetterCharacterControl(radius, height, 20f);
-	enemy.addControl(enemyControl);
-	enemy.setName("baddie");
+	AssetManager assetManager;
+	BulletAppState bulletAppState;
 	
-	bulletAppState.getPhysicsSpace().add(enemyControl);
+	EnemyGenerator(AssetManager assetManager, BulletAppState bulletAppState){
+		this.bulletAppState = bulletAppState;
+		this.assetManager = assetManager;
+	}
 	
-	return enemy;
-    }
+	public Spatial generateEnemy(String modelLocation, Vector3f translation, float radius, float height, int hp){
+		Spatial enemy = this.assetManager.loadModel(modelLocation);
+		enemy.setLocalTranslation(translation);
+		BetterCharacterControl enemyControl = new BetterCharacterControl(radius, height, 20f);
+		enemy.addControl(enemyControl);
+		enemy.setName("baddie");
+		
+		bulletAppState.getPhysicsSpace().add(enemyControl);
+		
+		return enemy;
+	}
 }

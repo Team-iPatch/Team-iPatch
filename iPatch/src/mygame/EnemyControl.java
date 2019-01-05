@@ -6,6 +6,8 @@
 package mygame;
 
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -31,71 +33,66 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
     int hp;
     Spatial enemy;
     BulletAppState bulletAppState;
+    
     public EnemyControl(BulletAppState bulletAppState){
-	this.hp = 10;
-	this.enemy = spatial;
-	this.bulletAppState = bulletAppState;
-	bulletAppState.getPhysicsSpace().addCollisionListener(this);
+		this.hp = 10;
+		this.enemy = spatial;
+		this.bulletAppState = bulletAppState;
+		bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
     
     public EnemyControl(BulletAppState bulletAppState, int hp){
-	this.hp = hp;
-	this.enemy = spatial;
-	bulletAppState.getPhysicsSpace().addCollisionListener(this);
-	this.bulletAppState = bulletAppState;
+		this.hp = hp;
+		this.enemy = spatial;
+		bulletAppState.getPhysicsSpace().addCollisionListener(this);
+		this.bulletAppState = bulletAppState;
     }
     
     @Override
     protected void controlUpdate(float tpf) {
-	if(this.hp <= 0){
-	    spatial.getParent().detachChild(spatial);
-	    bulletAppState.getPhysicsSpace().remove(spatial.getControl(BetterCharacterControl.class));
-	    bulletAppState.getPhysicsSpace().removeCollisionListener(this);
-	}
-	//TODO: add code that controls Spatial,
-	//e.g. spatial.rotate(tpf,tpf,tpf);
+		if(this.hp <= 0){
+			spatial.getParent().detachChild(spatial);
+			bulletAppState.getPhysicsSpace().remove(spatial.getControl(BetterCharacterControl.class));
+			bulletAppState.getPhysicsSpace().removeCollisionListener(this);
+		}
     }
     
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
-	//Only needed for rendering-related operations,
-	//not called when spatial is culled.
+		//Only needed for rendering-related operations,
+		//not called when spatial is culled.
     }
     
     @Override
     public Control cloneForSpatial(Spatial spatial) {
-	EnemyControl control = new EnemyControl(bulletAppState);
-	//TODO: copy parameters to new Control
-	return control;
+		EnemyControl control = new EnemyControl(bulletAppState);
+		//TODO: copy parameters to new Control
+		return control;
     }
     
     @Override
     public void read(JmeImporter im) throws IOException {
-	super.read(im);
-	InputCapsule in = im.getCapsule(this);
-	//TODO: load properties of this Control, e.g.
-	//this.value = in.readFloat("name", defaultValue);
+		super.read(im);
+		InputCapsule in = im.getCapsule(this);
     }
     
     @Override
     public void write(JmeExporter ex) throws IOException {
-	super.write(ex);
-	OutputCapsule out = ex.getCapsule(this);
-	//TODO: save properties of this Control, e.g.
-	//out.write(this.value, "name", defaultValue);
+		super.write(ex);
+		OutputCapsule out = ex.getCapsule(this);
     }
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-	if(!event.getNodeA().getName().equals("Scene") && !event.getNodeB().getName().equals("Scene")){
-	    System.out.print("nodeA: " + event.getNodeA().getName() + "    nodeB: " + event.getNodeB().getName() + "\n");
-	}
-	if(event.getNodeA().getName().equals("baddie") || event.getNodeB().getName().equals("baddie")){
-	    if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
-		this.hp -= 5;
-	    }
-	}
-	
+		if(event.getNodeA().equals(spatial) || event.getNodeB().equals(spatial)){
+			if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
+				this.hp -= 5;
+				if(event.getNodeA().getName().equals("cannon ball"))
+					event.getNodeA().getControl(BulletControl.class).destroy();
+				if(event.getNodeB().getName().equals("cannon ball"))
+					event.getNodeB().getControl(BulletControl.class).destroy();
+			}
+		}	
     }
-    
+   
 }

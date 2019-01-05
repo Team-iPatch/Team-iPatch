@@ -42,8 +42,6 @@ public class ShooterControl extends AbstractControl {
         sphere = new Sphere(8, 8, 0.4f, true, false);
     }
     
-    
-    
     public ShooterControl(Vector3f direction, boolean isEnemy, Application app) {
         this.direction = direction;
         this.isEnemy = isEnemy;
@@ -58,14 +56,14 @@ public class ShooterControl extends AbstractControl {
         app.getRootNode().attachChild(bullet_geo);
         
 	
-	bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
+		bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
         
-	//================PROBLEMATIC CODE================
-	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
-	bullet_geo.addControl(bullet_phys);
-	physicsSpace.add(bullet_phys);
-	bullet_phys.setKinematic(true);
-        bulletControl = new BulletControl(direction, isEnemy,
+		//================PROBLEMATIC CODE================
+		RigidBodyControl bullet_phys = new RigidBodyControl(2f);
+		bullet_geo.addControl(bullet_phys);
+		physicsSpace.add(bullet_phys);
+		bullet_phys.setKinematic(true);
+	    bulletControl = new BulletControl(direction, isEnemy,
                                           physicsSpace, bullet_phys);
         bullet_geo.addControl(bulletControl);
     }
