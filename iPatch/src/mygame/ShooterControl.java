@@ -54,16 +54,14 @@ public class ShooterControl extends AbstractControl {
         Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         bullet_geo.setMaterial(mat);
         app.getRootNode().attachChild(bullet_geo);
-        
-	
-		bullet_geo.setLocalTranslation(spatial.getLocalTranslation());
-        
-		//================PROBLEMATIC CODE================
-		RigidBodyControl bullet_phys = new RigidBodyControl(2f);
-		bullet_geo.addControl(bullet_phys);
-		physicsSpace.add(bullet_phys);
-		bullet_phys.setKinematic(true);
-	    bulletControl = new BulletControl(direction, isEnemy,
+	bullet_geo.setLocalTranslation(spatial.getLocalTranslation().add(
+                                       direction.mult(2f)));
+        // addition is required for the bullets not to spawn underneath
+	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
+	bullet_geo.addControl(bullet_phys);
+	physicsSpace.add(bullet_phys);
+	bullet_phys.setKinematic(true);
+	bulletControl = new BulletControl(direction, isEnemy,
                                           physicsSpace, bullet_phys);
         bullet_geo.addControl(bulletControl);
     }
