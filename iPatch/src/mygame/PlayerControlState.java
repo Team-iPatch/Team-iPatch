@@ -38,7 +38,7 @@ public class PlayerControlState extends BaseAppState {
     private BetterCharacterControl controller;
     private float speed;
     private AppSettings settings; 
-	private Integer points;
+    private Integer points;
    
     @Override 
     protected void initialize(Application app){

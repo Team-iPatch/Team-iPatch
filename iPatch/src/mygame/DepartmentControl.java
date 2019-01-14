@@ -26,19 +26,23 @@ import java.io.IOException;
 public class DepartmentControl extends AbstractControl {
     private GhostControl ghost;
     private final String name;
-    private final float ghostRadius;
+    private float ghostRadius;
     private PhysicsSpace physicsSpace;
     
     DepartmentControl(String name, float ghostRadius, PhysicsSpace physicsSpace){
         this.physicsSpace = physicsSpace;
         this.name = name;
         this.ghostRadius = ghostRadius;
-        this.ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
+        this.ghost = new GhostControl(new SphereCollisionShape(this.ghostRadius));
+        physicsSpace.add(ghost);
+        spatial.addControl(ghost);
     }
     
     @Override
     protected void controlUpdate(float tpf) {
-        
+        if (ghost.getOverlappingCount() > 0){
+            System.out.println(ghost.getOverlappingObjects());
+        }
     }
     
     @Override
