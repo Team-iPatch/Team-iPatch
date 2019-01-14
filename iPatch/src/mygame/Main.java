@@ -37,7 +37,7 @@ public class Main extends SimpleApplication {
     BetterCharacterControl character;
     Node ship;
     Node sceneNode;
-	EnemyGenerator enemyGenerator;
+    EnemyGenerator enemyGenerator;
     
     public static void main(String[] args) {
         Main app = new Main();
