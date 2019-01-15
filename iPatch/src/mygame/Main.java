@@ -6,8 +6,10 @@ import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.HullCollisionShape;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.CharacterControl;
+import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.input.ChaseCamera;
@@ -38,6 +40,7 @@ public class Main extends SimpleApplication {
     Node ship;
     Node sceneNode;
     EnemyGenerator enemyGenerator;
+    GhostControl ghost;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -53,7 +56,9 @@ public class Main extends SimpleApplication {
 	loadPlayer();
 	//loadBox();
 	loadBaddie();
-        //bulletAppState.setDebugEnabled(true);
+        bulletAppState.setDebugEnabled(true);
+        BuildingGeneratorState b = new BuildingGeneratorState();
+        b.generateDepartment("compsci", this);
     }
 	
     private void loadEnemyGenerator(){
@@ -75,7 +80,7 @@ public class Main extends SimpleApplication {
         box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));
         box_geom.setLocalTranslation(5, 1, 0);
         rootNode.attachChild(box_geom);
-        RigidBodyControl box_phys = new RigidBodyControl(0f);
+        RigidBodyControl box_phys = new RigidBodyControl(3f);
         box_geom.addControl(box_phys);
 	bulletAppState.getPhysicsSpace().add(box_phys);
     }
@@ -102,13 +107,13 @@ public class Main extends SimpleApplication {
 	character = new BetterCharacterControl(1.5f, 3f, 10f);
 	ship.addControl(character);
 	rootNode.attachChild(ship);
-	ship.setName("PlayerModel");
+	ship.setName("Player"); // Required for collision detection do not change
 	bulletAppState.getPhysicsSpace().add(character);
     }
     
     @Override
     public void simpleUpdate(float tpf) {
-        //TODO: add update code
+        
     }
 
     @Override

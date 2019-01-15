@@ -45,7 +45,7 @@ public class PlayerControlState extends BaseAppState {
         speed = 0f;
 	this.app = (SimpleApplication)app;
 	this.rootNode = this.app.getRootNode();
-	this.player = this.rootNode.getChild("PlayerModel");
+	this.player = this.rootNode.getChild("Player");
 	this.inputManager = this.app.getInputManager();
 	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
@@ -67,6 +67,10 @@ public class PlayerControlState extends BaseAppState {
 	
     public void incrementPoints(int points){
 	this.points += points;
+    }
+    
+    public Spatial getPlayerSpatial(){
+        return this.player;
     }
 	
     @Override

@@ -18,60 +18,43 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.scene.Node;
 
 /**
  *
  * @author cpl512
  */
-public class DepartmentControl extends AbstractControl {
+public class DepartmentControl extends AbstractControl{
     private GhostControl ghost;
     private final String name;
     private float ghostRadius;
-    private PhysicsSpace physicsSpace;
     
-    DepartmentControl(String name, float ghostRadius, PhysicsSpace physicsSpace){
-        this.physicsSpace = physicsSpace;
+    DepartmentControl(String name, GhostControl ghost){
         this.name = name;
-        this.ghostRadius = ghostRadius;
-        this.ghost = new GhostControl(new SphereCollisionShape(this.ghostRadius));
-        physicsSpace.add(ghost);
-        spatial.addControl(ghost);
+        this.ghost = ghost;
     }
     
     @Override
     protected void controlUpdate(float tpf) {
-        if (ghost.getOverlappingCount() > 0){
-            System.out.println(ghost.getOverlappingObjects());
+        for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+            Node userObject = (Node)obj.getUserObject();
+            if(userObject.getName().equals("Player")){
+                //TODO: Add function handling shop access here
+                System.out.println("Player in GhostControl");
+            }
         }
     }
-    
+ 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
     }
-    
+       
     public Control cloneForSpatial(Spatial spatial) {
-        DepartmentControl control = new DepartmentControl(name, ghostRadius,
-                                                          physicsSpace);
+        DepartmentControl control = new DepartmentControl(name, ghost);
         //TODO: copy parameters to new Control
         return control;
     }
-    
-    @Override
-    public void read(JmeImporter im) throws IOException {
-        super.read(im);
-        InputCapsule in = im.getCapsule(this);
-        //TODO: load properties of this Control, e.g.
-        //this.value = in.readFloat("name", defaultValue);
-    }
-    
-    @Override
-    public void write(JmeExporter ex) throws IOException {
-        super.write(ex);
-        OutputCapsule out = ex.getCapsule(this);
-        //TODO: save properties of this Control, e.g.
-        //out.write(this.value, "name", defaultValue);
-    }
-    
 }

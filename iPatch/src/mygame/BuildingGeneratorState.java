@@ -6,9 +6,13 @@
 package mygame;
 
 import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
+import com.jme3.bullet.control.GhostControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -23,26 +27,26 @@ import java.util.ArrayList;
  */
 public class BuildingGeneratorState extends AbstractAppState {
     ArrayList<Spatial> buildings;
-    Application app;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
-        this.app = app;
         //TODO: initialize your AppState, e.g. attach spatials to rootNode
         //this is called on the OpenGL thread after the AppState has been attached
     }
     
-    public void generateDepartment(String name){
-       //TODO: replace box with department model
-       Box model = new Box(2,2,2);
-       Geometry department = new Geometry(name, model);
-       //this will be given by the environment map
-       department.setLocalTranslation(new Vector3f(2, 2, 2));
-       Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
-       mat1.setColor("Color", ColorRGBA.Blue);
-       department.setMaterial(mat1);
-       department.addControl(new DepartmentControl(name, 10,app.
-               getStateManager().getState(BulletAppState.class).getPhysicsSpace()));
+    public void generateDepartment(String name, SimpleApplication app){
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(5f));
+        Box model = new Box(2,2,2);
+        Geometry department = new Geometry("compsci", model);
+        //this will be given by the environment map
+        department.setLocalTranslation(new Vector3f(2, 2, 2));
+        Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
+        mat1.setColor("Color", ColorRGBA.Blue);
+        department.setMaterial(mat1);
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
+        department.addControl(ghost);
+        department.addControl(new DepartmentControl(name, ghost));
+        app.getRootNode().attachChild(department);
     }
     
     @Override
