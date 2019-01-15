@@ -49,6 +49,10 @@ public class BuildingGeneratorState extends AbstractAppState {
         app.getRootNode().attachChild(department);
     }
     
+    public void generateCollege(String name, SimpleApplication app){
+        
+    }
+    
     @Override
     public void update(float tpf) {
         //TODO: implement behavior during runtime

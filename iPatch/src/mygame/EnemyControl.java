@@ -6,8 +6,6 @@
 package mygame;
 
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
