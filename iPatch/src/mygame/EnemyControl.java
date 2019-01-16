@@ -13,6 +13,7 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.math.Transform;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -31,17 +32,21 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
     int hp;
     Spatial enemy;
     BulletAppState bulletAppState;
+    PlayerControlState playerControlState;
     
-    public EnemyControl(BulletAppState bulletAppState){
+    public EnemyControl(BulletAppState bulletAppState, PlayerControlState playerControlState){
 		this.hp = 10;
 		this.enemy = spatial;
 		this.bulletAppState = bulletAppState;
+        this.playerControlState = playerControlState;
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
+        
     }
     
-    public EnemyControl(BulletAppState bulletAppState, int hp){
+    public EnemyControl(BulletAppState bulletAppState, PlayerControlState playerControlState, int hp){
 		this.hp = hp;
 		this.enemy = spatial;
+        this.playerControlState = playerControlState;
 		bulletAppState.getPhysicsSpace().addCollisionListener(this);
 		this.bulletAppState = bulletAppState;
     }
@@ -49,10 +54,18 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
     @Override
     protected void controlUpdate(float tpf) {
 		if(this.hp <= 0){
-			spatial.getParent().detachChild(spatial);
-			bulletAppState.getPhysicsSpace().remove(spatial.getControl(BetterCharacterControl.class));
-			bulletAppState.getPhysicsSpace().removeCollisionListener(this);
+			kill();
 		}
+        //Maybe usable to lock enemy to vertical location
+        //spatial.setLocalTranslation(spatial.getLocalTranslation().x, 0.5f, spatial.getLocalTranslation().z);
+        //spatial.getControl(BetterCharacterControl.class).warp(spatial.getLocalTranslation());
+        
+    }
+    
+    public void kill(){
+        spatial.getParent().detachChild(spatial);
+		bulletAppState.getPhysicsSpace().remove(spatial.getControl(BetterCharacterControl.class));
+		bulletAppState.getPhysicsSpace().removeCollisionListener(this);
     }
     
     @Override
@@ -63,7 +76,7 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
     
     @Override
     public Control cloneForSpatial(Spatial spatial) {
-		EnemyControl control = new EnemyControl(bulletAppState);
+		EnemyControl control = new EnemyControl(bulletAppState, playerControlState);
 		//TODO: copy parameters to new Control
 		return control;
     }
@@ -90,6 +103,10 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
 				if(event.getNodeB().getName().equals("cannon ball"))
 					event.getNodeB().getControl(BulletControl.class).destroy();
 			}
+            else if(event.getNodeA().getName().equals("Player") || event.getNodeB().getName().equals("Player")){
+                playerControlState.reduceHP(10);
+                kill();
+            }
 		}	
     }
    

@@ -36,6 +36,7 @@ import com.jme3.input.controls.AnalogListener;
 public class Main extends SimpleApplication {
 
     private BulletAppState bulletAppState;
+    private PlayerControlState playerControlState;
     BetterCharacterControl character;
     Node ship;
     Node sceneNode;
@@ -50,16 +51,18 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         flyCam.setEnabled(false);
+        playerControlState = new PlayerControlState();
+
         loadBulletPhysics();
         loadEnemyGenerator();
         loadScene();
         loadPlayer();
-        //loadBox();
+        loadBox();
         loadBaddie();
         bulletAppState.setDebugEnabled(true);
-        BuildingGeneratorState b = new BuildingGeneratorState();
-        b.generateDepartment("compsci", 5f, this);
-        b.generateCollege("Derwent", new Vector3f(10,0,10), 20, this);
+        //BuildingGeneratorState b = new BuildingGeneratorState();
+        //b.generateDepartment("compsci", 5f, this);
+        //b.generateCollege("Derwent", new Vector3f(10,0,10), 20, this);
     }
 	
     private void loadEnemyGenerator(){
@@ -71,12 +74,12 @@ public class Main extends SimpleApplication {
 	    Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o",
                                           new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
         rootNode.attachChild(baddie);
-	    baddie.addControl(new EnemyControl(bulletAppState, 10));
+	    baddie.addControl(new EnemyControl(bulletAppState, playerControlState, 10));
         
         Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",
-                                          new Vector3f(4, 3, 0), 1.5f, 3f, 10);
+                                          new Vector3f(15, 3, 0), 1.5f, 3f, 10);
 	    rootNode.attachChild(baddie2);
-        baddie2.addControl(new EnemyControl(bulletAppState, 10));
+        baddie2.addControl(new EnemyControl(bulletAppState, playerControlState, 10));
         baddie2.addControl(new AIChaserControl(this.ship, 3));
     }
 
@@ -86,7 +89,7 @@ public class Main extends SimpleApplication {
         box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));
         box_geom.setLocalTranslation(5, 1, 0);
         rootNode.attachChild(box_geom);
-        RigidBodyControl box_phys = new RigidBodyControl(3f);
+        RigidBodyControl box_phys = new RigidBodyControl(0f);
         box_geom.addControl(box_phys);
         bulletAppState.getPhysicsSpace().add(box_phys);
     }
@@ -104,7 +107,7 @@ public class Main extends SimpleApplication {
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
-        stateManager.attach(new PlayerControlState());
+        stateManager.attach(playerControlState);
     }
     
     private void loadPlayer(){
