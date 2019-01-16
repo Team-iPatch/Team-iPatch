@@ -58,7 +58,8 @@ public class Main extends SimpleApplication {
 	loadBaddie();
         bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
-        b.generateDepartment("compsci", this);
+        b.generateDepartment("compsci", 5f, this);
+        b.generateCollege("Derwent", new Vector3f(10,0,10), 20, this);
     }
 	
     private void loadEnemyGenerator(){
@@ -66,7 +67,7 @@ public class Main extends SimpleApplication {
     }
     
     private void loadBaddie(){
-	Spatial baddie = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
+	Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
         rootNode.attachChild(baddie);
 	baddie.addControl(new EnemyControl(bulletAppState, 10));
 	Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(4, 3, 0), 1.5f, 3f, 10);

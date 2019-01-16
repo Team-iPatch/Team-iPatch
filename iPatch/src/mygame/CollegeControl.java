@@ -30,10 +30,12 @@ public class CollegeControl extends AbstractControl {
     private GhostControl ghost;
     private final String name;
     private float ghostRadius;
+    private Spatial cannons[];
     
-    CollegeControl(String name, GhostControl ghost){
+    CollegeControl(String name, GhostControl ghost, Spatial[] cannons){
         this.name = name;
         this.ghost = ghost;
+        this.cannons = cannons;
     }
 
     @Override
