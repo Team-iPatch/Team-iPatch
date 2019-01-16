@@ -25,7 +25,9 @@ public class EnemyGenerator {
 		this.assetManager = assetManager;
 	}
 	
-	public Spatial generateEnemy(String modelLocation, Vector3f translation, float radius, float height, int hp){
+
+	public Spatial generateEnemy(String modelLocation, Vector3f translation,
+                                            float radius, float height, int hp){
 		Spatial enemy = assetManager.loadModel(modelLocation);
 		enemy.setLocalTranslation(translation);
 		BetterCharacterControl enemyControl = new BetterCharacterControl(radius, height, 20f);

@@ -17,6 +17,7 @@ import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
@@ -34,10 +35,10 @@ public class BuildingGeneratorState extends AbstractAppState {
         //this is called on the OpenGL thread after the AppState has been attached
     }
     
-    public void generateDepartment(String name, SimpleApplication app){
-        GhostControl ghost = new GhostControl(new SphereCollisionShape(5f));
+    public void generateDepartment(String name, float ghostRadius, SimpleApplication app){
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         Box model = new Box(2,2,2);
-        Geometry department = new Geometry("compsci", model);
+        Geometry department = new Geometry(name, model);
         //this will be given by the environment map
         department.setLocalTranslation(new Vector3f(2, 2, 2));
         Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
@@ -49,8 +50,25 @@ public class BuildingGeneratorState extends AbstractAppState {
         app.getRootNode().attachChild(department);
     }
     
-    public void generateCollege(String name, SimpleApplication app){
-        
+    public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){
+        Node collegeNode = new Node();
+        collegeNode.setLocalTranslation(location);
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
+        Spatial college = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
+        college.setLocalTranslation(location);
+        Spatial[] cannons = new Spatial[8];
+        for (int i=0;i<cannons.length;i++) {
+            cannons[i] = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
+            double rotAngle = (double)i * Math.PI / 4f;
+            Vector3f direction = new Vector3f((float)Math.sin(rotAngle), 0, (float)Math.cos(rotAngle));
+            cannons[i].setLocalTranslation(location.add(direction.mult(4)));
+            cannons[i].rotate(0, i * (float)Math.PI/4f, 0);
+            cannons[i].addControl(new ShooterControl(direction, true, app));
+            collegeNode.attachChild(cannons[i]);
+        }
+        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode));
+        collegeNode.attachChild(college);
+        app.getRootNode().attachChild(collegeNode);
     }
     
     @Override
