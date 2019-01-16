@@ -67,10 +67,12 @@ public class Main extends SimpleApplication {
     }
     
     private void loadBaddie(){
-	Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
+	Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o",
+                                          new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
         rootNode.attachChild(baddie);
 	baddie.addControl(new EnemyControl(bulletAppState, 10));
-	Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(4, 3, 0), 1.5f, 3f, 10);
+	Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",
+                                          new Vector3f(4, 3, 0), 1.5f, 3f, 10);
 	rootNode.attachChild(baddie2);
 	baddie2.addControl(new EnemyControl(bulletAppState, 10));
     }
@@ -103,7 +105,7 @@ public class Main extends SimpleApplication {
     }
     
     private void loadPlayer(){
-	ship = (Node)assetManager.loadModel("Models/pirate-ship-blender-v2/mesh.j3o");
+	ship = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
 	ship.setLocalTranslation(new Vector3f(0, 3, 0));
 	character = new BetterCharacterControl(1.5f, 3f, 10f);
 	ship.addControl(character);

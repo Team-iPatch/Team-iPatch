@@ -51,12 +51,11 @@ public class BuildingGeneratorState extends AbstractAppState {
     }
     
     public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){
-        Node departmentNode = new Node();
-        departmentNode.setLocalTranslation(location);
+        Node collegeNode = new Node();
+        collegeNode.setLocalTranslation(location);
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
-        Spatial department = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
-        department.setLocalTranslation(location);
-        app.getRootNode().attachChild(department);
+        Spatial college = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
+        college.setLocalTranslation(location);
         Spatial[] cannons = new Spatial[8];
         for (int i=0;i<cannons.length;i++) {
             cannons[i] = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
@@ -65,10 +64,11 @@ public class BuildingGeneratorState extends AbstractAppState {
             cannons[i].setLocalTranslation(location.add(direction.mult(4)));
             cannons[i].rotate(0, i * (float)Math.PI/4f, 0);
             cannons[i].addControl(new ShooterControl(direction, true, app));
-            departmentNode.attachChild(cannons[i]);
+            collegeNode.attachChild(cannons[i]);
         }
-        departmentNode.attachChild(department);
-        app.getRootNode().attachChild(departmentNode);
+        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode));
+        collegeNode.attachChild(college);
+        app.getRootNode().attachChild(collegeNode);
     }
     
     @Override
