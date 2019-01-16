@@ -49,16 +49,17 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
-	flyCam.setEnabled(false);
-	loadBulletPhysics();
-	loadEnemyGenerator();
-	loadScene();
-	loadPlayer();
-	//loadBox();
-	loadBaddie();
+        flyCam.setEnabled(false);
+        loadBulletPhysics();
+        loadEnemyGenerator();
+        loadScene();
+        loadPlayer();
+        //loadBox();
+        loadBaddie();
         bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
-        b.generateDepartment("compsci", this);
+        b.generateDepartment("compsci", 5f, this);
+        b.generateCollege("Derwent", new Vector3f(10,0,10), 20, this);
     }
 	
     private void loadEnemyGenerator(){
@@ -66,12 +67,13 @@ public class Main extends SimpleApplication {
     }
     
     private void loadBaddie(){
-	Spatial baddie = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie);
-	baddie.addControl(new EnemyControl(bulletAppState, 10));
-	Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(4, 3, 0), 1.5f, 3f, 10);
-	rootNode.attachChild(baddie2);
-	baddie2.addControl(new EnemyControl(bulletAppState, 10));
+        Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o", new Vector3f(-4, 3, 0), 1.5f, 3f, 10);        rootNode.attachChild(baddie);
+        baddie.addControl(new EnemyControl(bulletAppState, 10));
+        
+        Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirate-ship-blender-v2/mesh.j3o", new Vector3f(4, 3, 0), 1.5f, 3f, 10);
+        rootNode.attachChild(baddie2);
+        baddie2.addControl(new EnemyControl(bulletAppState, 10));
+        baddie2.addControl(new AIChaserControl(this.ship, 3));
     }
 
     private void loadBox(){
@@ -82,33 +84,33 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(box_geom);
         RigidBodyControl box_phys = new RigidBodyControl(3f);
         box_geom.addControl(box_phys);
-	bulletAppState.getPhysicsSpace().add(box_phys);
+        bulletAppState.getPhysicsSpace().add(box_phys);
     }
     
     private void loadScene(){
-	sceneNode = (Node)assetManager.loadModel("Scenes/newScene.j3o");
-	rootNode.attachChild(sceneNode);
-	sceneNode.setName("Scene");
-	RigidBodyControl landscape = new RigidBodyControl(0);
-	sceneNode.addControl(landscape);
-	bulletAppState.getPhysicsSpace().add(landscape);
+        sceneNode = (Node)assetManager.loadModel("Scenes/newScene.j3o");
+        rootNode.attachChild(sceneNode);
+        sceneNode.setName("Scene");
+        RigidBodyControl landscape = new RigidBodyControl(0);
+        sceneNode.addControl(landscape);
+        bulletAppState.getPhysicsSpace().add(landscape);
     }
     
     private void loadBulletPhysics(){
-	bulletAppState = new BulletAppState();
-	bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
-	stateManager.attach(bulletAppState);
-	stateManager.attach(new PlayerControlState());
+        bulletAppState = new BulletAppState();
+        bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
+        stateManager.attach(bulletAppState);
+        stateManager.attach(new PlayerControlState());
     }
     
     private void loadPlayer(){
-	ship = (Node)assetManager.loadModel("Models/pirate-ship-blender-v2/mesh.j3o");
-	ship.setLocalTranslation(new Vector3f(0, 3, 0));
-	character = new BetterCharacterControl(1.5f, 3f, 10f);
-	ship.addControl(character);
-	rootNode.attachChild(ship);
-	ship.setName("Player"); // Required for collision detection do not change
-	bulletAppState.getPhysicsSpace().add(character);
+        ship = (Node)assetManager.loadModel("Models/pirate-ship-blender-v2/mesh.j3o");
+        ship.setLocalTranslation(new Vector3f(0, 3, 0));
+        character = new BetterCharacterControl(1.5f, 3f, 10f);
+        ship.addControl(character);
+        rootNode.attachChild(ship);
+        ship.setName("Player"); // Required for collision detection do not change
+        bulletAppState.getPhysicsSpace().add(character);
     }
     
     @Override

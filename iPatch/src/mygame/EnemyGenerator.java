@@ -26,10 +26,11 @@ public class EnemyGenerator {
 	}
 	
 	public Spatial generateEnemy(String modelLocation, Vector3f translation, float radius, float height, int hp){
-		Spatial enemy = this.assetManager.loadModel(modelLocation);
+		Spatial enemy = assetManager.loadModel(modelLocation);
 		enemy.setLocalTranslation(translation);
 		BetterCharacterControl enemyControl = new BetterCharacterControl(radius, height, 20f);
 		enemy.addControl(enemyControl);
+        //BetterCharacterControl has to be added to the spatial BEFORE any AI control!
 		enemy.setName("baddie");
 		
 		bulletAppState.getPhysicsSpace().add(enemyControl);
