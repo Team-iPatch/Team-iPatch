@@ -108,7 +108,7 @@ public class Main extends SimpleApplication {
     }
     
     private void loadPlayer(){
-        ship = (Node)assetManager.loadModel("Models/pirate-ship-blender-v2/mesh.j3o");
+        ship = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
         ship.setLocalTranslation(new Vector3f(0, 3, 0));
         character = new BetterCharacterControl(1.5f, 3f, 10f);
         ship.addControl(character);
