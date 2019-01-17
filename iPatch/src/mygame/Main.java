@@ -60,15 +60,9 @@ public class Main extends SimpleApplication {
         loadBox();
         loadBaddie();
         bulletAppState.setDebugEnabled(true);
-<<<<<<< HEAD
         BuildingGeneratorState b = new BuildingGeneratorState();
         b.generateDepartment("compsci", 5f, this);
         b.generateCollege("Derwent", new Vector3f(10,0,10), 19f, this);
-=======
-        //BuildingGeneratorState b = new BuildingGeneratorState();
-        //b.generateDepartment("compsci", 5f, this);
-        //b.generateCollege("Derwent", new Vector3f(10,0,10), 20, this);
->>>>>>> d1dce94d6fb84bbb17d85dcfffd295be143bfb19
     }
 	
     private void loadEnemyGenerator(){
