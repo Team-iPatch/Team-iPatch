@@ -9,11 +9,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
-import com.jme3.math.Transform;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -80,18 +75,6 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
 		EnemyControl control = new EnemyControl(bulletAppState, playerControlState);
 		//TODO: copy parameters to new Control
 		return control;
-    }
-    
-    @Override
-    public void read(JmeImporter im) throws IOException {
-		super.read(im);
-		InputCapsule in = im.getCapsule(this);
-    }
-    
-    @Override
-    public void write(JmeExporter ex) throws IOException {
-		super.write(ex);
-		OutputCapsule out = ex.getCapsule(this);
     }
     
     @Override

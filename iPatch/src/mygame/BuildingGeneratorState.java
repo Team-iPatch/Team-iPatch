@@ -56,7 +56,6 @@ public class BuildingGeneratorState extends AbstractAppState {
         collegeNode.setLocalTranslation(location);
         Spatial college = app.getAssetManager().loadModel("Models/"
                                                      + "turret02/turret02.j3o");
-        college.setLocalTranslation(location);
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         college.addControl(ghost);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().
@@ -68,7 +67,7 @@ public class BuildingGeneratorState extends AbstractAppState {
             double rotAngle = (double)i * Math.PI / 4f;
             Vector3f direction = new Vector3f((float)Math.sin(rotAngle), 0, 
                                               (float)Math.cos(rotAngle));
-            cannons[i].setLocalTranslation(location.add(direction.mult(4)));
+            cannons[i].setLocalTranslation(direction.mult(4));
             cannons[i].rotate(0, i * (float)Math.PI/4f, 0);
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
@@ -76,6 +75,9 @@ public class BuildingGeneratorState extends AbstractAppState {
         college.addControl(new CollegeControl(name, ghost, cannons, collegeNode));
         collegeNode.attachChild(college);
         app.getRootNode().attachChild(collegeNode);
+        System.out.println(collegeNode.getLocalTranslation());
+        System.out.println(collegeNode.getWorldTranslation());
+        System.out.println(college.getWorldTranslation());
     }
     
     @Override
