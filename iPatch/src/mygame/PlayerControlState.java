@@ -39,34 +39,44 @@ public class PlayerControlState extends BaseAppState {
     private float speed;
     private AppSettings settings; 
     private Integer points;
+    private Integer hp;
    
     @Override 
     protected void initialize(Application app){
         speed = 0f;
-	this.app = (SimpleApplication)app;
-	this.rootNode = this.app.getRootNode();
-	this.player = this.rootNode.getChild("Player");
-	this.inputManager = this.app.getInputManager();
-	this.controller = player.getControl(BetterCharacterControl.class);
+        this.app = (SimpleApplication)app;
+        this.rootNode = this.app.getRootNode();
+    	this.player = this.rootNode.getChild("Player");
+    	this.inputManager = this.app.getInputManager();
+    	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
-	this.settings = app.getContext().getSettings();
-	this.points = 0;
-	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-	chaseCam.setSmoothMotion(true);
+    	this.settings = app.getContext().getSettings();
+    	this.points = 0;
+        this.hp = 100;
+    	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
+    	chaseCam.setSmoothMotion(true);
         ShooterControl shooterControl = new ShooterControl(controller.getViewDirection(), true, app);
         this.player.addControl(shooterControl);
         this.settings.setFrameRate(60);
         this.app.restart();
-	System.out.print(this.app.getCamera().getWidth() + " " + this.app.getCamera().getHeight());
-	initKeys();
+    	System.out.print(this.app.getCamera().getWidth() + " " + this.app.getCamera().getHeight());
+    	initKeys();
+    }
+    
+    public Integer getHP(){
+        return this.hp;
+    }
+    
+    public void reduceHP(int hp){
+        this.hp -= hp;
     }
     
     public Integer getPoints(){
-	return this.points;
+        return this.points;
     }
 	
     public void incrementPoints(int points){
-	this.points += points;
+        this.points += points;
     }
     
     public Spatial getPlayerSpatial(){
@@ -99,26 +109,26 @@ public class PlayerControlState extends BaseAppState {
    
     @Override
     public void update(float tpf) {
-	Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
-	controller.setWalkDirection(playerRotation.mult(speed));
-	speed *= 0.99;
+        Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
+        controller.setWalkDirection(playerRotation.mult(speed));
+        speed *= 0.99;
         
     } 
 	
     private void changeResolution(){
-	this.settings.setResolution(1600, 900);
-	this.app.restart();
+        this.settings.setResolution(1600, 900);
+    	this.app.restart();
     }
 	
     private void initKeys(){
-	inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
-	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
-	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
-	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
-	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
+    	inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
+    	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
+    	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
+    	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
+    	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("Shoot",     new KeyTrigger(KeyInput.KEY_SPACE));
-	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
-	inputManager.addListener(actionListener, "ChangeRes", "Shoot");
+    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
+    	inputManager.addListener(actionListener, "ChangeRes", "Shoot");
     }
 	
     private final ActionListener actionListener = new ActionListener(){
@@ -135,29 +145,29 @@ public class PlayerControlState extends BaseAppState {
     private final AnalogListener analogListener = new AnalogListener(){
 	@Override
 	public void onAnalog(String name, float value, float tpf){
-            if(name.equals("RotLeft")) {
-		Vector3f dir = controller.getViewDirection();
-            	Quaternion quat = new Quaternion();
-                quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
-		quat.multLocal(dir);
-		controller.setViewDirection(dir);
-            }
+        if(name.equals("RotLeft")) {
+            Vector3f dir = controller.getViewDirection();
+            Quaternion quat = new Quaternion();
+            quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
+            quat.multLocal(dir);
+            controller.setViewDirection(dir);
+        }
 		
-            if(name.equals("RotRight")) {
-		Vector3f dir = controller.getViewDirection();
-		Quaternion quat = new Quaternion();
-		quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
-		quat.multLocal(dir);
-		controller.setViewDirection(dir);	
-            }
+        if(name.equals("RotRight")) {
+            Vector3f dir = controller.getViewDirection();
+            Quaternion quat = new Quaternion();
+            quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
+            quat.multLocal(dir);
+            controller.setViewDirection(dir);	
+        }
 	
-            if (name.equals("Forward"))
-                if (speed < 15)
-                    speed += 1;
-            
-            if (name.equals("Backward")) 
-                if(speed>1)
-                    speed -= 0.1;
+        if (name.equals("Forward"))
+            if (speed < 15)
+                speed += 1;
+           
+        if (name.equals("Backward")) 
+            if(speed>1)
+                speed -= 0.1;
 	}
     };
 }
