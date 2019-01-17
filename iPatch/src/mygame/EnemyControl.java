@@ -63,6 +63,7 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
     }
     
     public void kill(){
+        // Do not call outside of controlUpdate, set hp to 0 instead
         spatial.getParent().detachChild(spatial);
 		bulletAppState.getPhysicsSpace().remove(spatial.getControl(BetterCharacterControl.class));
 		bulletAppState.getPhysicsSpace().removeCollisionListener(this);
@@ -92,22 +93,21 @@ public class EnemyControl extends AbstractControl implements PhysicsCollisionLis
 		super.write(ex);
 		OutputCapsule out = ex.getCapsule(this);
     }
-
+    
     @Override
     public void collision(PhysicsCollisionEvent event) {
-		if(event.getNodeA().equals(spatial) || event.getNodeB().equals(spatial)){
-			if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
-				this.hp -= 5;
-				if(event.getNodeA().getName().equals("cannon ball"))
-					event.getNodeA().getControl(BulletControl.class).destroy();
-				if(event.getNodeB().getName().equals("cannon ball"))
-					event.getNodeB().getControl(BulletControl.class).destroy();
-			}
+        if(event.getNodeA().equals(spatial) || event.getNodeB().equals(spatial)){
+            if(event.getNodeA().getName().equals("cannon ball") || event.getNodeB().getName().equals("cannon ball")){
+                this.hp -= 5;
+                if(event.getNodeA().getName().equals("cannon ball"))
+                    event.getNodeA().getControl(BulletControl.class).destroy();
+                if(event.getNodeB().getName().equals("cannon ball"))
+                    event.getNodeB().getControl(BulletControl.class).destroy();
+            }
             else if(event.getNodeA().getName().equals("Player") || event.getNodeB().getName().equals("Player")){
                 playerControlState.reduceHP(10);
-                kill();
+                this.hp = 0;
             }
-		}	
+        }    
     }
-   
 }
