@@ -38,7 +38,8 @@ public class CollegeControl extends AbstractControl {
     private Quaternion rotation;
     private double shootChance;
     
-    CollegeControl(String name, GhostControl ghost, Spatial[] cannons, Node collegeNode){
+    CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
+                   Node collegeNode){
         this.name = name;
         this.ghost = ghost;
         this.cannons = cannons;
@@ -56,8 +57,8 @@ public class CollegeControl extends AbstractControl {
             collegeNode.setLocalRotation(rot.mult(rotation));
             for(Spatial cannon : cannons){
                 if(Math.random() < shootChance){
-                    cannon.getControl(ShooterControl.class).shootBullet(cannon.
-                                                        getLocalTranslation());
+                    cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation()));
                 }
             }
         } 
