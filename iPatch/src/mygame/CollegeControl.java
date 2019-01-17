@@ -11,6 +11,8 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
@@ -32,18 +34,42 @@ public class CollegeControl extends AbstractControl {
     private float ghostRadius;
     private Spatial cannons[];
     private Node collegeNode;
+    private boolean inCombat;
+    private Quaternion rotation;
+    private double shootChance;
     
     CollegeControl(String name, GhostControl ghost, Spatial[] cannons, Node collegeNode){
         this.name = name;
         this.ghost = ghost;
         this.cannons = cannons;
         this.collegeNode = collegeNode;
+        this.inCombat = false;
+        this.rotation = new Quaternion();
+        rotation.fromAngleAxis(0.05f, Vector3f.UNIT_Y);
+        shootChance = 0.02;
     }
 
     @Override
     protected void controlUpdate(float tpf) {
-        //TODO: add code that controls Spatial,
-        //e.g. spatial.rotate(tpf,tpf,tpf);
+        if(inCombat) {
+            Quaternion rot = collegeNode.getLocalRotation();
+            collegeNode.setLocalRotation(rot.mult(rotation));
+            for(Spatial cannon : cannons){
+                if(Math.random() < shootChance){
+                    cannon.getControl(ShooterControl.class).shootBullet();
+                }
+            }
+        } 
+        else {
+            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+                if (obj.getUserObject().getClass() == Node.class){
+                    Node userObject = (Node)obj.getUserObject();
+                    if(userObject.getName().equals("Player")){
+                        inCombat = true;
+                    }
+                }
+            }
+        }
     }
     
     @Override

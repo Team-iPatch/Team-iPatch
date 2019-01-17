@@ -50,17 +50,24 @@ public class BuildingGeneratorState extends AbstractAppState {
         app.getRootNode().attachChild(department);
     }
     
-    public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){
+    public void generateCollege(String name, Vector3f location, 
+                                float ghostRadius, SimpleApplication app){
         Node collegeNode = new Node();
         collegeNode.setLocalTranslation(location);
-        GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
-        Spatial college = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
+        Spatial college = app.getAssetManager().loadModel("Models/"
+                                                     + "turret02/turret02.j3o");
         college.setLocalTranslation(location);
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
+        college.addControl(ghost);
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().
+                                                                     add(ghost);
         Spatial[] cannons = new Spatial[8];
         for (int i=0;i<cannons.length;i++) {
-            cannons[i] = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
+            cannons[i] = app.getAssetManager().loadModel("Models/"
+                                                     + "turret02/turret02.j3o");
             double rotAngle = (double)i * Math.PI / 4f;
-            Vector3f direction = new Vector3f((float)Math.sin(rotAngle), 0, (float)Math.cos(rotAngle));
+            Vector3f direction = new Vector3f((float)Math.sin(rotAngle), 0, 
+                                              (float)Math.cos(rotAngle));
             cannons[i].setLocalTranslation(location.add(direction.mult(4)));
             cannons[i].rotate(0, i * (float)Math.PI/4f, 0);
             cannons[i].addControl(new ShooterControl(direction, true, app));

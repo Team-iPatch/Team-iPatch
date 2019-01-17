@@ -1,11 +1,5 @@
 package mygame;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
@@ -20,10 +14,7 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
 
-/**
- *
- * @author cpl512
- */
+
 public class BulletControl extends AbstractControl {
     
     private final float speed = 40f;
@@ -35,7 +26,7 @@ public class BulletControl extends AbstractControl {
     RigidBodyControl bullet_phys; //Remove the physics control on deletion
 
     public BulletControl(Vector3f direction, boolean isEnemy,
-                        PhysicsSpace physicsSpace, RigidBodyControl bullet_phys) {
+                      PhysicsSpace physicsSpace, RigidBodyControl bullet_phys) {
         this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.isEnemy = isEnemy;

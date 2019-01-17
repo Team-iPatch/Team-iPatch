@@ -46,7 +46,8 @@ public class ShooterControl extends AbstractControl {
         this.direction = direction;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
-        this.physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
+        this.physicsSpace = app.getStateManager().getState(BulletAppState.class)
+                                                             .getPhysicsSpace();
     }
     
     public void shootBullet(){
