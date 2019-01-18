@@ -13,6 +13,11 @@ import com.jme3.scene.Node;
 import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.terrain.geomipmap.TerrainLodControl;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -23,6 +28,7 @@ public class Main extends SimpleApplication {
 
     private BulletAppState bulletAppState;
     private PlayerControlState playerControlState;
+    private NiftyController niftyController;
     BetterCharacterControl character;
     Node ship;
     Node sceneNode;
@@ -45,13 +51,25 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
-        loadMap();
+        loadGUI();
+        //loadMap();
         //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
         b.generateDepartment("compsci", 5f, this);
         b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, this);
     }
 	
+    private void loadGUI(){
+        niftyController = new NiftyController();
+        stateManager.attach(niftyController);
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
+        Nifty nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
+    
+        //nifty.setDebugOptionPanelColors(true);
+    }
+    
     private void loadEnemyGenerator(){
         enemyGenerator = new EnemyGenerator(assetManager, 
                                             bulletAppState.getPhysicsSpace());
@@ -124,4 +142,5 @@ public class Main extends SimpleApplication {
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
     }
+
 }
