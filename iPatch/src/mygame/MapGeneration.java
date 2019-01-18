@@ -14,6 +14,8 @@ import com.jme3.scene.Node;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.math.ColorRGBA;
 import java.util.Random;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.scene.Spatial.CullHint;
 import fastnoise.FastNoise;
 
 
@@ -72,6 +74,10 @@ public class MapGeneration
         RigidBodyControl box_phys = new RigidBodyControl(0f);
         box_geom.addControl(box_phys);
         bulletAppState.getPhysicsSpace().add(box_phys);
+        if (yCo == 1)
+        {
+            addHitBox(xCo,yCo,zCo);
+        }
     }
     
     public static TerrainType[][][] generateArray()
@@ -119,5 +125,19 @@ public class MapGeneration
     private static void findAccesable()
     {
         
+    }
+    
+    private static void addHitBox(int xCo, int yCo, int zCo)
+    {
+       Box box = new Box(0.5f, 3f, 0.5f);
+       Geometry box_geom = new Geometry("box", box); 
+       box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);
+       rootNode.attachChild(box_geom);
+       RigidBodyControl box_phys = new RigidBodyControl(0f);
+       box_geom.addControl(box_phys);
+       bulletAppState.getPhysicsSpace().add(box_phys);
+       Material mat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+       box_geom.setMaterial(mat);
+       box_geom.setCullHint(CullHint.Always);
     }
 }
