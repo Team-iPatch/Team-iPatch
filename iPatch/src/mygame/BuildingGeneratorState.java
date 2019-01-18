@@ -12,6 +12,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -54,9 +55,14 @@ public class BuildingGeneratorState extends BaseAppState {
         collegeNode.setLocalTranslation(location);
         Spatial college = app.getAssetManager().loadModel("Models/"
                                                      + "turret02/turret02.j3o");
+        college.setName("college");
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         college.addControl(ghost);
-        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
+        physicsSpace.add(ghost);
+        RigidBodyControl rigidBody = new RigidBodyControl(2f);
+        college.addControl(rigidBody);
+        rigidBody.setKinematic(true);
+        physicsSpace.add(rigidBody);
         Spatial[] cannons = new Spatial[8];
         for (int i=0;i<cannons.length;i++) {
             cannons[i] = app.getAssetManager().loadModel("Models/"
@@ -69,12 +75,10 @@ public class BuildingGeneratorState extends BaseAppState {
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
         }
+        
         college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace));
         collegeNode.attachChild(college);
         app.getRootNode().attachChild(collegeNode);
-        System.out.println(collegeNode.getLocalTranslation());
-        System.out.println(collegeNode.getWorldTranslation());
-        System.out.println(college.getWorldTranslation());
     }
     
     @Override

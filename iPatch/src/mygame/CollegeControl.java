@@ -84,8 +84,15 @@ public class CollegeControl extends AbstractControl {
         }
     }
     
+    public void reduceHP(int hp){
+        this.hp -= hp;
+    }
+    
     public void kill(){
-        
+        physicsSpace.remove(ghost);
+        physicsSpace.remove(spatial.getControl(RigidBodyControl.class));
+        collegeNode.removeFromParent();
+        collegeNode.detachAllChildren();
     }
     
     @Override

@@ -32,6 +32,7 @@ import java.io.IOException;
  */
 public class ShooterControl extends AbstractControl {
     Vector3f direction;
+    int damage;
     boolean isEnemy;
     private static final Sphere sphere;
     SimpleApplication app;
@@ -45,6 +46,7 @@ public class ShooterControl extends AbstractControl {
     
     public ShooterControl(Vector3f direction, boolean isEnemy, Application app) {
         this.direction = direction;
+        this.damage = 5;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
         this.physicsSpace = app.getStateManager().getState(BulletAppState.class)
@@ -65,7 +67,7 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);
 	bullet_phys.setKinematic(true);
-	bulletControl = new BulletControl(direction, isEnemy, physicsSpace,
+	bulletControl = new BulletControl(direction, damage, isEnemy, physicsSpace,
                                           bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
     }
@@ -84,9 +86,13 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);
 	bullet_phys.setKinematic(true);
-	bulletControl = new BulletControl(direction, isEnemy, physicsSpace,
+	bulletControl = new BulletControl(direction, damage, isEnemy, physicsSpace,
                                           bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
+    }
+    
+    public void setDamage(int dmg){
+        this.damage = dmg;
     }
     
     @Override
@@ -96,28 +102,5 @@ public class ShooterControl extends AbstractControl {
     protected void controlRender(RenderManager rm, ViewPort vp) {
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
-    }
-    
-    @Override
-    public Control cloneForSpatial(Spatial spatial) {
-        ShooterControl control = new ShooterControl(direction, isEnemy, app);
-        //TODO: copy parameters to new Control
-        return control;
-    }
-    
-    @Override
-    public void read(JmeImporter im) throws IOException {
-        super.read(im);
-        InputCapsule in = im.getCapsule(this);
-        //TODO: load properties of this Control, e.g.
-        //this.value = in.readFloat("name", defaultValue);
-    }
-    
-    @Override
-    public void write(JmeExporter ex) throws IOException {
-        super.write(ex);
-        OutputCapsule out = ex.getCapsule(this);
-        //TODO: save properties of this Control, e.g.
-        //out.write(this.value, "name", defaultValue);
     }
 }

@@ -22,6 +22,7 @@ public class BulletControl extends AbstractControl
     
     private final float speed = 50f;
     public Vector3f direction;
+    private int damage;
     float lifeExpectancy = 2f; //Seconds before it is erased
     float lifetime;
     boolean isEnemy;
@@ -29,9 +30,10 @@ public class BulletControl extends AbstractControl
     RigidBodyControl bullet_phys; //Remove the physics control on deletion
     PlayerControlState playerControlState;
 
-    public BulletControl(Vector3f direction, boolean isEnemy,
+    public BulletControl(Vector3f direction, int damage, boolean isEnemy,
                       PhysicsSpace physicsSpace, RigidBodyControl bullet_phys,
                       PlayerControlState playerControlState){
+        this.damage = damage;
         this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.isEnemy = isEnemy;
@@ -61,7 +63,7 @@ public class BulletControl extends AbstractControl
     
     @Override
     public Control cloneForSpatial(Spatial spatial) {
-        BulletControl control = new BulletControl(direction, isEnemy,
+        BulletControl control = new BulletControl(direction, damage, isEnemy,
                                 physicsSpace, bullet_phys, playerControlState);
         //TODO: copy parameters to new Control
         return control;
@@ -90,18 +92,23 @@ public class BulletControl extends AbstractControl
                 String nameA = event.getNodeA().getName();
                 String nameB = event.getNodeB().getName();
                 if(nameA.equals("baddie")){
-                    event.getNodeA().getControl(EnemyControl.class).reduceHP(5);
+                    event.getNodeA().getControl(EnemyControl.class).reduceHP(damage);
                     playerControlState.incrementPoints(10);
                     this.lifetime = lifeExpectancy;
                 } 
                 else if(nameB.equals("baddie")){
-                    event.getNodeB().getControl(EnemyControl.class).reduceHP(5);
+                    event.getNodeB().getControl(EnemyControl.class).reduceHP(damage);
+                    playerControlState.incrementPoints(10);
+                    this.lifetime = lifeExpectancy;
+                }
+                else if(nameA.equals("college")){
+                    event.getNodeA().getControl(CollegeControl.class).reduceHP(damage);
                     playerControlState.incrementPoints(10);
                     this.lifetime = lifeExpectancy;
                 }
             }
             else if(event.getNodeA().getName().equals("Player") || event.getNodeB().getName().equals("Player")){
-                playerControlState.reduceHP(10);
+                playerControlState.reduceHP(damage);
                 this.lifetime = lifeExpectancy;
                 System.out.println(playerControlState.getHP());
             }
