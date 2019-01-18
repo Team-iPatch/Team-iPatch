@@ -58,7 +58,8 @@ public class ShooterControl extends AbstractControl {
         bullet_geo.setMaterial(mat);
         app.getRootNode().attachChild(bullet_geo);
 	bullet_geo.setLocalTranslation(spatial.getWorldTranslation().add(
-                                       direction.mult(1f)));
+                                       direction.mult(1f).add(0, 1f, 0))); 
+        // add(0,1f,0) raises bullet off floor
         // addition is required for the bullets not to spawn underneath
 	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
 	bullet_geo.addControl(bullet_phys);
@@ -76,7 +77,8 @@ public class ShooterControl extends AbstractControl {
         bullet_geo.setMaterial(mat);
         app.getRootNode().attachChild(bullet_geo);
 	bullet_geo.setLocalTranslation(spatial.getWorldTranslation().add(
-                                       direction.mult(1f)));
+                                       direction.mult(1f).add(0, 1f, 0)));
+        // add(0,1f,0) raises bullet off floor
         // addition is required for the bullets not to spawn underneath
 	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
 	bullet_geo.addControl(bullet_phys);

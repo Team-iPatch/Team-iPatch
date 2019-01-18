@@ -59,7 +59,7 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
-        bulletAppState.setDebugEnabled(true);
+        //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
         b.generateDepartment("compsci", 5f, this);
         b.generateCollege("Derwent", new Vector3f(10,1,10), 19f, this);
@@ -86,7 +86,7 @@ public class Main extends SimpleApplication {
         Geometry box_geom = new Geometry("box", box);
         box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/"
                                                             + "Unshaded.j3md"));
-        box_geom.setLocalTranslation(5, 1, 0);
+        box_geom.setLocalTranslation(10, 1, 0);
         rootNode.attachChild(box_geom);
         RigidBodyControl box_phys = new RigidBodyControl(0f);
         box_geom.addControl(box_phys);

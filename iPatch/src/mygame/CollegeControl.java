@@ -48,7 +48,7 @@ public class CollegeControl extends AbstractControl {
         this.inCombat = false;
         this.rotation = new Quaternion();
         rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
-        shootChance = 0.2;
+        shootChance = 0.05;
         this.hp = 100;
     }
 
@@ -60,7 +60,7 @@ public class CollegeControl extends AbstractControl {
             for(Spatial cannon : cannons){
                 if(Math.random() < shootChance){
                     cannon.getControl(ShooterControl.class).shootBullet(
-                                        rot.mult(cannon.getLocalTranslation()));
+                                        rot.mult(cannon.getLocalTranslation().normalizeLocal()));
                 }
             }
         } 

@@ -20,9 +20,9 @@ import java.io.IOException;
 public class BulletControl extends AbstractControl 
                            implements PhysicsCollisionListener{
     
-    private final float speed = 10f;
+    private final float speed = 50f;
     public Vector3f direction;
-    float lifeExpectancy = 5f; //Seconds before it is erased
+    float lifeExpectancy = 2f; //Seconds before it is erased
     float lifetime;
     boolean isEnemy;
     PhysicsSpace physicsSpace;
@@ -91,10 +91,12 @@ public class BulletControl extends AbstractControl
                 String nameB = event.getNodeB().getName();
                 if(nameA.equals("baddie")){
                     event.getNodeA().getControl(EnemyControl.class).reduceHP(5);
+                    playerControlState.incrementPoints(10);
                     this.lifetime = lifeExpectancy;
                 } 
                 else if(nameB.equals("baddie")){
                     event.getNodeB().getControl(EnemyControl.class).reduceHP(5);
+                    playerControlState.incrementPoints(10);
                     this.lifetime = lifeExpectancy;
                 }
             }
