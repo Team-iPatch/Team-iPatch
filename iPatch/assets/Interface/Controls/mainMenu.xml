@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <useStyles filename="nifty-default-styles.xml"/>
+    <useControls filename="nifty-default-controls.xml"/>
+    <screen id="start" controller="mygame.NiftyController">
+        <layer id="layer" childLayout="center">
+            <panel id="panel" childLayout="center" width="50%" height="50%" align="center" backgroundColor="#966F3333" visibleToMouse="true">
+                <control name="button" id="startButton" visibleToMouse="true" label="Ping!">
+                    <interact onClick="ping()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+</nifty>
