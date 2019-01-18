@@ -30,9 +30,9 @@ public class MapGeneration
     static BulletAppState bulletAppState;
     static Node rootNode;
     static AssetManager assetManager;
-    static int xAxis = 200;
+    static int xAxis = 256;
     static int yAxis = 64;
-    static int zAxis = 200;
+    static int zAxis = 256;
     static int[][] heightMap = new int[xAxis][zAxis];
 
     
@@ -71,9 +71,9 @@ public class MapGeneration
         box_geom.setMaterial(mat);
         box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);
         rootNode.attachChild(box_geom);
-        RigidBodyControl box_phys = new RigidBodyControl(0f);
-        box_geom.addControl(box_phys);
-        bulletAppState.getPhysicsSpace().add(box_phys);
+        //RigidBodyControl box_phys = new RigidBodyControl(0f);
+        //box_geom.addControl(box_phys);
+        //bulletAppState.getPhysicsSpace().add(box_phys);
         if (yCo == 1)
         {
             addHitBox(xCo,yCo,zCo);
@@ -113,10 +113,22 @@ public class MapGeneration
         {
             for (int y = 0; y< MapGeneration.heightMap[x].length; y += 1)
             {
+                float LOL = 32.0f; 
                 //heightMap[x][y] = (int)(64.0 * FastNoise.noise(0.1, 1.0));
-                if (((int)(32.0 * FastNoise.noise(x / 64.0f, y/64.0f)) > 0))
-                {
-                    MapGeneration.heightMap[x][y] = (int)(32.0 * FastNoise.noise(x / 64.0f, y/64.0f));
+                if (((int)(32.0 * FastNoise.noise(x / LOL, y / LOL)) > 0))
+                {                 
+                    int xd = (heightMap.length / 2 ) - x;
+                    float xdf = xd / ((float) (heightMap.length/2));
+                    int yd = (heightMap[x].length / 2 ) - y;
+                    float ydf = yd / ((float) (heightMap[x].length/2));
+                    float mask = (float)(Math.sqrt(1.0f - Math.abs(xdf)) * Math.sqrt(1.0f - Math.abs(ydf)));
+                    float height = (float) (mask * (32.0f * FastNoise.noise(x / LOL, y/LOL)));
+                    MapGeneration.heightMap[x][y] = (int) height;
+                    
+                    
+                    //I'll be back in a moment
+                    //UN ACC SEPT TOH BRUHHH
+                    
                 }
             }    
         }
