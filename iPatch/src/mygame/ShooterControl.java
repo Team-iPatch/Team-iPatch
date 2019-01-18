@@ -37,6 +37,7 @@ public class ShooterControl extends AbstractControl {
     SimpleApplication app;
     private BulletControl bulletControl;
     PhysicsSpace physicsSpace;
+    PlayerControlState playerControlState;
     
     static {
         sphere = new Sphere(8, 8, 0.4f, true, false);
@@ -48,6 +49,7 @@ public class ShooterControl extends AbstractControl {
         this.app = (SimpleApplication)app;
         this.physicsSpace = app.getStateManager().getState(BulletAppState.class)
                                                              .getPhysicsSpace();
+        playerControlState = app.getStateManager().getState(PlayerControlState.class);
     }
     
     public void shootBullet(){
@@ -62,8 +64,8 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);
 	bullet_phys.setKinematic(true);
-	bulletControl = new BulletControl(direction, isEnemy,
-                                          physicsSpace, bullet_phys);
+	bulletControl = new BulletControl(direction, isEnemy, physicsSpace,
+                                          bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
     }
     
@@ -80,8 +82,8 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);
 	bullet_phys.setKinematic(true);
-	bulletControl = new BulletControl(direction, isEnemy,
-                                          physicsSpace, bullet_phys);
+	bulletControl = new BulletControl(direction, isEnemy, physicsSpace,
+                                          bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
     }
     

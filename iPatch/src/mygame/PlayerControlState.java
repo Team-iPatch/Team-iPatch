@@ -55,7 +55,8 @@ public class PlayerControlState extends BaseAppState {
         this.hp = 100;
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
     	chaseCam.setSmoothMotion(true);
-        ShooterControl shooterControl = new ShooterControl(controller.getViewDirection(), true, app);
+        ShooterControl shooterControl = new ShooterControl(
+                       controller.getViewDirection(), false, app);
         this.player.addControl(shooterControl);
         this.settings.setFrameRate(60);
         this.app.restart();

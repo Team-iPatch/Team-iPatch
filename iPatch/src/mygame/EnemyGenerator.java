@@ -7,6 +7,7 @@ package mygame;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -18,10 +19,10 @@ import com.jme3.scene.Spatial;
  */
 public class EnemyGenerator {
 	AssetManager assetManager;
-	BulletAppState bulletAppState;
+	PhysicsSpace physicsSpace;
 	
-	EnemyGenerator(AssetManager assetManager, BulletAppState bulletAppState){
-		this.bulletAppState = bulletAppState;
+	EnemyGenerator(AssetManager assetManager, PhysicsSpace physicsSpace){
+		this.physicsSpace = physicsSpace;
 		this.assetManager = assetManager;
 	}
 	
@@ -30,13 +31,12 @@ public class EnemyGenerator {
                                             float radius, float height, int hp){
 		Spatial enemy = assetManager.loadModel(modelLocation);
 		enemy.setLocalTranslation(translation);
-		BetterCharacterControl enemyControl = new BetterCharacterControl(radius, height, 20f);
-		enemy.addControl(enemyControl);
+		BetterCharacterControl characterControl = new BetterCharacterControl(radius, height, 20f);
+		enemy.addControl(characterControl);
         //BetterCharacterControl has to be added to the spatial BEFORE any AI control!
-		enemy.setName("baddie");
-		
-		bulletAppState.getPhysicsSpace().add(enemyControl);
-		
+                enemy.addControl(new EnemyControl(physicsSpace));
+                enemy.setName("baddie");
+		physicsSpace.add(characterControl);
 		return enemy;
 	}
 }

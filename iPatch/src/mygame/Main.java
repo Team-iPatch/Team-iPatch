@@ -66,27 +66,26 @@ public class Main extends SimpleApplication {
     }
 	
     private void loadEnemyGenerator(){
-        enemyGenerator = new EnemyGenerator(assetManager, bulletAppState);
+        enemyGenerator = new EnemyGenerator(assetManager, 
+                                            bulletAppState.getPhysicsSpace());
     }
     
     private void loadBaddie(){
-
-	    Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o",
+        Spatial baddie = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o",
                                           new Vector3f(-4, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie);
-	    baddie.addControl(new EnemyControl(bulletAppState, playerControlState, 10));
-        
+        rootNode.attachChild(baddie);        
         Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",
                                           new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-	    rootNode.attachChild(baddie2);
-        baddie2.addControl(new EnemyControl(bulletAppState, playerControlState, 10));
-        baddie2.addControl(new AIChaserControl(this.ship, 3));
+	rootNode.attachChild(baddie2);
+        baddie2.addControl(new AIChaserControl(this.ship, 3, playerControlState,
+                                            bulletAppState.getPhysicsSpace()));
     }
 
     private void loadBox(){
         Box box = new Box(1, 1, 1);
         Geometry box_geom = new Geometry("box", box);
-        box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));
+        box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/"
+                                                            + "Unshaded.j3md"));
         box_geom.setLocalTranslation(5, 1, 0);
         rootNode.attachChild(box_geom);
         RigidBodyControl box_phys = new RigidBodyControl(0f);

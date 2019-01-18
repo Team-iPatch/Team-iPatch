@@ -37,6 +37,7 @@ public class CollegeControl extends AbstractControl {
     private boolean inCombat;
     private Quaternion rotation;
     private double shootChance;
+    private int hp;
     
     CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
                    Node collegeNode){
@@ -48,6 +49,7 @@ public class CollegeControl extends AbstractControl {
         this.rotation = new Quaternion();
         rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
         shootChance = 0.2;
+        this.hp = 100;
     }
 
     @Override
