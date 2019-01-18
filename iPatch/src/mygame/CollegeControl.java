@@ -5,8 +5,11 @@
  */
 package mygame;
 
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -38,9 +41,10 @@ public class CollegeControl extends AbstractControl {
     private Quaternion rotation;
     private double shootChance;
     private int hp;
+    PhysicsSpace physicsSpace;
     
     CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
-                   Node collegeNode){
+                   Node collegeNode, PhysicsSpace physicsSpace){
         this.name = name;
         this.ghost = ghost;
         this.cannons = cannons;
@@ -50,10 +54,14 @@ public class CollegeControl extends AbstractControl {
         rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
         shootChance = 0.05;
         this.hp = 100;
+        this.physicsSpace = physicsSpace;
     }
 
     @Override
     protected void controlUpdate(float tpf) {
+        if (hp <= 0){
+            kill();
+        }
         if(inCombat) {
             Quaternion rot = collegeNode.getLocalRotation();
             collegeNode.setLocalRotation(rot.mult(rotation));
@@ -74,6 +82,10 @@ public class CollegeControl extends AbstractControl {
                 }
             }
         }
+    }
+    
+    public void kill(){
+        
     }
     
     @Override

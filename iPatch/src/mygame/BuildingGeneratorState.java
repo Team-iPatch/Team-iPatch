@@ -7,10 +7,9 @@ package mygame;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
-import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppStateManager;
-import com.jme3.asset.AssetManager;
+import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.material.Material;
@@ -20,20 +19,19 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import java.util.ArrayList;
 
 /**
  *
  * @author cpl512
  */
-public class BuildingGeneratorState extends AbstractAppState {
-    ArrayList<Spatial> buildings;
+public class BuildingGeneratorState extends BaseAppState {
+    
     @Override
-    public void initialize(AppStateManager stateManager, Application app) {
-        super.initialize(stateManager, app);
-        //TODO: initialize your AppState, e.g. attach spatials to rootNode
-        //this is called on the OpenGL thread after the AppState has been attached
+    protected void initialize(Application app) {
+        
     }
+    
+   //They require app in their parameters because of an issue with null pointers
     
     public void generateDepartment(String name, float ghostRadius, SimpleApplication app){
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
@@ -50,16 +48,15 @@ public class BuildingGeneratorState extends AbstractAppState {
         app.getRootNode().attachChild(department);
     }
     
-    public void generateCollege(String name, Vector3f location, 
-                                float ghostRadius, SimpleApplication app){
+    public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){
+        PhysicsSpace physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
         Node collegeNode = new Node();
         collegeNode.setLocalTranslation(location);
         Spatial college = app.getAssetManager().loadModel("Models/"
                                                      + "turret02/turret02.j3o");
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         college.addControl(ghost);
-        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().
-                                                                     add(ghost);
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         Spatial[] cannons = new Spatial[8];
         for (int i=0;i<cannons.length;i++) {
             cannons[i] = app.getAssetManager().loadModel("Models/"
@@ -72,7 +69,7 @@ public class BuildingGeneratorState extends AbstractAppState {
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
         }
-        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode));
+        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace));
         collegeNode.attachChild(college);
         app.getRootNode().attachChild(collegeNode);
         System.out.println(collegeNode.getLocalTranslation());
@@ -84,13 +81,17 @@ public class BuildingGeneratorState extends AbstractAppState {
     public void update(float tpf) {
         //TODO: implement behavior during runtime
     }
-    
+
+
     @Override
-    public void cleanup() {
-        super.cleanup();
-        //TODO: clean up what you initialized in the initialize method,
-        //e.g. remove all spatials from rootNode
-        //this is called on the OpenGL thread after the AppState has been detached
+    protected void cleanup(Application app) {
     }
-    
+
+    @Override
+    protected void onEnable() {
+    }
+
+    @Override
+    protected void onDisable() {
+    }
 }
