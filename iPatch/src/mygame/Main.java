@@ -2,21 +2,10 @@ package mygame;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
-import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.collision.shapes.HullCollisionShape;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
-import com.jme3.input.ChaseCamera;
-import com.jme3.input.KeyInput;
-import com.jme3.input.controls.KeyTrigger;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
@@ -24,9 +13,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.SceneGraphVisitor;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.jme3.terrain.geomipmap.TerrainLodControl;
-import com.jme3.input.controls.ActionListener;
-import com.jme3.input.controls.AnalogListener;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -63,7 +49,7 @@ public class Main extends SimpleApplication {
         //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
         b.generateDepartment("compsci", 5f, this);
-        b.generateCollege("Derwent", new Vector3f(10,1,10), 5f, this);
+        b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, this);
     }
 	
     private void loadEnemyGenerator(){

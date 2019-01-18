@@ -23,6 +23,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -34,7 +35,6 @@ public class CollegeControl extends AbstractControl {
     //Right-click a local variable to encapsulate it with getters and setters.
     private GhostControl ghost;
     private final String name;
-    private float ghostRadius;
     private Spatial cannons[];
     private Node collegeNode;
     private boolean inCombat;
@@ -51,9 +51,21 @@ public class CollegeControl extends AbstractControl {
         this.collegeNode = collegeNode;
         this.inCombat = false;
         this.rotation = new Quaternion();
-        rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
-        shootChance = 0.05;
-        this.hp = 100;
+        switch(name){
+            case "Derwent":
+                this.hp = 100;
+                shootChance = 0.05;
+                rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
+                break;
+            case "Vanbrugh":
+                this.hp = 200;
+                shootChance = 0.1;
+                break;
+            case "Alcuin":
+                this.hp = 70;
+                shootChance = 0.05;
+                rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);                
+        }
         this.physicsSpace = physicsSpace;
     }
 
@@ -64,12 +76,38 @@ public class CollegeControl extends AbstractControl {
         }
         if(inCombat) {
             Quaternion rot = collegeNode.getLocalRotation();
-            collegeNode.setLocalRotation(rot.mult(rotation));
-            for(Spatial cannon : cannons){
-                if(Math.random() < shootChance){
-                    cannon.getControl(ShooterControl.class).shootBullet(
-                                        rot.mult(cannon.getLocalTranslation().normalizeLocal()));
-                }
+            switch(name) {
+                case "Derwent":
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(Math.random() < shootChance){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                        }
+                    } break;
+                case "Vanbrugh":
+                    for(Spatial cannon : cannons){
+                        if(Math.random() < shootChance){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                        }
+                    } break;
+                case "Alcuin":
+                    if(Math.random() < 0.001){
+                        rotation = rotation.inverse();
+                    }
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(Math.random() < shootChance){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                        }
+                    } break;
+                default:
+                    throw new NotImplementedException();
             }
         } 
         else {
