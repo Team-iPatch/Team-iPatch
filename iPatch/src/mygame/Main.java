@@ -59,6 +59,7 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
+        loadMap();
         //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
         b.generateDepartment("compsci", 5f, this);
@@ -95,11 +96,13 @@ public class Main extends SimpleApplication {
     
     private void loadScene(){
         sceneNode = (Node)assetManager.loadModel("Scenes/newScene.j3o");
+        sceneNode.scale(10);
         rootNode.attachChild(sceneNode);
         sceneNode.setName("Scene");
         RigidBodyControl landscape = new RigidBodyControl(0);
         sceneNode.addControl(landscape);
         bulletAppState.getPhysicsSpace().add(landscape);
+        
     }
     
     private void loadBulletPhysics(){
@@ -117,6 +120,14 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(ship);
         ship.setName("Player"); // Required for collision detection do not change
         bulletAppState.getPhysicsSpace().add(character);
+    }
+    
+    private void loadMap(){
+        MapGeneration.assetManager = assetManager;
+        MapGeneration.rootNode = rootNode;
+        MapGeneration.bulletAppState = bulletAppState;
+        TerrainType[][][] testArray = MapGeneration.generateArray();
+        MapGeneration.loadArrayIntoWorld(testArray);
     }
     
     @Override

@@ -5,7 +5,7 @@
             <url>src/mygame/BuildingGeneratorState.java</url>
             <bookmark id="1">
                 <name/>
-                <line>31</line>
+                <line>32</line>
                 <key/>
             </bookmark>
         </file>
@@ -16,6 +16,8 @@
             <file>file:/C:/Users/cpl512/team-ipatch/iPatch/src/mygame/EnemyGenerator.java</file>
             <file>file:/C:/Users/cpl512/team-ipatch/iPatch/src/mygame/Main.java</file>
             <file>file:/C:/Users/cpl512/team-ipatch/iPatch/src/mygame/CollegeControl.java</file>
+            <file>file:/C:/Users/cpl512/team-ipatch/iPatch/src/mygame/ShooterControl.java</file>
+            <file>file:/C:/Users/cpl512/team-ipatch/iPatch/src/mygame/MapGeneration.java</file>
         </group>
     </open-files>
 </project-private>
