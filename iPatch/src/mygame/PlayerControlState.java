@@ -86,6 +86,10 @@ public class PlayerControlState extends BaseAppState {
         this.maxHP = amount;
     }
     
+    public Integer getHP(){
+        return this.hp;
+    }
+    
     public void setHP(int hp){
         this.hp = hp;
     }

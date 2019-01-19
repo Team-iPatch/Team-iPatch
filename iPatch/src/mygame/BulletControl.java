@@ -74,6 +74,7 @@ public class BulletControl extends AbstractControl
             if(testNode.getName().equals("baddie")){
                 testNode.getControl(EnemyControl.class).reduceHP(damage);
                 playerControlState.incrementPoints(10);
+                playerControlState.incrementGold(5);
                 this.lifetime = lifeExpectancy;
                 if(testNode.getControl(EnemyControl.class).getHP() <= 0){
                     playerControlState.incrementGold(10);

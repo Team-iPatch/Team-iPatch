@@ -11,6 +11,8 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
@@ -42,7 +44,10 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     
     @Override
     public void update(float tpf) {
-        //TODO: implement behavior during runtime
+        if(screen.getScreenId().equals("hudScreen")){
+            updateHP();
+        }
+        
     }
     
     @Override
@@ -65,5 +70,17 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     
     public void startGame(){
         nifty.gotoScreen("hudScreen");
+        screen = nifty.getCurrentScreen();
+    }
+    
+    public void updateHP(){
+        Integer hp = stateManager.getState(PlayerControlState.class).getHP();
+        Element label = nifty.getScreen("hudScreen").findElementById("HPLabel");
+        label.getRenderer(TextRenderer.class).setText(" HP: " + hp);
+        /*
+        screen = nifty.getCurrentScreen();
+        Element label = screen.findElementById("HPLabel");
+        TextRenderer textRenderer = label.getRenderer(TextRenderer.class);
+        textRenderer.setText(" HP: " + hp);*/
     }
 }
