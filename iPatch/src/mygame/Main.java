@@ -36,10 +36,12 @@ public class Main extends SimpleApplication {
     EnemyGenerator enemyGenerator;
     GhostControl ghost;
     Spatial department;
+    public Boolean paused;
     
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
+        
     }
     
     @Override
@@ -50,6 +52,22 @@ public class Main extends SimpleApplication {
         java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
         
         flyCam.setEnabled(false);
+        loadGUI();
+        startGame();
+    }
+    
+    @Override
+    public void simpleUpdate(float tpf) {
+        
+    }
+
+    @Override
+    public void simpleRender(RenderManager rm) {
+        //TODO: add render code
+    }
+    
+    private void startGame(){
+        paused = true;
         playerControlState = new PlayerControlState();
 
         loadBulletPhysics();
@@ -58,7 +76,7 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
-        loadGUI();
+        
         //loadMap();
         //bulletAppState.setDebugEnabled(true);
         //BuildingGeneratorState b = new BuildingGeneratorState();
@@ -74,6 +92,7 @@ public class Main extends SimpleApplication {
         guiViewPort.addProcessor(niftyDisplay);
         nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
         nifty.setIgnoreKeyboardEvents(true);
+        niftyController.passMain(this);
         //nifty.setDebugOptionPanelColors(true);
     }
     
@@ -139,15 +158,6 @@ public class Main extends SimpleApplication {
         MapGeneration.bulletAppState = bulletAppState;
         TerrainType[][][] testArray = MapGeneration.generateArray();
         MapGeneration.loadArrayIntoWorld(testArray);
-    }
-    
-    @Override
-    public void simpleUpdate(float tpf) {
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
 
 }

@@ -38,7 +38,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.app = (SimpleApplication)app;
         this.stateManager = stateManager;
     }
-    
+
     
     @Override
     public void update(float tpf) {
@@ -63,7 +63,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void ping(){
-        System.out.println("Pong!");
+    public void startGame(){
+        nifty.gotoScreen("hudScreen");
     }
 }

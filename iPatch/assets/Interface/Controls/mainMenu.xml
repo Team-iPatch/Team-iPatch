@@ -9,9 +9,18 @@
     <screen id="start" controller="mygame.NiftyController">
         <layer id="layer" childLayout="center">
             <panel id="panel" childLayout="center" width="50%" height="50%" align="center" backgroundColor="#966F3333" visibleToMouse="false">
-                <control name="button" id="startButton" visibleToMouse="true" label="Ping!">
-                    <interact onClick="ping()"/>
+                <control name="button" id="startButton" visibleToMouse="true" label="Play">
+                    <interact onClick="startGame()"/>
                 </control>
+            </panel>
+        </layer>
+    </screen>
+    <screen id="hudScreen" controller="mygame.NiftyController">
+        <layer id="hudLayer" childLayout="center">
+            <panel id="hudPanel" childLayout="vertical" width="10%" height="10%" align="left" valign="top" backgroundColor="#00000055" visibleToMouse="false">
+                <control id="HPLabel" name="label" text=" HP: " align="center"/>
+                <control id="PointLabel" name="label" text=" Points: " align="center"/>
+                <control id="GoldLabel" name="label" text=" Gold: " align="center"/>    
             </panel>
         </layer>
     </screen>
