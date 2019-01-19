@@ -43,14 +43,16 @@ public class PlayerControlState extends BaseAppState {
     private Integer hp;
     private Integer maxHP;
     private Integer gold;
+    private Vector3f viewDirection;
     private ArrayList<ShooterControl> shooters;
+    private ArrayList<Quaternion> shooterDirections;
     
     @Override 
     protected void initialize(Application app){
         speed = 0f;
         this.app = (SimpleApplication)app;
         this.rootNode = this.app.getRootNode();
-    	this.player = this.rootNode.getChild("Player");
+    	this.player = this.rootNode.getChild("player");
     	this.inputManager = this.app.getInputManager();
     	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
@@ -62,13 +64,17 @@ public class PlayerControlState extends BaseAppState {
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
     	chaseCam.setSmoothMotion(true);
         shooters = new ArrayList<>();
+        shooterDirections = new ArrayList<>();
+        this.viewDirection = controller.getViewDirection();
         ShooterControl shooterControl = new ShooterControl(
-                       controller.getViewDirection(), false, app);
+                       viewDirection, false, this.app);
         this.player.addControl(shooterControl);
         shooters.add(shooterControl);
+        Quaternion shooterDir = new Quaternion();
+        shooterDir.fromAngleAxis(0, Vector3f.UNIT_Y);
+        shooterDirections.add(shooterDir);
         this.settings.setFrameRate(60);
         this.app.restart();
-    	System.out.print(this.app.getCamera().getWidth() + " " + this.app.getCamera().getHeight());
     	initKeys();
     }
     
@@ -103,7 +109,17 @@ public class PlayerControlState extends BaseAppState {
     public Spatial getPlayerSpatial(){
         return this.player;
     }
-	
+    
+    public ArrayList<ShooterControl> getShooters(){
+        return shooters;
+    }
+    
+    public void addShooter(Quaternion direction, SimpleApplication app){
+	ShooterControl shooterControl = new ShooterControl(viewDirection, false, app);
+        player.addControl(shooterControl);
+        shooters.add(shooterControl);
+        shooterDirections.add(direction);
+    }
     @Override
     protected void cleanup(Application app) {
 		//TODO: clean up what you initialized in the initialize method,        
@@ -159,7 +175,10 @@ public class PlayerControlState extends BaseAppState {
                 changeResolution();
             }
             if(name.equals("Shoot") && isPressed) {
-                player.getControl(ShooterControl.class ).shootBullet();
+                for(int i = 0; i < shooters.size(); i++){
+                    shooters.get(i).shootBullet(shooterDirections.get(i).mult(
+                                                controller.getViewDirection()));
+                }
             }
 	}
     };

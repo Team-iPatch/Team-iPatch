@@ -114,7 +114,7 @@ public class CollegeControl extends AbstractControl {
             for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
                 if (obj.getUserObject().getClass() == Node.class){
                     Node userObject = (Node)obj.getUserObject();
-                    if(userObject.getName().equals("Player")){
+                    if(userObject.getName().equals("player")){
                         inCombat = true;
                     }
                 }

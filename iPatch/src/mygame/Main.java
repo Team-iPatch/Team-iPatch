@@ -34,6 +34,7 @@ public class Main extends SimpleApplication {
     Node sceneNode;
     EnemyGenerator enemyGenerator;
     GhostControl ghost;
+    Spatial department;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -55,7 +56,7 @@ public class Main extends SimpleApplication {
         //loadMap();
         //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();
-        b.generateDepartment("compsci", 5f, this);
+        department = b.generateDepartment("compsci", 5f, this);     
         b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, this);
     }
 	
@@ -122,7 +123,7 @@ public class Main extends SimpleApplication {
         character = new BetterCharacterControl(1.5f, 3f, 10f);
         ship.addControl(character);
         rootNode.attachChild(ship);
-        ship.setName("Player"); // Required for collision detection do not change
+        ship.setName("player"); // Required for collision detection do not change
         bulletAppState.getPhysicsSpace().add(character);
     }
     

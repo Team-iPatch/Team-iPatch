@@ -44,7 +44,7 @@ public class ShooterControl extends AbstractControl {
         sphere = new Sphere(8, 8, 0.4f, true, false);
     }
     
-    public ShooterControl(Vector3f direction, boolean isEnemy, Application app) {
+    public ShooterControl(Vector3f direction, boolean isEnemy, SimpleApplication app) {
         this.direction = direction;
         this.damage = 5;
         this.isEnemy = isEnemy;
@@ -89,6 +89,10 @@ public class ShooterControl extends AbstractControl {
 	bulletControl = new BulletControl(direction, damage, isEnemy, physicsSpace,
                                           bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
+    }
+    
+    public int getDamage(){
+        return this.damage;
     }
     
     public void setDamage(int dmg){

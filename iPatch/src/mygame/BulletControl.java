@@ -89,7 +89,7 @@ public class BulletControl extends AbstractControl
                 this.lifetime = lifeExpectancy;
             }
         }
-        else if(testNode != null && testNode.getName().equals("Player")){
+        else if(testNode != null && testNode.getName().equals("player")){
             playerControlState.reduceHP(damage);
             this.lifetime = lifeExpectancy;
         }
