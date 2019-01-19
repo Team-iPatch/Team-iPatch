@@ -18,6 +18,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
+import java.util.logging.Level;
 
 /**
  * This is the Main Class of your Game. You should only do initialization here.
@@ -43,6 +44,11 @@ public class Main extends SimpleApplication {
     
     @Override
     public void simpleInitApp() {
+        //Level.SEVERE suppresses some warnings caused by libs which create
+        //sphere colliders, lots of shooting floods output log
+        //Set to Level.WARNING or Level.FINE for more messages
+        java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
+        
         flyCam.setEnabled(false);
         playerControlState = new PlayerControlState();
 
@@ -52,12 +58,12 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
-        //loadGUI();
+        loadGUI();
         //loadMap();
         //bulletAppState.setDebugEnabled(true);
-        BuildingGeneratorState b = new BuildingGeneratorState();
-        department = b.generateDepartment("compsci", 5f, this);     
-        b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, this);
+        //BuildingGeneratorState b = new BuildingGeneratorState();
+        //department = b.generateDepartment("compsci", 5f, this);     
+        //b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, this);
     }
 	
     private void loadGUI(){
@@ -67,7 +73,7 @@ public class Main extends SimpleApplication {
         Nifty nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
         nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
-    
+        nifty.setIgnoreKeyboardEvents(true);
         //nifty.setDebugOptionPanelColors(true);
     }
     

@@ -54,7 +54,7 @@ public class ShooterControl extends AbstractControl {
         playerControlState = app.getStateManager().getState(PlayerControlState.class);
     }
     
-    public void shootBullet(){
+    public void shootBullet(){    
         Geometry bullet_geo = new Geometry("cannon ball", sphere);
         Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         bullet_geo.setMaterial(mat);
@@ -62,7 +62,7 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.setLocalTranslation(spatial.getWorldTranslation().add(
                                        direction.mult(1f).add(0, 1f, 0))); 
         // add(0,1f,0) raises bullet off floor
-        // addition is required for the bullets not to spawn underneath
+        // addition is required for the bullets not to spawn underneath ship
 	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);

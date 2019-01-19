@@ -8,7 +8,7 @@
     <useControls filename="nifty-default-controls.xml"/>
     <screen id="start" controller="mygame.NiftyController">
         <layer id="layer" childLayout="center">
-            <panel id="panel" childLayout="center" width="50%" height="50%" align="center" backgroundColor="#966F3333" visibleToMouse="true">
+            <panel id="panel" childLayout="center" width="50%" height="50%" align="center" backgroundColor="#966F3333" visibleToMouse="false">
                 <control name="button" id="startButton" visibleToMouse="true" label="Ping!">
                     <interact onClick="ping()"/>
                 </control>
