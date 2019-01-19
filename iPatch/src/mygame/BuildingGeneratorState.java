@@ -34,7 +34,7 @@ public class BuildingGeneratorState extends BaseAppState {
     
    //They require app in their parameters because of an issue with null pointers
     
-    public void generateDepartment(String name, float ghostRadius, SimpleApplication app){
+    public Spatial generateDepartment(String name, float ghostRadius, SimpleApplication app){
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         Box model = new Box(2,2,2);
         Geometry department = new Geometry(name, model);
@@ -45,8 +45,10 @@ public class BuildingGeneratorState extends BaseAppState {
         department.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         department.addControl(ghost);
-        department.addControl(new DepartmentControl(name, ghost));
+        PlayerControlState player = app.getStateManager().getState(PlayerControlState.class);
+        department.addControl(new DepartmentControl(name, ghost, app));
         app.getRootNode().attachChild(department);
+        return department;
     }
     
     public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){

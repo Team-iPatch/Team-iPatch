@@ -11,6 +11,7 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
@@ -60,59 +61,39 @@ public class BulletControl extends AbstractControl
     
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {}
-    
-    @Override
-    public Control cloneForSpatial(Spatial spatial) {
-        BulletControl control = new BulletControl(direction, damage, isEnemy,
-                                physicsSpace, bullet_phys, playerControlState);
-        //TODO: copy parameters to new Control
-        return control;
-    }
-    
-    @Override
-    public void read(JmeImporter im) throws IOException {
-        super.read(im);
-        InputCapsule in = im.getCapsule(this);
-        //TODO: load properties of this Control, e.g.
-        //this.value = in.readFloat("name", defaultValue);
-    }
-    
-    @Override
-    public void write(JmeExporter ex) throws IOException {
-        super.write(ex);
-        OutputCapsule out = ex.getCapsule(this);
-        //TODO: save properties of this Control, e.g.
-        //out.write(this.value, "name", defaultValue);
-    }
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-        if(event.getNodeA().equals(spatial) || event.getNodeB().equals(spatial)){
-            if(!isEnemy){
-                String nameA = event.getNodeA().getName();
-                String nameB = event.getNodeB().getName();
-                if(nameA.equals("baddie")){
-                    event.getNodeA().getControl(EnemyControl.class).reduceHP(damage);
-                    playerControlState.incrementPoints(10);
-                    this.lifetime = lifeExpectancy;
-                } 
-                else if(nameB.equals("baddie")){
-                    event.getNodeB().getControl(EnemyControl.class).reduceHP(damage);
-                    playerControlState.incrementPoints(10);
-                    this.lifetime = lifeExpectancy;
-                }
-                else if(nameA.equals("college")){
-                    event.getNodeA().getControl(CollegeControl.class).reduceHP(damage);
-                    playerControlState.incrementPoints(10);
-                    this.lifetime = lifeExpectancy;
-                }
-            }
-            else if(event.getNodeA().getName().equals("Player") || event.getNodeB().getName().equals("Player")){
-                playerControlState.reduceHP(damage);
+        Spatial testNode = null;
+        if(event.getNodeA().equals(spatial)){
+            testNode = event.getNodeB();
+        } else if (event.getNodeB().equals(spatial)){
+            testNode = event.getNodeA();
+        }
+        if(testNode != null && !isEnemy){
+            if(testNode.getName().equals("baddie")){
+                testNode.getControl(EnemyControl.class).reduceHP(damage);
+
                 this.lifetime = lifeExpectancy;
-                System.out.println(playerControlState.getHP());
+                if(testNode.getControl(EnemyControl.class).getHP() <= 0){
+                    playerControlState.incrementPoints(20);
+                    playerControlState.incrementGold(10);
+                }
             }
-        }   
+            else if(testNode.getName().equals("college")){
+                CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
+                collegeControl.reduceHP(damage);
+                if(collegeControl.getHP() <= 0){
+                    playerControlState.incrementGold(1000);
+                    playerControlState.incrementPoints(2000);
+                }
+                this.lifetime = lifeExpectancy;
+            }
+        }
+        else if(testNode != null && testNode.getName().equals("player")){
+            playerControlState.reduceHP(damage);
+            this.lifetime = lifeExpectancy;
+        }
     }
 }
     

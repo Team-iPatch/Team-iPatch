@@ -94,8 +94,8 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
     public void collision(PhysicsCollisionEvent event) {
         Spatial nodeA = event.getNodeA();
         Spatial nodeB = event.getNodeB();
-        if((nodeA.equals(spatial) && nodeB.getName().equals("Player")) ||
-                   (nodeB.equals(spatial) && nodeA.getName().equals("Player"))){
+        if((nodeA.equals(spatial) && nodeB.getName().equals("player")) ||
+                   (nodeB.equals(spatial) && nodeA.getName().equals("player"))){
             alive = false;
             player.reduceHP(collisionDamage);
             spatial.getControl(EnemyControl.class).setHP(0);
