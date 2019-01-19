@@ -51,7 +51,7 @@ public class Main extends SimpleApplication {
         loadPlayer();
         loadBox();
         loadBaddie();
-        loadGUI();
+        //loadGUI();
         //loadMap();
         //bulletAppState.setDebugEnabled(true);
         BuildingGeneratorState b = new BuildingGeneratorState();

@@ -21,11 +21,12 @@ import com.jme3.scene.Node;
 public class DepartmentControl extends AbstractControl{
     private GhostControl ghost;
     private final String name;
-    private float ghostRadius;
+    private PlayerControlState player;
     
-    DepartmentControl(String name, GhostControl ghost){
+    DepartmentControl(String name, GhostControl ghost, PlayerControlState player){
         this.name = name;
         this.ghost = ghost;
+        this.player = player;
     }
     
     @Override
@@ -46,10 +47,14 @@ public class DepartmentControl extends AbstractControl{
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
     }
-       
-    public Control cloneForSpatial(Spatial spatial) {
-        DepartmentControl control = new DepartmentControl(name, ghost);
-        //TODO: copy parameters to new Control
-        return control;
+    
+    public void healPlayer(){
+        player.setHP(player.getMaxHP());
+    }
+    
+    public void healthUpgrade(int amount){
+        int newMaxHP = player.getMaxHP() + amount;
+        player.setMaxHP(newMaxHP);
+        player.setHP(newMaxHP);
     }
 }

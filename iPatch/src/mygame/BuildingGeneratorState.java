@@ -45,7 +45,8 @@ public class BuildingGeneratorState extends BaseAppState {
         department.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         department.addControl(ghost);
-        department.addControl(new DepartmentControl(name, ghost));
+        PlayerControlState player = app.getStateManager().getState(PlayerControlState.class);
+        department.addControl(new DepartmentControl(name, ghost, player));
         app.getRootNode().attachChild(department);
     }
     

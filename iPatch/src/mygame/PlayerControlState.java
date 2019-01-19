@@ -22,6 +22,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import java.util.ArrayList;
 
 /**
  *  
@@ -40,7 +41,10 @@ public class PlayerControlState extends BaseAppState {
     private AppSettings settings; 
     private Integer points;
     private Integer hp;
-   
+    private Integer maxHP;
+    private Integer gold;
+    private ArrayList<ShooterControl> shooters;
+    
     @Override 
     protected void initialize(Application app){
         speed = 0f;
@@ -52,20 +56,32 @@ public class PlayerControlState extends BaseAppState {
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
     	this.points = 0;
+        this.gold = 0;
+        this.maxHP = 100;
         this.hp = 100;
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
     	chaseCam.setSmoothMotion(true);
+        shooters = new ArrayList<>();
         ShooterControl shooterControl = new ShooterControl(
                        controller.getViewDirection(), false, app);
         this.player.addControl(shooterControl);
+        shooters.add(shooterControl);
         this.settings.setFrameRate(60);
         this.app.restart();
     	System.out.print(this.app.getCamera().getWidth() + " " + this.app.getCamera().getHeight());
     	initKeys();
     }
     
-    public Integer getHP(){
-        return this.hp;
+    public Integer getMaxHP(){
+        return this.maxHP;
+    }
+    
+    public void setMaxHP(int amount){
+        this.maxHP = amount;
+    }
+    
+    public void setHP(int hp){
+        this.hp = hp;
     }
     
     public void reduceHP(int hp){
@@ -78,6 +94,10 @@ public class PlayerControlState extends BaseAppState {
 	
     public void incrementPoints(int points){
         this.points += points;
+    }
+    
+    public void incrementGold(int gold){
+        this.gold += gold;
     }
     
     public Spatial getPlayerSpatial(){

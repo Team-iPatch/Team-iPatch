@@ -63,6 +63,10 @@ public class EnemyControl extends AbstractControl{
         this.hp -= reduction;
     }
     
+    public int getHP(){
+        return this.hp;
+    }
+    
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
     }
