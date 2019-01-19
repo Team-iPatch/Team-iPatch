@@ -92,7 +92,6 @@ public class Main extends SimpleApplication {
         guiViewPort.addProcessor(niftyDisplay);
         nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
         nifty.setIgnoreKeyboardEvents(true);
-        niftyController.passMain(this);
         //nifty.setDebugOptionPanelColors(true);
     }
     
