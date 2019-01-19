@@ -46,6 +46,8 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     public void update(float tpf) {
         if(screen.getScreenId().equals("hudScreen")){
             updateHP();
+            updatePoints();
+            updateGold();
         }
         
     }
@@ -77,10 +79,17 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         Integer hp = stateManager.getState(PlayerControlState.class).getHP();
         Element label = nifty.getScreen("hudScreen").findElementById("HPLabel");
         label.getRenderer(TextRenderer.class).setText(" HP: " + hp);
-        /*
-        screen = nifty.getCurrentScreen();
-        Element label = screen.findElementById("HPLabel");
-        TextRenderer textRenderer = label.getRenderer(TextRenderer.class);
-        textRenderer.setText(" HP: " + hp);*/
+    }
+    
+    public void updatePoints(){
+        Integer points = stateManager.getState(PlayerControlState.class).getPoints();
+        Element label = nifty.getScreen("hudScreen").findElementById("PointLabel");
+        label.getRenderer(TextRenderer.class).setText(" Points: " + points);
+    }
+    
+    public void updateGold(){
+        Integer gold = stateManager.getState(PlayerControlState.class).getGold();
+        Element label = nifty.getScreen("hudScreen").findElementById("GoldLabel");
+        label.getRenderer(TextRenderer.class).setText(" Gold: " + gold);
     }
 }

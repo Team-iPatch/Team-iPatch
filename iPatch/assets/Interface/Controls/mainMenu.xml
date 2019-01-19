@@ -18,9 +18,9 @@
     <screen id="hudScreen" controller="mygame.NiftyController">
         <layer id="hudLayer" childLayout="center">
             <panel id="hudPanel" childLayout="vertical" width="20%" height="10%" align="left" valign="top" backgroundColor="#00000055" visibleToMouse="false">
-                <control id="HPLabel" name="label" text=" HP: " align="center" width="20%"/>
-                <control id="PointLabel" name="label" text=" Points: " align="center"/>
-                <control id="GoldLabel" name="label" text=" Gold: " align="center"/>    
+                <control id="HPLabel" name="label" text=" HP: " align="center" width="100%"/>
+                <control id="PointLabel" name="label" text=" Points: " align="center" width="100%"/>
+                <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
             </panel>
         </layer>
     </screen>

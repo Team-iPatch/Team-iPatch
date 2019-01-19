@@ -106,6 +106,10 @@ public class PlayerControlState extends BaseAppState {
         this.points += points;
     }
     
+    public Integer getGold(){
+        return this.gold;
+    }
+    
     public void incrementGold(int gold){
         this.gold += gold;
     }
