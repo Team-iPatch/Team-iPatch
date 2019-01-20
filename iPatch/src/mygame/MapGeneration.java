@@ -30,9 +30,9 @@ public class MapGeneration
     static BulletAppState bulletAppState;
     static Node rootNode;
     static AssetManager assetManager;
-    static int xAxis = 200;
+    static int xAxis = 220;
     static int yAxis = 64;
-    static int zAxis = 200;
+    static int zAxis = 220;
     static int[][] heightMap = new int[xAxis][zAxis];
 
     
@@ -64,6 +64,22 @@ public class MapGeneration
         {
             mat.setColor("Color", ColorRGBA.Yellow);
         }
+        else if (skin == TerrainType.WOOD)
+        {
+            mat.setColor("Color", ColorRGBA.Blue);
+        }
+        else if (skin == TerrainType.AIR)
+        {
+            mat.setColor("Color", ColorRGBA.Red);
+        }
+         else if (skin == TerrainType.DIRT)
+        {
+            mat.setColor("Color", ColorRGBA.Orange);
+        }
+        else if (skin == TerrainType.STONE)
+        {
+            mat.setColor("Color", ColorRGBA.Cyan);
+        }
         else
         {
             mat.setColor("Color", ColorRGBA.Green);
@@ -71,9 +87,9 @@ public class MapGeneration
         box_geom.setMaterial(mat);
         box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);
         rootNode.attachChild(box_geom);
-        RigidBodyControl box_phys = new RigidBodyControl(0f);
-        box_geom.addControl(box_phys);
-        bulletAppState.getPhysicsSpace().add(box_phys);
+        //RigidBodyControl box_phys = new RigidBodyControl(0f);
+        //box_geom.addControl(box_phys);
+        //bulletAppState.getPhysicsSpace().add(box_phys);
         if (yCo == 1)
         {
             addHitBox(xCo,yCo,zCo);
@@ -88,17 +104,7 @@ public class MapGeneration
         {
             for (int y = 0; y< MapGeneration.heightMap[x].length; y+= 1)
             {
-                if (MapGeneration.heightMap[x][y] > 0)
-                {
-                    if (MapGeneration.heightMap[x][y] <= 5)
-                    {
-                        mapArray[x][MapGeneration.heightMap[x][y]][y] = TerrainType.SAND;
-                    }
-                    else
-                    {
-                        mapArray[x][MapGeneration.heightMap[x][y]][y] = TerrainType.GRASS;
-                    }
-                }
+               fillMap(x,y,mapArray);
             }
         }
         return mapArray;
@@ -107,16 +113,23 @@ public class MapGeneration
     private static void generateHeightMap()
     {
         Random rand = new Random();
-        FastNoise.seed = rand.nextInt(100000000) + 1;
+        FastNoise.seed = 1923123; //rand.nextInt(100000000) + 1;
         FastNoise.init();
         for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
         {
             for (int y = 0; y< MapGeneration.heightMap[x].length; y += 1)
             {
+                float arbritraryNumber = 32.0f; 
                 //heightMap[x][y] = (int)(64.0 * FastNoise.noise(0.1, 1.0));
-                if (((int)(32.0 * FastNoise.noise(x / 64.0f, y/64.0f)) > 0))
-                {
-                    MapGeneration.heightMap[x][y] = (int)(32.0 * FastNoise.noise(x / 64.0f, y/64.0f));
+                if (((int)(32.0 * FastNoise.noise(x / arbritraryNumber, y / arbritraryNumber)) > 0))
+                {                 
+                    int xd = (heightMap.length / 2 ) - x;
+                    float xdf = xd / ((float) (heightMap.length/2));
+                    int yd = (heightMap[x].length / 2 ) - y;
+                    float ydf = yd / ((float) (heightMap[x].length/2));
+                    float mask = (float)(Math.sqrt(1.0f - Math.abs(xdf)) * Math.sqrt(1.0f - Math.abs(ydf)));
+                    float height = (float) (mask * (32.0f * FastNoise.noise(x / arbritraryNumber, y/arbritraryNumber)));
+                    MapGeneration.heightMap[x][y] = (int) height;                    
                 }
             }    
         }
@@ -124,7 +137,66 @@ public class MapGeneration
     
     private static void findAccesable()
     {
-        
+       
+    }
+    
+    private static void fillMap(int x, int y,  TerrainType[][][] mapArray)
+    {
+         if (MapGeneration.heightMap[x][y] > 0)
+                {
+                    assignTexture(x,y,MapGeneration.heightMap[x][y],mapArray);
+                }
+                             if (x > 0 && y > 0 && x < MapGeneration.heightMap.length && y < MapGeneration.heightMap[x].length && MapGeneration.heightMap[x][y] > 1)
+                    {
+                        fixHoles(x,y,mapArray);
+                    } 
+    }
+    
+    private static void assignTexture(int x, int y, int z, TerrainType mapArray[][][])
+    {
+        if (z > 0)
+            {
+            if (z <= 3)
+                        {
+                            mapArray[x][z][y] = TerrainType.SAND;
+                        }
+                        else
+                        {
+                            mapArray[x][z][y] = TerrainType.GRASS;
+                        }
+            }
+    }
+    
+    private static void fixHoles(int x, int y,  TerrainType[][][] mapArray)
+    {
+        if ((heightMap[x-1][y] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x-1][y] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x-1][heightMap[x-1][y]+i-1][y] = TerrainType.WOOD;        
+            }
+        else if ((heightMap[x+1][y] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x+1][y] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x+1,y,heightMap[x+1][y]+i-1,mapArray);
+                mapArray[x+1][heightMap[x+1][y]+i-1][y] = TerrainType.AIR;        
+            }
+        else if ((heightMap[x][y-1] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x][y-1] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x][heightMap[x][y]+i+1][y-1] = TerrainType.STONE;        
+            }
+        else if ((heightMap[x][y+1] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x][y+1] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x][heightMap[x][y]+i+1][y+1] = TerrainType.DIRT;        
+            }
     }
     
     private static void addHitBox(int xCo, int yCo, int zCo)

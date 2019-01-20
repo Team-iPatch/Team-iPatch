@@ -32,10 +32,6 @@ public final class FastNoise {
    private static int start = 1;
    private static double[][] points = new double[32][3];
 
-   static {
-      init();
-   }
-
    private static double lerp(double t, double a, double b) {
       return a + t * (b - a);
    }
