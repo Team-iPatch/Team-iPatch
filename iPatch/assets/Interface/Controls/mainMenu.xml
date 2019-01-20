@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<nifty xmlns="http://nifty-gui.lessvoid.com/nifty-gui" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd https://raw.githubusercontent.com/void256/nifty-gui/1.4/nifty-core/src/main/resources/nifty.xsd">
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <!-- start screen -->
+    <!-- +++++++++++++++++++++++++++++++++++++++ -->
+    <useStyles filename="nifty-default-styles.xml"/>
+    <useControls filename="nifty-default-controls.xml"/>
+    <screen id="start" controller="mygame.NiftyController">
+        <layer id="layer" childLayout="center">
+            <panel id="panel" childLayout="center" width="50%" height="50%" align="center" backgroundColor="#966F3333" visibleToMouse="false">
+                <control name="button" id="startButton" visibleToMouse="true" label="Play">
+                    <interact onClick="startGame()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    <screen id="hudScreen" controller="mygame.NiftyController">
+        <layer id="hudLayer" childLayout="center">
+            <panel id="hudPanel" childLayout="vertical" width="20%" height="10%" align="left" valign="top" backgroundColor="#00000055" visibleToMouse="false">
+                <control id="HPLabel" name="label" text=" HP: " align="center" width="100%"/>
+                <control id="PointLabel" name="label" text=" Points: " align="center" width="100%"/>
+                <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
+            </panel>
+            <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
+                <control id="departmentLabel" name="label" text="Department: " width="100%"/>
+                <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true" width="80%"> 
+                    <interact onClick="shopUpgrade()"/>
+                </control>
+                <control id="HealButton" name="button" label="Restore HP (20 gold)" align="center" visibleToMouse="true" width="80%">
+                    <interact onClick="shopHeal()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    <screen id="gameoverScreen" controller="mygame.NiftyController">
+        <layer id="gameoverLayer" childLayout="center">
+            <panel id="gameoverPanel" childLayout="center" width="100%" height="100%" align="center" valign="center" backgroundColor="#830000aa">
+                <control name="label" text="Game over!" align="center"/>
+            </panel>
+        </layer>
+    </screen>
+</nifty>
