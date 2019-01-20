@@ -18,16 +18,19 @@ import com.jme3.scene.control.Control;
 import java.io.IOException;
 
 /**
- *
- * @author Blue
+ * Used to manage the health of an enemy Spatial, cleaning up entity after
+ * it is destroyed.
+ * @author Team iPatch
  */
 public class EnemyControl extends AbstractControl{
-    //Any local variables should be encapsulated by getters/setters so they
-    //appear in the SDK properties window and can be edited.
-    //Right-click a local variable to encapsulate it with getters and setters.
     private int hp;
     PhysicsSpace physicsSpace;
     
+    /**
+     * Used to manage the health of an enemy Spatial, cleaning up the entity
+     * after it is destroyed.
+     * @param physicsSpace 
+     */
     public EnemyControl(PhysicsSpace physicsSpace){
         this.hp = 10;
         this.physicsSpace = physicsSpace;
@@ -40,13 +43,9 @@ public class EnemyControl extends AbstractControl{
     
     @Override
     protected void controlUpdate(float tpf) {
-		if(this.hp <= 0){
-			kill();
-		}
-        //Maybe usable to lock enemy to vertical location
-        //spatial.setLocalTranslation(spatial.getLocalTranslation().x, 0.5f, spatial.getLocalTranslation().z);
-        //spatial.getControl(BetterCharacterControl.class).warp(spatial.getLocalTranslation());
-        
+        if(this.hp <= 0){
+                kill();
+        }        
     }
     
     public void kill(){
@@ -54,6 +53,7 @@ public class EnemyControl extends AbstractControl{
         spatial.getParent().detachChild(spatial);
         physicsSpace.remove(spatial.getControl(BetterCharacterControl.class));
     }
+    
     
     public void setHP(int hp){
         this.hp = hp;

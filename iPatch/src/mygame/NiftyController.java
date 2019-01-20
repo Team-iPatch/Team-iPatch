@@ -110,17 +110,16 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             layer.show();
             switch(this.shopName){
                 case "Computer Science":
-                    //departmentLabel.
+                    departmentLabel.setText("Computer Science Department");
                     if(this.shopsUpgraded.contains("Computer Science")){
-                        departmentLabel.setText("Computer Science Department");
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: Piercing Cannonballs (50 gold)");
                     }
                     break;
                 case "Biology":
+                    departmentLabel.setText("Biology Department");
                     if(this.shopsUpgraded.contains("Biology")){
-                        departmentLabel.setText("Biology Department");
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: +100 max HP (50 gold)");    
