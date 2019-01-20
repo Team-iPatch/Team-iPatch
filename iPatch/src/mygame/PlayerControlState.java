@@ -69,6 +69,7 @@ public class PlayerControlState extends BaseAppState {
 
         chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD);
         chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
+        chaseCam.setMinDistance(chaseCam.getMaxDistance());
         
         this.piercing = false;
         shooters = new ArrayList<>();
