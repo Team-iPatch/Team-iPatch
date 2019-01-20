@@ -62,7 +62,14 @@ public class PlayerControlState extends BaseAppState {
         this.maxHP = 100;
         this.hp = 100;
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-    	chaseCam.setSmoothMotion(true);
+    	chaseCam.setSmoothMotion(false);
+        chaseCam.setDragToRotate(true);
+        chaseCam.setRotationSpeed(0);
+
+        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD);
+        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
+        
+        
         shooters = new ArrayList<>();
         shooterDirections = new ArrayList<>();
         this.viewDirection = controller.getViewDirection();
@@ -71,7 +78,7 @@ public class PlayerControlState extends BaseAppState {
         this.player.addControl(shooterControl);
         shooters.add(shooterControl);
         Quaternion shooterDir = new Quaternion();
-        shooterDir.fromAngleAxis(0, Vector3f.UNIT_Y);
+        shooterDir.fromAngleAxis(270*FastMath.DEG_TO_RAD, Vector3f.UNIT_Y);
         shooterDirections.add(shooterDir);
         this.settings.setFrameRate(60);
         this.app.restart();

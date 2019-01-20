@@ -27,6 +27,8 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     NiftyJmeDisplay niftyDisplay;
     Nifty nifty;
     Screen screen;
+    Boolean shop;
+    PlayerControlState playerControlState;
     
     @Override
     public void bind(Nifty nifty, Screen screen){
@@ -39,17 +41,25 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         super.initialize(stateManager, app);
         this.app = (SimpleApplication)app;
         this.stateManager = stateManager;
+        this.playerControlState = this.stateManager.getState(PlayerControlState.class);
+        this.shop = false;
     }
 
     
     @Override
     public void update(float tpf) {
+        
         if(screen.getScreenId().equals("hudScreen")){
             updateHP();
             updatePoints();
             updateGold();
+            updateShop();
         }
         
+    }
+    
+    public void showShop(Boolean inShop){
+        this.shop = inShop;
     }
     
     @Override
@@ -76,10 +86,20 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         screen = nifty.getCurrentScreen();
     }
     
+    public void updateShop(){
+        Element layer = nifty.getScreen("hudScreen").findElementById("shopPanel");
+        if(this.shop){
+            layer.show();
+        } else {
+            layer.hide();
+        }
+    }
+    
     public void updateHP(){
         Integer hp = stateManager.getState(PlayerControlState.class).getHP();
+        Integer maxHP = stateManager.getState(PlayerControlState.class).getMaxHP();
         Element label = nifty.getScreen("hudScreen").findElementById("HPLabel");
-        label.getRenderer(TextRenderer.class).setText(" HP: " + hp);
+        label.getRenderer(TextRenderer.class).setText(" HP: " + hp + "/" + maxHP);
     }
     
     public void updatePoints(){

@@ -22,6 +22,10 @@
                 <control id="PointLabel" name="label" text=" Points: " align="center" width="100%"/>
                 <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
             </panel>
+            <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
+                <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true"/>
+                <control id="HealButton" name="button" label="Restore HP" align="center" visibleToMouse="true"/>
+            </panel>
         </layer>
     </screen>
 </nifty>

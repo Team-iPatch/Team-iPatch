@@ -36,14 +36,21 @@ public class DepartmentControl extends AbstractControl{
     
     @Override
     protected void controlUpdate(float tpf) {
+        Boolean showshop = false;
         for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
             if (obj.getUserObject().getClass() == Node.class){
                 Node userObject = (Node)obj.getUserObject();
                 if(userObject.getName().equals("player")){
                     //TODO: Add function handling shop access here
-                    System.out.println("Player in GhostControl");
+                    showshop = true;
                 }
             }
+        }
+        if(showshop){
+            this.app.getStateManager().getState(NiftyController.class).showShop(true);
+        }
+        else{
+            this.app.getStateManager().getState(NiftyController.class).showShop(false);
         }
     }
  
