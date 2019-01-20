@@ -85,7 +85,7 @@ public class GameManagementState extends AbstractAppState {
         loadPlayer();
         loadBox();
         loadBaddies();
-        //loadMap();
+        loadMap();
         loadBuildings();
     }
     
@@ -166,6 +166,18 @@ public class GameManagementState extends AbstractAppState {
         Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
         rootNode.attachChild(baddie2);
         baddie2.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        Spatial baddie3 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
+        rootNode.attachChild(baddie3);
+        baddie3.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        Spatial baddie4 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
+        rootNode.attachChild(baddie4);
+        baddie4.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        Spatial baddie5 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
+        rootNode.attachChild(baddie5);
+        baddie5.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        Spatial baddie6 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
+        rootNode.attachChild(baddie6);
+        baddie6.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
     }
     
     private void loadMap(){
@@ -178,7 +190,7 @@ public class GameManagementState extends AbstractAppState {
     
     private void loadBuildings(){
         BuildingGeneratorState b = new BuildingGeneratorState();
-        Spatial department = b.generateDepartment("compsci", 5f, app);
+        Spatial department = b.generateDepartment("Computer Science", 5f, app);
         b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, app);
     }
     

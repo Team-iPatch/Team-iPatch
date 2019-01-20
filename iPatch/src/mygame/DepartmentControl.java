@@ -47,7 +47,7 @@ public class DepartmentControl extends AbstractControl{
             }
         }
         if(showshop){
-            this.app.getStateManager().getState(NiftyController.class).showShop(true);
+            this.app.getStateManager().getState(NiftyController.class).showShop(true, this.name);
         }
         else{
             this.app.getStateManager().getState(NiftyController.class).showShop(false);

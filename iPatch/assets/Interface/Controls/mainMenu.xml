@@ -23,8 +23,19 @@
                 <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
             </panel>
             <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
-                <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true"/>
-                <control id="HealButton" name="button" label="Restore HP" align="center" visibleToMouse="true"/>
+                <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true" width="80%"> 
+                    <interact onClick="shopUpgrade()"/>
+                </control>
+                <control id="HealButton" name="button" label="Restore HP (20 gold)" align="center" visibleToMouse="true" width="80%">
+                    <interact onClick="shopHeal()"/>
+                </control>
+            </panel>
+        </layer>
+    </screen>
+    <screen id="gameoverScreen" controller="mygame.NiftyController">
+        <layer id="gameoverLayer" childLayout="center">
+            <panel id="gameoverPanel" childLayout="center" width="100%" height="100%" align="center" valign="center" backgroundColor="#830000aa">
+                <control name="label" text="Game over!" align="center"/>
             </panel>
         </layer>
     </screen>

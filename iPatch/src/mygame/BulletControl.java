@@ -21,7 +21,7 @@ import java.io.IOException;
 public class BulletControl extends AbstractControl 
                            implements PhysicsCollisionListener{
     
-    private final float speed = 50f;
+    private final float speed = 30f;
     public Vector3f direction;
     private int damage;
     float lifeExpectancy = 2f; //Seconds before it is erased
@@ -30,6 +30,7 @@ public class BulletControl extends AbstractControl
     PhysicsSpace physicsSpace;
     RigidBodyControl bullet_phys; //Remove the physics control on deletion
     PlayerControlState playerControlState;
+    Spatial lastEnemyHit;
 
     public BulletControl(Vector3f direction, int damage, boolean isEnemy,
                       PhysicsSpace physicsSpace, RigidBodyControl bullet_phys,
@@ -71,24 +72,36 @@ public class BulletControl extends AbstractControl
             testNode = event.getNodeA();
         }
         if(testNode != null && !isEnemy){
-            if(testNode.getName().equals("baddie")){
-                testNode.getControl(EnemyControl.class).reduceHP(damage);
+            if(!testNode.equals(lastEnemyHit)){
+                if(testNode.getName().equals("baddie")){
+                    testNode.getControl(EnemyControl.class).reduceHP(damage);
 
-                this.lifetime = lifeExpectancy;
-                if(testNode.getControl(EnemyControl.class).getHP() <= 0){
-                    playerControlState.incrementPoints(20);
-                    playerControlState.incrementGold(10);
+                    if(testNode.getControl(EnemyControl.class).getHP() <= 0){
+                        playerControlState.incrementPoints(20);
+                        playerControlState.incrementGold(10);
+                    }
+
+                    if(!playerControlState.isPiercing()){
+                        this.lifetime = lifeExpectancy;
+                    }
                 }
-            }
-            else if(testNode.getName().equals("college")){
-                CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
-                collegeControl.reduceHP(damage);
-                if(collegeControl.getHP() <= 0){
-                    playerControlState.incrementGold(1000);
-                    playerControlState.incrementPoints(2000);
+                else if(testNode.getName().equals("college")){
+                    CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
+                    collegeControl.reduceHP(damage);
+                    if(collegeControl.getHP() <= 0){
+                        playerControlState.incrementGold(1000);
+                        playerControlState.incrementPoints(2000);
+                    }
+                    if(!playerControlState.isPiercing()){
+                        this.lifetime = lifeExpectancy;
+                    }
                 }
-                this.lifetime = lifeExpectancy;
+                else if(testNode.getName().equals("hitBox")){
+                    this.lifetime = lifeExpectancy;
+                }
+                lastEnemyHit = testNode;                
             }
+
         }
         else if(testNode != null && testNode.getName().equals("player")){
             playerControlState.reduceHP(damage);

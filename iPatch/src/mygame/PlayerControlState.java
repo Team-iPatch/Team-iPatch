@@ -46,6 +46,7 @@ public class PlayerControlState extends BaseAppState {
     private Vector3f viewDirection;
     private ArrayList<ShooterControl> shooters;
     private ArrayList<Quaternion> shooterDirections;
+    private Boolean piercing;
     
     @Override 
     protected void initialize(Application app){
@@ -58,7 +59,7 @@ public class PlayerControlState extends BaseAppState {
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
     	this.points = 0;
-        this.gold = 0;
+        this.gold = 40;
         this.maxHP = 100;
         this.hp = 100;
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
@@ -69,7 +70,7 @@ public class PlayerControlState extends BaseAppState {
         chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD);
         chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
         
-        
+        this.piercing = false;
         shooters = new ArrayList<>();
         shooterDirections = new ArrayList<>();
         this.viewDirection = controller.getViewDirection();
@@ -105,6 +106,10 @@ public class PlayerControlState extends BaseAppState {
         this.hp -= hp;
     }
     
+    public void addHP(int hp){
+        this.hp += hp;
+    }
+    
     public Integer getPoints(){
         return this.points;
     }
@@ -135,6 +140,15 @@ public class PlayerControlState extends BaseAppState {
         shooters.add(shooterControl);
         shooterDirections.add(direction);
     }
+    
+    public void setPiercing(Boolean piercing){
+        this.piercing = piercing;
+    }
+    
+    public Boolean isPiercing(){
+        return this.piercing;
+    }
+    
     @Override
     protected void cleanup(Application app) {
 		//TODO: clean up what you initialized in the initialize method,        
@@ -161,10 +175,22 @@ public class PlayerControlState extends BaseAppState {
    
     @Override
     public void update(float tpf) {
-        Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
-        controller.setWalkDirection(playerRotation.mult(speed));
-        speed *= 0.99;
-        
+        if(player == null || controller == null){
+            
+        } else {
+            Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
+            controller.setWalkDirection(playerRotation.mult(speed));
+            speed *= 0.99;
+
+            if(hp<=0){
+                NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
+                niftyController.gameOver();
+                player.removeFromParent();
+                player = null;
+                controller = null;
+            }
+        }
+
     } 
 	
     private void changeResolution(){
