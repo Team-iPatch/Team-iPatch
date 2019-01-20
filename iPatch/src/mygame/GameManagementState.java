@@ -83,7 +83,7 @@ public class GameManagementState extends AbstractAppState {
         loadEnemyGenerator();
         loadScene();
         loadPlayer();
-        loadBox();
+        //loadBox(); // used to test physics, allows the ship to "surf" into the air
         loadBaddies();
         loadMap();
         loadBuildings();

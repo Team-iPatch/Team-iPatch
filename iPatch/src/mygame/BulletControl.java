@@ -17,7 +17,13 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
 
-
+/**
+ * BulletControl used to control individual projectiles, typically attached by
+ * ShooterControl. Determines various bullet properties and controls its 
+ * trajectory and collisions.
+ * 
+ * @author Team iPatch
+ */
 public class BulletControl extends AbstractControl 
                            implements PhysicsCollisionListener{
     
@@ -25,13 +31,26 @@ public class BulletControl extends AbstractControl
     public Vector3f direction;
     private int damage;
     float lifeExpectancy = 2f; //Seconds before it is erased
-    float lifetime;
+    float lifetime; //Counts up to lifeExpectancy
     boolean isEnemy;
     PhysicsSpace physicsSpace;
     RigidBodyControl bullet_phys; //Remove the physics control on deletion
     PlayerControlState playerControlState;
     Spatial lastEnemyHit;
 
+    /**
+     * BulletControl used to control individual projectiles, typically attached
+     * by ShooterControl. Determines various bullet properties and controls its
+     * trajectory and collisions.
+     * @param direction Vector3f indicating direction the bullet will travel
+     * @param damage int deciding how much damage the bullet deals on impact
+     * @param isEnemy indicates whether the bullet was shot by the player
+     * or an enemy
+     * @param physicsSpace PhysicsSpace to which the bullet will attach its 
+     * colliders
+     * @param bullet_phys RigidBodyControl the Control will control.
+     * @param playerControlState PlayerControlState, used to deal damage
+     */
     public BulletControl(Vector3f direction, int damage, boolean isEnemy,
                       PhysicsSpace physicsSpace, RigidBodyControl bullet_phys,
                       PlayerControlState playerControlState){
@@ -54,6 +73,10 @@ public class BulletControl extends AbstractControl
         }
     }
     
+    /**
+     * Destroys the bullet, detaching spatial and removing RigidBodyControl
+     * from the physics space
+     */
     public void destroy(){
         physicsSpace.remove(bullet_phys);
         physicsSpace.removeCollisionListener(this);
@@ -63,6 +86,10 @@ public class BulletControl extends AbstractControl
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {}
 
+    /**
+     * 
+     * @param event 
+     */ 
     @Override
     public void collision(PhysicsCollisionEvent event) {
         Spatial testNode = null;
