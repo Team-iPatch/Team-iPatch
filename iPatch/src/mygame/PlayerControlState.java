@@ -212,43 +212,53 @@ public class PlayerControlState extends BaseAppState {
     private final ActionListener actionListener = new ActionListener(){
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
-            if(name.equals("ChangeRes")) {
-                changeResolution();
-            }
-            if(name.equals("Shoot") && isPressed) {
-                for(int i = 0; i < shooters.size(); i++){
-                    shooters.get(i).shootBullet(shooterDirections.get(i).mult(
-                                                controller.getViewDirection()));
+            if(player == null || controller == null){
+          
+            } else {
+                if(name.equals("ChangeRes")) {
+                    changeResolution();
+                }
+                if(name.equals("Shoot") && isPressed) {
+                    for(int i = 0; i < shooters.size(); i++){
+                        shooters.get(i).shootBullet(shooterDirections.get(i).mult(
+                                                    controller.getViewDirection()));
+                    }
                 }
             }
+            
 	}
     };
     private final AnalogListener analogListener = new AnalogListener(){
 	@Override
 	public void onAnalog(String name, float value, float tpf){
-        if(name.equals("RotLeft")) {
-            Vector3f dir = controller.getViewDirection();
-            Quaternion quat = new Quaternion();
-            quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
-            quat.multLocal(dir);
-            controller.setViewDirection(dir);
-        }
-		
-        if(name.equals("RotRight")) {
-            Vector3f dir = controller.getViewDirection();
-            Quaternion quat = new Quaternion();
-            quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
-            quat.multLocal(dir);
-            controller.setViewDirection(dir);	
-        }
-	
-        if (name.equals("Forward"))
-            if (speed < 15)
-                speed += 1;
-           
-        if (name.equals("Backward")) 
-            if(speed>1)
-                speed -= 0.1;
-	}
+            if(player == null || controller == null){
+                
+            } else {
+                if(name.equals("RotLeft")) {
+                    Vector3f dir = controller.getViewDirection();
+                    Quaternion quat = new Quaternion();
+                    quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
+                    quat.multLocal(dir);
+                    controller.setViewDirection(dir);
+                }
+
+                if(name.equals("RotRight")) {
+                    Vector3f dir = controller.getViewDirection();
+                    Quaternion quat = new Quaternion();
+                    quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
+                    quat.multLocal(dir);
+                    controller.setViewDirection(dir);	
+                }
+
+                if (name.equals("Forward"))
+                    if (speed < 15)
+                        speed += 1;
+
+                if (name.equals("Backward")) 
+                    if(speed>1)
+                        speed -= 0.1;
+                }
+            }
+
     };
 }

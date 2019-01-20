@@ -113,7 +113,7 @@ public class MapGeneration
     private static void generateHeightMap()
     {
         Random rand = new Random();
-        FastNoise.seed = rand.nextInt(100000000) + 1; //1923123;
+        FastNoise.seed = 1923123; //rand.nextInt(100000000) + 1;
         FastNoise.init();
         for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
         {
@@ -146,7 +146,7 @@ public class MapGeneration
                 {
                     assignTexture(x,y,MapGeneration.heightMap[x][y],mapArray);
                 }
-                             if (x > 0 && y > 0 && x < MapGeneration.heightMap.length && y < MapGeneration.heightMap[x].length && MapGeneration.heightMap[x][y] > 1)
+                             if (x > 0 && y > 0 && x < MapGeneration.heightMap.length && y < MapGeneration.heightMap[x].length && MapGeneration.heightMap[x][y] > 1) //do not change this lower than 1
                     {
                         fixHoles(x,y,mapArray);
                     } 
@@ -202,7 +202,7 @@ public class MapGeneration
     private static void addHitBox(int xCo, int yCo, int zCo)
     {
        Box box = new Box(0.5f, 3f, 0.5f);
-       Geometry box_geom = new Geometry("box", box); 
+       Geometry box_geom = new Geometry("hitBox", box); 
        box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);
        rootNode.attachChild(box_geom);
        RigidBodyControl box_phys = new RigidBodyControl(0f);

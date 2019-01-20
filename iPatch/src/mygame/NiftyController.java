@@ -13,6 +13,7 @@ import com.jme3.niftygui.NiftyJmeDisplay;
 import com.sun.media.jfxmedia.logging.Logger;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.Button;
+import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
@@ -103,11 +104,13 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     public void updateShop(){
         Element layer = nifty.getScreen("hudScreen").findElementById("shopPanel");
         Button upgradeButton = screen.findNiftyControl("UpgradeButton", Button.class);
+        Label departmentLabel = screen.findNiftyControl("departmentLabel", Label.class);
         //Button healButton = screen.findNiftyControl("HealButton", Button.class);
         if(this.shop){
             layer.show();
             switch(this.shopName){
                 case "Computer Science":
+                    //departmentLabel.
                     if(this.shopsUpgraded.contains("Computer Science")){
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {

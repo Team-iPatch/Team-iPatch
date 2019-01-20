@@ -23,6 +23,7 @@
                 <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
             </panel>
             <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
+                <control id="departmentLabel" name="label" text="Department: "/>
                 <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true" width="80%"> 
                     <interact onClick="shopUpgrade()"/>
                 </control>

@@ -84,8 +84,7 @@ public class BulletControl extends AbstractControl
                     if(!playerControlState.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
-                }
-                else if(testNode.getName().equals("college")){
+                } else if(testNode.getName().equals("college")){
                     CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
                     collegeControl.reduceHP(damage);
                     if(collegeControl.getHP() <= 0){
@@ -95,16 +94,16 @@ public class BulletControl extends AbstractControl
                     if(!playerControlState.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
-                }
-                else if(testNode.getName().equals("hitBox")){
+                } else if(testNode.getName().equals("hitBox")){
                     this.lifetime = lifeExpectancy;
                 }
                 lastEnemyHit = testNode;                
             }
-
         }
         else if(testNode != null && testNode.getName().equals("player")){
             playerControlState.reduceHP(damage);
+            this.lifetime = lifeExpectancy;
+        } else if(testNode != null && testNode.getName().equals("hitBox")) {
             this.lifetime = lifeExpectancy;
         }
     }
