@@ -77,7 +77,7 @@ public class Main extends SimpleApplication {
         loadBox();
         loadBaddie();
         
-        //loadMap();
+        loadMap();
         //bulletAppState.setDebugEnabled(true);
         //BuildingGeneratorState b = new BuildingGeneratorState();
         //department = b.generateDepartment("compsci", 5f, this);     

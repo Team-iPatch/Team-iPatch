@@ -64,6 +64,22 @@ public class MapGeneration
         {
             mat.setColor("Color", ColorRGBA.Yellow);
         }
+        else if (skin == TerrainType.WOOD)
+        {
+            mat.setColor("Color", ColorRGBA.Blue);
+        }
+        else if (skin == TerrainType.AIR)
+        {
+            mat.setColor("Color", ColorRGBA.Red);
+        }
+         else if (skin == TerrainType.DIRT)
+        {
+            mat.setColor("Color", ColorRGBA.Orange);
+        }
+        else if (skin == TerrainType.STONE)
+        {
+            mat.setColor("Color", ColorRGBA.Cyan);
+        }
         else
         {
             mat.setColor("Color", ColorRGBA.Green);
@@ -97,7 +113,7 @@ public class MapGeneration
     private static void generateHeightMap()
     {
         Random rand = new Random();
-        FastNoise.seed = rand.nextInt(100000000) + 1;
+        FastNoise.seed = 1923123; //rand.nextInt(100000000) + 1;
         FastNoise.init();
         for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
         {
@@ -128,60 +144,12 @@ public class MapGeneration
     {
          if (MapGeneration.heightMap[x][y] > 0)
                 {
-                    assignTexture(x,y,MapGeneration.heightMap[x][y]-1,mapArray);
-                    if (x > 1 && y > 1 && x < MapGeneration.heightMap.length && y < MapGeneration.heightMap[x].length && MapGeneration.heightMap[x][y] > 1)
-                    {
-                        if (MapGeneration.heightMap[x-1][y] > MapGeneration.heightMap[x][y])
-                        {
-                            if ((MapGeneration.heightMap[x][y] != MapGeneration.heightMap[x+1][y]) && (MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x+1][y] -1))
-                            {
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-1,mapArray);
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-2,mapArray);
-                            }    
-                        }
-                        else if (MapGeneration.heightMap[x-1][y] == MapGeneration.heightMap[x][y])
-                        {
-                            if ((MapGeneration.heightMap[x][y] != MapGeneration.heightMap[x+1][y]) && (MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x+1][y] +1) && (MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x+1][y] -1))
-                            {
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-1,mapArray);
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-2,mapArray);
-                            }  
-                        }
-                       else if (MapGeneration.heightMap[x-1][y] < MapGeneration.heightMap[x][y])
-                       {
-                            if ((MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x+1][y]) && (MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x+1][y] +1))
-                            {
-                               assignTexture(x,y,MapGeneration.heightMap[x][y]+1,mapArray);
-                               assignTexture(x,y,MapGeneration.heightMap[x][y]+2,mapArray);
-                            }  
-                       }
-                       if (MapGeneration.heightMap[x][y-1] > MapGeneration.heightMap[x][y])
-                        {
-                            if ((MapGeneration.heightMap[x][y] != MapGeneration.heightMap[x][y+1]) && (MapGeneration.heightMap[x][y+1] != MapGeneration.heightMap[x+1][y] -1))
-                            {
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-1,mapArray);
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-2,mapArray);
-                            }    
-                        }
-                        else if (MapGeneration.heightMap[x][y-1] == MapGeneration.heightMap[x][y])
-                        {
-                            if ((MapGeneration.heightMap[x][y] != MapGeneration.heightMap[x][y]+1) && (MapGeneration.heightMap[x][y+1] != MapGeneration.heightMap[x][y+1] +1) && (MapGeneration.heightMap[x+1][y] != MapGeneration.heightMap[x][y+1] -1))
-                            {
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-1,mapArray);
-                                assignTexture(x,y,MapGeneration.heightMap[x][y]-2,mapArray);
-                            }  
-                        }
-                       else if (MapGeneration.heightMap[x][y-1] < MapGeneration.heightMap[x][y])
-                       {
-                            if ((MapGeneration.heightMap[x][y+1] != MapGeneration.heightMap[x][y+1]) && (MapGeneration.heightMap[x][y+1] != MapGeneration.heightMap[x][y+1] +1))
-                            {
-                               assignTexture(x,y,MapGeneration.heightMap[x][y]+1,mapArray);
-                               assignTexture(x,y,MapGeneration.heightMap[x][y]+2,mapArray);
-                            }  
-                       } 
-                        
-                    }
+                    assignTexture(x,y,MapGeneration.heightMap[x][y],mapArray);
                 }
+                             if (x > 0 && y > 0 && x < MapGeneration.heightMap.length && y < MapGeneration.heightMap[x].length && MapGeneration.heightMap[x][y] > 1)
+                    {
+                        fixHoles(x,y,mapArray);
+                    } 
     }
     
     private static void assignTexture(int x, int y, int z, TerrainType mapArray[][][])
@@ -196,6 +164,38 @@ public class MapGeneration
                         {
                             mapArray[x][z][y] = TerrainType.GRASS;
                         }
+            }
+    }
+    
+    private static void fixHoles(int x, int y,  TerrainType[][][] mapArray)
+    {
+        if ((heightMap[x-1][y] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x-1][y] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x-1][heightMap[x-1][y]+i-1][y] = TerrainType.WOOD;        
+            }
+        else if ((heightMap[x+1][y] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x+1][y] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x+1,y,heightMap[x+1][y]+i-1,mapArray);
+                mapArray[x+1][heightMap[x+1][y]+i-1][y] = TerrainType.AIR;        
+            }
+        else if ((heightMap[x][y-1] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x][y-1] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x][heightMap[x][y]+i+1][y-1] = TerrainType.STONE;        
+            }
+        else if ((heightMap[x][y+1] - heightMap[x][y]) > 1)
+            {
+                int amountMissing = heightMap[x][y+1] - heightMap[x][y] - 1;
+                for (int i = 0; i < amountMissing; i++)
+                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
+                mapArray[x][heightMap[x][y]+i+1][y+1] = TerrainType.DIRT;        
             }
     }
     
