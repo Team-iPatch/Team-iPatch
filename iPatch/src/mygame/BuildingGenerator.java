@@ -80,7 +80,7 @@ public class BuildingGenerator {
             double rotAngle = (double)i * Math.PI / 4f;
             Vector3f direction = new Vector3f((float)Math.sin(rotAngle), 0, 
                                               (float)Math.cos(rotAngle));
-            cannons[i].setLocalTranslation(direction.mult(4));
+            cannons[i].setLocalTranslation(direction);
             cannons[i].rotate(0, i * (float)Math.PI/4f, 0);
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);

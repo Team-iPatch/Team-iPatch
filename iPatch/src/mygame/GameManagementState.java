@@ -216,9 +216,9 @@ public class GameManagementState extends AbstractAppState {
     private void loadBuildings(){
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
         buildingGenerator.generateDepartment("Computer Science", new Vector3f(10,1,10), 5f);
-        //buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
-        //buildingGenerator.generateCollege("Alcuin", new Vector3f(-20,1,-20), 5f);
-        //buildingGenerator.generateCollege("Vanbrugh", new Vector3f(-20, 1, 20), 5f);
-        buildingGenerator.generateCollege("Derwent", new Vector3f(20, 1, 20), 5f);
+        buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
+        buildingGenerator.generateCollege("Alcuin", new Vector3f(-20,1,-20), 15f);
+        buildingGenerator.generateCollege("Vanbrugh", new Vector3f(-20, 1, 20), 15f);
+        buildingGenerator.generateCollege("Derwent", new Vector3f(-20, 1, 30), 15f);
     }
 }
