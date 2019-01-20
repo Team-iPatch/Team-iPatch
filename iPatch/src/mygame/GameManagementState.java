@@ -57,7 +57,8 @@ public class GameManagementState extends AbstractAppState {
         this.rootNode = this.app.getRootNode();
         
         playerControlState = new PlayerControlState();
-        startGame();
+        
+        loadGUI();
     }
     
     @Override
@@ -78,7 +79,6 @@ public class GameManagementState extends AbstractAppState {
         loadPlayer();
         loadBox();
         loadBaddies();
-        loadGUI();
         //loadMap();
         //loadBuildings();
     }

@@ -71,6 +71,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     }
     
     public void startGame(){
+        stateManager.getState(GameManagementState.class).startGame();
         nifty.gotoScreen("hudScreen");
         screen = nifty.getCurrentScreen();
     }
