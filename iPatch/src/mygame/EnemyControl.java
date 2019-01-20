@@ -29,16 +29,22 @@ public class EnemyControl extends AbstractControl{
     /**
      * Used to manage the health of an enemy Spatial, cleaning up the entity
      * after it is destroyed.
-     * @param physicsSpace 
+     * @param physicsSpace PhysicsSpace of the application.
      */
     public EnemyControl(PhysicsSpace physicsSpace){
         this.hp = 10;
         this.physicsSpace = physicsSpace;
     }
     
+    /**
+     * Used to manage the health of an enemy Spatial, cleaning up the entity
+     * after it is destroyed.
+     * @param physicsSpace PhysicsSpace of the application.
+     * @param hp Enemy health.
+     */
     public EnemyControl(PhysicsSpace physicsSpace, int hp){
-		this.hp = hp;
-		this.physicsSpace = physicsSpace;
+        this.hp = hp;
+        this.physicsSpace = physicsSpace;
     }
     
     @Override
@@ -54,15 +60,26 @@ public class EnemyControl extends AbstractControl{
         physicsSpace.remove(spatial.getControl(BetterCharacterControl.class));
     }
     
-    
+    /**
+     * Sets HP to to value of argument.
+     * @param hp Integer for new enemy HP.
+     */
     public void setHP(int hp){
         this.hp = hp;
     }
     
+    /**
+     * Reduces HP by a value.
+     * @param reduction Value to reduce HP by.
+     */
     public void reduceHP(int reduction){
         this.hp -= reduction;
     }
     
+    /**
+     * Returns entity's HP.
+     * @return int, entity HP
+     */
     public int getHP(){
         return this.hp;
     }

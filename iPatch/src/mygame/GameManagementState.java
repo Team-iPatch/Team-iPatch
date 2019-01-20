@@ -32,8 +32,9 @@ import com.jme3.texture.Texture;
 import de.lessvoid.nifty.Nifty;
 
 /**
- *
- * @author Blue
+ * Manager app state used to initialise and store the majority of program code.
+ * Effectively a substitute for Main() which can be accessed at runtime.
+ * @author Team iPatch
  */
 public class GameManagementState extends AbstractAppState {
     
@@ -51,6 +52,12 @@ public class GameManagementState extends AbstractAppState {
     PlayerControlState playerControlState;
     BetterCharacterControl characterControl;
     
+    /**
+     * Manager app state used to initialise and store the majority of program
+     * code. Effectively a substitue for Main() which can be accessed at runtime.
+     * @param stateManager Application's AppStateManager.
+     * @param app Application object.
+     */
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -64,12 +71,12 @@ public class GameManagementState extends AbstractAppState {
         
         playerControlState = new PlayerControlState();
         
+        // Loads GUI first for a rudimentary start menu
         loadGUI();
     }
     
     @Override
     public void update(float tpf) {
-        //TODO: implement behavior during runtime
     }
     
     @Override
@@ -77,6 +84,10 @@ public class GameManagementState extends AbstractAppState {
         super.cleanup();
     }
     
+    /**
+     * Used to initialise game entities, through private submethods which
+     * have to be edited internally.
+     */
     public void startGame(){
         //loadPhysics() has to be executed first
         loadPhysics();
@@ -89,6 +100,9 @@ public class GameManagementState extends AbstractAppState {
         loadBuildings();
     }
     
+    /**
+     * Initialises GUI code.
+     */
     private void loadGUI(){
         niftyController = new NiftyController();
         stateManager.attach(niftyController);
@@ -99,6 +113,9 @@ public class GameManagementState extends AbstractAppState {
         nifty.setIgnoreKeyboardEvents(true);
     }
     
+    /**
+     * Initialises physics code. 
+     */
     private void loadPhysics(){
         bulletAppState = new BulletAppState();
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
@@ -106,6 +123,9 @@ public class GameManagementState extends AbstractAppState {
         stateManager.attach(playerControlState);
     }
     
+    /**
+     * Loads scene, changes made to the play area have to be done here.
+     */
     private void loadScene(){
         Node sceneNode = (Node)assetManager.loadModel("Scenes/newScene.j3o");
         sceneNode.scale(10);
@@ -134,6 +154,9 @@ public class GameManagementState extends AbstractAppState {
         rootNode.attachChild(quad_geom);
     }
     
+    /**
+     * Loads a box.
+     */
     private void loadBox(){
         Box box = new Box(1, 1, 1);
         Geometry box_geom = new Geometry("box", box);
@@ -145,6 +168,9 @@ public class GameManagementState extends AbstractAppState {
         bulletAppState.getPhysicsSpace().add(box_geom);
     }
     
+    /**
+     * Initialises player.
+     */
     private void loadPlayer(){
         playerShip = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
         playerShip.setLocalTranslation(new Vector3f(0, 3, 0));
@@ -155,10 +181,16 @@ public class GameManagementState extends AbstractAppState {
         bulletAppState.getPhysicsSpace().add(characterControl);
     }
     
+    /**
+     * Initialises enemy generator.
+     */
     private void loadEnemyGenerator(){
         enemyGenerator = new EnemyGenerator(assetManager, bulletAppState.getPhysicsSpace());
     }
     
+    /**
+     * Initialises bad guys, edit enemy instantiation here.
+     */
     private void loadBaddies(){
         Spatial baddie1 = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o", new Vector3f(-15, 3, 0),1.5f, 3f, 10);
         rootNode.attachChild(baddie1);
@@ -180,6 +212,9 @@ public class GameManagementState extends AbstractAppState {
         baddie6.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
     }
     
+    /**
+     * Initialises and generates voxel islands.
+     */
     private void loadMap(){
         MapGeneration.assetManager = assetManager;
         MapGeneration.rootNode = rootNode;
@@ -188,6 +223,9 @@ public class GameManagementState extends AbstractAppState {
         MapGeneration.loadArrayIntoWorld(testArray);
     }
     
+    /**
+     * Initialises departments and colleges.
+     */
     private void loadBuildings(){
         BuildingGeneratorState b = new BuildingGeneratorState();
         Spatial department = b.generateDepartment("Computer Science", 5f, app);

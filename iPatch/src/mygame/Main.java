@@ -1,11 +1,7 @@
 package mygame;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.GhostControl;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import java.util.logging.Level;
 
 /**
@@ -14,13 +10,6 @@ import java.util.logging.Level;
  * @author normenhansen
  */
 public class Main extends SimpleApplication {
-
-    BetterCharacterControl character;
-    Node ship;
-    Node sceneNode;
-    EnemyGenerator enemyGenerator;
-    GhostControl ghost;
-    Spatial department;
     GameManagementState gameManagementState;
     
     public static void main(String[] args) {
@@ -38,6 +27,8 @@ public class Main extends SimpleApplication {
         
         flyCam.setEnabled(false);
         
+        // Main does nothing except initialise a GameManagementState.
+        // All other initialisation is done there.
         gameManagementState = new GameManagementState();
         stateManager.attach(gameManagementState);
     }

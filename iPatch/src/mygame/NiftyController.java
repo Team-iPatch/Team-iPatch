@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Blue
+ * App state used to manipulate the GUI and implement UI events.
+ * @author Team iPatch
  */
 public class NiftyController extends AbstractAppState implements ScreenController{
     
@@ -57,7 +57,8 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     
     @Override
     public void update(float tpf) {
-        
+        // If the player is in the hudScreen, updates relevant UI elements every 
+        // frame.
         if(screen.getScreenId().equals("hudScreen")){
             updateHP();
             updatePoints();
@@ -67,11 +68,23 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         
     }
     
+    /**
+     * Called by Department entities to show that the player is NOT in their range.
+     * A second argument, shopName, is called when the player is in range and 
+     * shows which type of department it's close to.
+     * @param inShop Boolean, usually false.
+     */
     public void showShop(Boolean inShop){
         this.shop = inShop;
         this.shopName = "none";
     }
     
+    /**
+     * Called by Department entities to show that the player is in range. 
+     * @param inShop Boolean, usually true.
+     * @param shopName Name of the department, choices hardcoded internally.
+     * Currently, either Computer Science or Biology.
+     */
     public void showShop(Boolean inShop, String shopName){
         this.shop = inShop;
         this.shopName = shopName;
@@ -95,22 +108,37 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    /**
+     * Used to initialise the game from the start screen.
+     */
     public void startGame(){
         stateManager.getState(GameManagementState.class).startGame();
         nifty.gotoScreen("hudScreen");
         screen = nifty.getCurrentScreen();
     }
     
+    /**
+     * Used to update shop interfaces whenever the player is in range of a 
+     * Department.
+     */
     public void updateShop(){
+        // Gets UI elements as defined by mainMenu.xml. Only changes elements
+        // that aren't constant, ie the header label and upgrade button
         Element layer = nifty.getScreen("hudScreen").findElementById("shopPanel");
         Button upgradeButton = screen.findNiftyControl("UpgradeButton", Button.class);
         Label departmentLabel = screen.findNiftyControl("departmentLabel", Label.class);
-        //Button healButton = screen.findNiftyControl("HealButton", Button.class);
+        
+        // Checks if the player is currently within range of a Department.
         if(this.shop){
             layer.show();
+            // Displays different text depending on whether the Department
+            // is named Computer Science or Biology. Additional Departments
+            // have to have their UI functionality implemented here.
             switch(this.shopName){
                 case "Computer Science":
                     departmentLabel.setText("Computer Science Department");
+                    // If the player already bought the Comp Sci upgrade, 
+                    // displays a different message.
                     if(this.shopsUpgraded.contains("Computer Science")){
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
@@ -119,6 +147,8 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                     break;
                 case "Biology":
                     departmentLabel.setText("Biology Department");
+                    // If the player already bought the Biology upgrade,
+                    // displays a different message.
                     if(this.shopsUpgraded.contains("Biology")){
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
@@ -129,10 +159,15 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                     System.out.println("Sorry, nothing");
             }
         } else {
+            // Hides the UI layer if the player is not close to a Department.
             layer.hide();
         }
     }
     
+    /**
+     * Called when the player clicks the topmost, unique upgrade button.
+     * Functionality depends on the shop the player is in.
+     */
     public void shopUpgrade(){
         playerControlState = stateManager.getState(PlayerControlState.class);
         
@@ -152,6 +187,9 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         }
     }
     
+    /**
+     * Called when the player clicks the "Restore HP" button in any department.
+     */
     public void shopHeal(){
         playerControlState = stateManager.getState(PlayerControlState.class);
 
@@ -162,6 +200,9 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         }
     }
     
+    /**
+     * Updates HP display on the HUD.
+     */
     public void updateHP(){
         Integer hp = stateManager.getState(PlayerControlState.class).getHP();
         Integer maxHP = stateManager.getState(PlayerControlState.class).getMaxHP();
@@ -169,18 +210,27 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         label.getRenderer(TextRenderer.class).setText(" HP: " + hp + "/" + maxHP);
     }
     
+    /**
+     * Updates the point display on the HUD.
+     */
     public void updatePoints(){
         Integer points = stateManager.getState(PlayerControlState.class).getPoints();
         Element label = nifty.getScreen("hudScreen").findElementById("PointLabel");
         label.getRenderer(TextRenderer.class).setText(" Points: " + points);
     }
     
+    /**
+     * Updates the gold display on the HUD.
+     */
     public void updateGold(){
         Integer gold = stateManager.getState(PlayerControlState.class).getGold();
         Element label = nifty.getScreen("hudScreen").findElementById("GoldLabel");
         label.getRenderer(TextRenderer.class).setText(" Gold: " + gold);
     }
     
+    /**
+     * Called when the player dies, displays a game over screen.
+     */
     public void gameOver(){
         nifty.gotoScreen("gameoverScreen");
     }
