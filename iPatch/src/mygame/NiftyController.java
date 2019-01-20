@@ -65,7 +65,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updateGold();
             updateShop();
         }
-        
+        showShop(false);
     }
     
     /**
