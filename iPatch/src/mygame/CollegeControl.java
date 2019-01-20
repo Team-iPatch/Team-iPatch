@@ -7,13 +7,8 @@ package mygame;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -21,18 +16,15 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
-import com.jme3.scene.control.Control;
-import java.io.IOException;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
- *
- * @author cpl512
+ * Control used to manage Colleges, tracking their health and controlling
+ * where they fire.
+ * 
+ * @author Team iPatch
  */
 public class CollegeControl extends AbstractControl {
-    //Any local variables should be encapsulated by getters/setters so they
-    //appear in the SDK properties window and can be edited.
-    //Right-click a local variable to encapsulate it with getters and setters.
     private GhostControl ghost;
     private final String name;
     private Spatial cannons[];
@@ -43,6 +35,17 @@ public class CollegeControl extends AbstractControl {
     private int hp;
     PhysicsSpace physicsSpace;
     
+    /**
+     * Control used to manage Colleges, tracking their health and controlling
+     * where they fire.
+     * @param name Name indicates the functionality of the college. Names have to
+     * be hardcoded in the body of the code.
+     * @param ghost GhostControl used to detect proximity collisions with the player.
+     * Currently unused internally.
+     * @param cannons Array of spatials of cannons. Indicates shooting direction.
+     * @param collegeNode Node used to store the College entity.
+     * @param physicsSpace PhysicsSpace where the College will register collisions.
+     */
     CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
                    Node collegeNode, PhysicsSpace physicsSpace){
         this.name = name;

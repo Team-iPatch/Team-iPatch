@@ -112,6 +112,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                 case "Computer Science":
                     //departmentLabel.
                     if(this.shopsUpgraded.contains("Computer Science")){
+                        departmentLabel.setText("Computer Science Department");
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: Piercing Cannonballs (50 gold)");
@@ -119,6 +120,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                     break;
                 case "Biology":
                     if(this.shopsUpgraded.contains("Biology")){
+                        departmentLabel.setText("Biology Department");
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: +100 max HP (50 gold)");    

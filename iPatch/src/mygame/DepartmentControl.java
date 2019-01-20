@@ -18,8 +18,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 /**
- *
- * @author cpl512
+ * Controls interactions with Departments, which act as shops.
+ * @author Team iPatch
  */
 public class DepartmentControl extends AbstractControl{
     private GhostControl ghost;
@@ -27,6 +27,14 @@ public class DepartmentControl extends AbstractControl{
     private PlayerControlState player;
     private SimpleApplication app;
     
+    /**
+     * Controls interactions with Departments, which act as shops.
+     * @param name Name which indicates functionality, have to be hardcoded.
+     * Currently only "Computer Science" and "Biology" are implemented.
+     * @param ghost GhostControl with the collider used to find when the player
+     * is close enough to the Department to show a shop interface.
+     * @param app SimpleApplication of the main program.
+     */
     DepartmentControl(String name, GhostControl ghost, SimpleApplication app){
         this.name = name;
         this.ghost = ghost;
@@ -36,12 +44,13 @@ public class DepartmentControl extends AbstractControl{
     
     @Override
     protected void controlUpdate(float tpf) {
+        // Finds whether to display the shop, checking every frame
+        // Passes the name of the Department if colliding.
         Boolean showshop = false;
         for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
             if (obj.getUserObject().getClass() == Node.class){
                 Node userObject = (Node)obj.getUserObject();
                 if(userObject.getName().equals("player")){
-                    //TODO: Add function handling shop access here
                     showshop = true;
                 }
             }
@@ -59,35 +68,54 @@ public class DepartmentControl extends AbstractControl{
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
     }
-    
+    /**
+     * Sets player HP to their maximum.
+     */
     public void healPlayer(){
         player.setHP(player.getMaxHP());
     }
     
+    /**
+     * Increses player's max HP by an integer
+     * @param amount HP to add to the player's max
+     */
     public void healthUpgrade(int amount){
         int newMaxHP = player.getMaxHP() + amount;
         player.setMaxHP(newMaxHP);
         player.setHP(newMaxHP);
     }
     
+    /**
+     * Gives the player an extra cannon facing backwards.
+     */
     public void addBackwardsShooter(){
         Quaternion quaternion = new Quaternion();
         quaternion.fromAngleAxis(180, Vector3f.UNIT_Y);
         player.addShooter(quaternion, app);
     }
     
+    /**
+     * Gives the player an extra cannon facing to their right.
+     */
     public void addRightShooter(){
         Quaternion quaternion = new Quaternion();
         quaternion.fromAngleAxis(90, Vector3f.UNIT_Y);
         player.addShooter(quaternion, app);
     }
     
+    /**
+     * Gives the player an extra cannon facing to their left.
+     */
     public void addLeftShooter(){
         Quaternion quaternion = new Quaternion();
         quaternion.fromAngleAxis(270, Vector3f.UNIT_Y);
         player.addShooter(quaternion, app);
     }
     
+    /**
+     * Increases the amount of damage dealt by each shot the player fires.
+     * @param amount Extra damage dealt by player.
+     */
     public void increaseShotDamage(int amount){
         for(ShooterControl shooter : player.getShooters()){
             shooter.setDamage(shooter.getDamage() + amount);

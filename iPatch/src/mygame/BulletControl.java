@@ -106,33 +106,45 @@ public class BulletControl extends AbstractControl
             // than a single tick of damage per hit
             if(!testNode.equals(lastEnemyHit)){
                 if(testNode.getName().equals("baddie")){
+                    // Reduces enemy HP and tests if it is dead, giving points
+                    // and gold to the player
                     testNode.getControl(EnemyControl.class).reduceHP(damage);
 
                     if(testNode.getControl(EnemyControl.class).getHP() <= 0){
                         playerControlState.incrementPoints(20);
                         playerControlState.incrementGold(10);
                     }
-
+                    
+                    // Makes the bullet expire if it hits an enemy and is not
+                    // piercing
                     if(!playerControlState.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
                 } else if(testNode.getName().equals("college")){
+                    // Reduces enemy HP and tests if it is dead, giving points and
+                    // gold to the player
                     CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
                     collegeControl.reduceHP(damage);
                     if(collegeControl.getHP() <= 0){
                         playerControlState.incrementGold(1000);
                         playerControlState.incrementPoints(2000);
                     }
+                    
+                    // Makes the bullet expire it it hits an enemy and is not 
+                    // piercing
                     if(!playerControlState.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
                 } else if(testNode.getName().equals("hitBox")){
+                    // Destroys bullets which hit an island
                     this.lifetime = lifeExpectancy;
                 }
+                // Used to ensure piercing bullets don't deal a tick of damage
+                // per frame.
                 lastEnemyHit = testNode;                
             }
-        }
-        else if(testNode != null && testNode.getName().equals("player")){
+        } else if(testNode != null && testNode.getName().equals("player")){
+            // Collision handling for bullets fired by enemies
             playerControlState.reduceHP(damage);
             this.lifetime = lifeExpectancy;
         } else if(testNode != null && testNode.getName().equals("hitBox")) {
