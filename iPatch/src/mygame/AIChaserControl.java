@@ -84,7 +84,9 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
         direction.
         */
         if(this.target != null){
+            // Gets vector3f which points the entity towards the player 
             Vector3f targetDirection = this.target.getWorldTranslation().subtract(spatial.getWorldTranslation());
+            // Sets y value to 0 (no vertical movement) and normalises vector
             targetDirection.y = 0;
             targetDirection.normalizeLocal();
             this.viewDirection.set(targetDirection);

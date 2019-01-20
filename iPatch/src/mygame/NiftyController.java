@@ -136,12 +136,12 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         playerControlState = stateManager.getState(PlayerControlState.class);
         
         if(playerControlState.getGold()>=50){
-            if(this.shopName.equals("Computer Science")){
+            if(this.shopName.equals("Computer Science") && !this.shopsUpgraded.contains("Computer Science")){
                 playerControlState.setPiercing(true);
                 this.shopsUpgraded.add("Computer Science");
                 playerControlState.incrementGold(-50);
             }
-            else if(this.shopName.equals("Biology")){
+            else if(this.shopName.equals("Biology") && !this.shopsUpgraded.contains("Biology")){
                 Integer maxHP = stateManager.getState(PlayerControlState.class).getMaxHP();
                 playerControlState.setMaxHP(maxHP+100);
                 playerControlState.addHP(100);

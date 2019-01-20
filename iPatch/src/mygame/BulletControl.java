@@ -87,18 +87,23 @@ public class BulletControl extends AbstractControl
     protected void controlRender(RenderManager rm, ViewPort vp) {}
 
     /**
-     * 
-     * @param event 
+     * Used internally, collision handling for the bullets.
+     * @param event Automatically passed whenever this method is called.
      */ 
     @Override
     public void collision(PhysicsCollisionEvent event) {
+        // Finds which node was not the bullet
         Spatial testNode = null;
         if(event.getNodeA().equals(spatial)){
             testNode = event.getNodeB();
         } else if (event.getNodeB().equals(spatial)){
             testNode = event.getNodeA();
         }
+        // Tests whether there is a second body in the collision and whether
+        // the bullet came from the player
         if(testNode != null && !isEnemy){
+            // lastEnemyHit is used to prevent piercing bullets from dealing more
+            // than a single tick of damage per hit
             if(!testNode.equals(lastEnemyHit)){
                 if(testNode.getName().equals("baddie")){
                     testNode.getControl(EnemyControl.class).reduceHP(damage);
