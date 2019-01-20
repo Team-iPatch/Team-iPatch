@@ -20,28 +20,37 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Sphere;
 
 /**
  *
  * @author cpl512
  */
-public class BuildingGeneratorState extends BaseAppState {
+public class BuildingGenerator {
     
-    @Override
-    protected void initialize(Application app) {
-        
+    SimpleApplication app;
+   
+    BuildingGenerator(SimpleApplication app) {
+        this.app = app;
     }
     
    //They require app in their parameters because of an issue with null pointers
     
-    public Spatial generateDepartment(String name, float ghostRadius, SimpleApplication app){
+    public Spatial generateDepartment(String name, Vector3f location, float ghostRadius){
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         Box model = new Box(2,2,2);
         Geometry department = new Geometry(name, model);
         //this will be given by the environment map
-        department.setLocalTranslation(new Vector3f(2, 2, 2));
+        department.setLocalTranslation(location);
         Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.Blue);
+        switch(name){
+            case "Computer Science":
+                mat1.setColor("Color", ColorRGBA.Blue);
+                break;
+            case "Biology":
+                mat1.setColor("Color", new ColorRGBA(0,0.4f,0,1));
+                break;
+        }
         department.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         department.addControl(ghost);
@@ -51,12 +60,11 @@ public class BuildingGeneratorState extends BaseAppState {
         return department;
     }
     
-    public void generateCollege(String name, Vector3f location, float ghostRadius, SimpleApplication app){
+    public void generateCollege(String name, Vector3f location, float ghostRadius){
         PhysicsSpace physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
         Node collegeNode = new Node();
         collegeNode.setLocalTranslation(location);
-        Spatial college = app.getAssetManager().loadModel("Models/"
-                                                     + "turret02/turret02.j3o");
+        Spatial college = app.getAssetManager().loadModel("Models/turret02/turret02.j3o");
         college.setName("college");
         GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
         college.addControl(ghost);
@@ -77,27 +85,25 @@ public class BuildingGeneratorState extends BaseAppState {
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
         }
-        
         college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace));
         collegeNode.attachChild(college);
+        Geometry box = new Geometry("box", new Sphere(8,8,2f));
+        box.setLocalTranslation(0,2,0);
+        
+        Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
+        switch(name){
+            case "Derwent":
+                mat1.setColor("Color", ColorRGBA.LightGray);
+                break;
+            case "Vanbrugh":
+                mat1.setColor("Color", new ColorRGBA(0.5f,0,0.5f,1));
+                break;
+            case "Alcuin":
+                mat1.setColor("Color", ColorRGBA.Red);
+                break;
+        }
+        box.setMaterial(mat1);
+        collegeNode.attachChild(box);
         app.getRootNode().attachChild(collegeNode);
-    }
-    
-    @Override
-    public void update(float tpf) {
-        //TODO: implement behavior during runtime
-    }
-
-
-    @Override
-    protected void cleanup(Application app) {
-    }
-
-    @Override
-    protected void onEnable() {
-    }
-
-    @Override
-    protected void onDisable() {
     }
 }

@@ -60,29 +60,29 @@ public class MapGeneration
         Box box = new Box(0.5f, 0.5f, 0.5f);
         Geometry box_geom = new Geometry("box", box);
         Material mat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        if (skin == TerrainType.SAND)
-        {
-            mat.setColor("Color", ColorRGBA.Yellow);
-        }
-        else if (skin == TerrainType.WOOD)
-        {
-            mat.setColor("Color", ColorRGBA.Blue);
-        }
-        else if (skin == TerrainType.AIR)
-        {
-            mat.setColor("Color", ColorRGBA.Red);
-        }
-         else if (skin == TerrainType.DIRT)
-        {
-            mat.setColor("Color", ColorRGBA.Orange);
-        }
-        else if (skin == TerrainType.STONE)
-        {
-            mat.setColor("Color", ColorRGBA.Cyan);
-        }
-        else
+        if (null == skin)
         {
             mat.setColor("Color", ColorRGBA.Green);
+        }
+        else switch (skin) {
+            case SAND:
+                mat.setColor("Color", ColorRGBA.Yellow);
+                break;
+            case WOOD:
+                mat.setColor("Color", ColorRGBA.Blue);
+                break;
+            case AIR:
+                mat.setColor("Color", ColorRGBA.Red);
+                break;
+            case DIRT:
+                mat.setColor("Color", ColorRGBA.Orange);
+                break;
+            case STONE:
+                mat.setColor("Color", ColorRGBA.Cyan);
+                break;
+            default:
+                mat.setColor("Color", ColorRGBA.Green);
+                break;
         }
         box_geom.setMaterial(mat);
         box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);

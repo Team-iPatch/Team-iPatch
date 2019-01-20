@@ -51,6 +51,7 @@ public class DepartmentControl extends AbstractControl{
             if (obj.getUserObject().getClass() == Node.class){
                 Node userObject = (Node)obj.getUserObject();
                 if(userObject.getName().equals("player")){
+                    System.out.println(this.name);
                     showshop = true;
                 }
             }

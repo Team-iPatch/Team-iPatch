@@ -9,10 +9,12 @@ import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
@@ -33,6 +35,7 @@ public class CollegeControl extends AbstractControl {
     private Quaternion rotation;
     private double shootChance;
     private int hp;
+    private boolean captured;
     PhysicsSpace physicsSpace;
     
     /**
@@ -54,6 +57,7 @@ public class CollegeControl extends AbstractControl {
         this.collegeNode = collegeNode;
         this.inCombat = false;
         this.rotation = new Quaternion();
+        captured = false;
         switch(name){
             case "Derwent":
                 this.hp = 100;
@@ -75,9 +79,9 @@ public class CollegeControl extends AbstractControl {
     @Override
     protected void controlUpdate(float tpf) {
         if (hp <= 0){
-            kill();
+            capture();
         }
-        if(inCombat) {
+        if(!captured && inCombat) {
             Quaternion rot = collegeNode.getLocalRotation();
             switch(name) {
                 case "Derwent":
@@ -113,7 +117,7 @@ public class CollegeControl extends AbstractControl {
                     throw new NotImplementedException();
             }
         } 
-        else {
+        else if(!captured) {
             for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
                 if (obj.getUserObject().getClass() == Node.class){
                     Node userObject = (Node)obj.getUserObject();
@@ -133,11 +137,10 @@ public class CollegeControl extends AbstractControl {
         return this.hp;
     }
     
-    public void kill(){
-        physicsSpace.remove(ghost);
-        physicsSpace.remove(spatial.getControl(RigidBodyControl.class));
-        collegeNode.removeFromParent();
-        collegeNode.detachAllChildren();
+    public void capture(){
+        captured = true;
+        Geometry box = (Geometry) collegeNode.getChild("box");
+        box.getMaterial().setColor("Color", ColorRGBA.Green);
     }
     
     @Override

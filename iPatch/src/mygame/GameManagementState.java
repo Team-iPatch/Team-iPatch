@@ -93,11 +93,11 @@ public class GameManagementState extends AbstractAppState {
         loadPhysics();
         loadEnemyGenerator();
         loadScene();
-        loadPlayer();
         //loadBox(); // used to test physics, allows the ship to "surf" into the air
-        loadBaddies();
         loadMap();
         loadBuildings();
+        loadPlayer();
+        loadBaddies();
     }
     
     /**
@@ -189,27 +189,14 @@ public class GameManagementState extends AbstractAppState {
     }
     
     /**
-     * Initialises bad guys, edit enemy instantiation here.
+     * Initialises enemies, edit enemy instantiation here.
      */
     private void loadBaddies(){
-        Spatial baddie1 = enemyGenerator.generateEnemy("Models/turret02/turret02.j3o", new Vector3f(-15, 3, 0),1.5f, 3f, 10);
-        rootNode.attachChild(baddie1);
-        
-        Spatial baddie2 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie2);
-        baddie2.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
-        Spatial baddie3 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie3);
-        baddie3.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
-        Spatial baddie4 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie4);
-        baddie4.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
-        Spatial baddie5 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie5);
-        baddie5.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
-        Spatial baddie6 = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-        rootNode.attachChild(baddie6);
-        baddie6.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        for(int i = 0; i < 5; i++){
+            Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
+            rootNode.attachChild(baddie);
+            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+        }
     }
     
     /**
@@ -227,9 +214,11 @@ public class GameManagementState extends AbstractAppState {
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
-        BuildingGeneratorState b = new BuildingGeneratorState();
-        Spatial department = b.generateDepartment("Computer Science", 5f, app);
-        b.generateCollege("Alcuin", new Vector3f(10,1,10), 5f, app);
+        BuildingGenerator buildingGenerator = new BuildingGenerator(app);
+        buildingGenerator.generateDepartment("Computer Science", new Vector3f(10,1,10), 5f);
+        buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
+        buildingGenerator.generateCollege("Alcuin", new Vector3f(-20,1,-20), 5f);
+        buildingGenerator.generateCollege("Vanbrugh", new Vector3f(-20, 1, 20), 5f);
+        buildingGenerator.generateCollege("Derwent", new Vector3f(20, 1, 20), 5f);
     }
-    
 }
