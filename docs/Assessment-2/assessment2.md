@@ -6,7 +6,7 @@
   + [Updated risks](Risk2.pdf)
   + [Updated plan](Plan2.pdf)
 + [Game executable](PirateGame-Windows-x64.zip)
-  +[Game executable (Dropbox mirror)](https://www.dropbox.com/s/hrxujbwop82tbvf/PirateGame-Windows-x64.zip?dl=0)
+  + [Game executable (Dropbox mirror)](https://www.dropbox.com/s/hrxujbwop82tbvf/PirateGame-Windows-x64.zip?dl=0)
 + [User Manual (pdf)](manual.pdf)
 + [User Manual (source)](manual.latex)
 
