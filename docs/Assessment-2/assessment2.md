@@ -5,7 +5,7 @@
   + [Updated requirements](Req2.pdf)
   + [Updated risks](Risk2.pdf)
   + [Updated plan](Plan2.pdf)
-+ [Game executable](Team-iPatch-Game.zip)
++ [Game executable](PirateGame-Windows-x64.zip)
 + [User Manual (pdf)](manual.pdf)
 + [User Manual (source)](manual.latex)
 
