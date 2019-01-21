@@ -1,24 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mygame;
 
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
-import com.jme3.asset.AssetManager;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.Node;
+import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
+import com.jme3.texture.Texture;
 import java.util.Random;
-import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.scene.Spatial.CullHint;
 import fastnoise.FastNoise;
-
-
 /**
  *
  * @author Joseph Leigh
@@ -30,13 +25,13 @@ public class MapGeneration
     static BulletAppState bulletAppState;
     static Node rootNode;
     static AssetManager assetManager;
-    static int xAxis = 220;
-    static int yAxis = 64;
-    static int zAxis = 220;
+    static int xAxis = 220; //Map width
+    static int yAxis = 64;  //Map heigh
+    static int zAxis = 220; //Map length
     static int[][] heightMap = new int[xAxis][zAxis];
-
+    static boolean accessibleLocations[][] = new boolean[xAxis][zAxis];
     
-    public static void loadArrayIntoWorld(TerrainType[][][] worldArray) 
+    public static void loadArrayIntoWorld(TerrainType[][][] worldArray) //This sub loads blocks into the world based off of and array created by generate Array.
     {
         for (int x = 0; x < worldArray.length; x += 1)
         {
@@ -53,10 +48,8 @@ public class MapGeneration
         }
     }
     
-    
-    private static void loadBox(int xCo, int yCo, int zCo, TerrainType skin)
+    private static void loadBox(int xCo, int yCo, int zCo, TerrainType skin) //Loads a box into the world and gives it a skin and adds a hit box
     {
-        //System.out.println("in here");
         Box box = new Box(0.5f, 0.5f, 0.5f);
         Geometry box_geom = new Geometry("box", box);
         Material mat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
@@ -64,41 +57,29 @@ public class MapGeneration
         {
             mat.setColor("Color", ColorRGBA.Green);
         }
-        else switch (skin) {
+        else switch (skin)      //Gives the box a texture based on the box's TerrainType value in the array
+        {
             case SAND:
-                mat.setColor("Color", ColorRGBA.Yellow);
-                break;
-            case WOOD:
-                mat.setColor("Color", ColorRGBA.Blue);
-                break;
-            case AIR:
-                mat.setColor("Color", ColorRGBA.Red);
-                break;
-            case DIRT:
-                mat.setColor("Color", ColorRGBA.Orange);
-                break;
-            case STONE:
-                mat.setColor("Color", ColorRGBA.Cyan);
+                Texture tex = assetManager.loadTexture("Textures/dirt.jpg");
+                mat.setTexture("ColorMap", tex);
                 break;
             default:
-                mat.setColor("Color", ColorRGBA.Green);
+                Texture tex1 = assetManager.loadTexture("Textures/grass.png");
+                mat.setTexture("ColorMap", tex1);
                 break;
         }
         box_geom.setMaterial(mat);
-        box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f);
+        box_geom.setLocalTranslation(xCo+0.5f, yCo+0.5f, zCo+0.5f); //Raises box above scene floor
         rootNode.attachChild(box_geom);
-        //RigidBodyControl box_phys = new RigidBodyControl(0f);
-        //box_geom.addControl(box_phys);
-        //bulletAppState.getPhysicsSpace().add(box_phys);
-        if (yCo == 1)
+        if (yCo == 1)             //If the box height == 1 then a hit box is added
         {
-            addHitBox(xCo,yCo,zCo);
+            addHitBox(xCo,yCo,zCo);  
         }
     }
     
-    public static TerrainType[][][] generateArray()
+    public static TerrainType[][][] generateArray() //Generates a 3-D array of TerrainType
     {
-        generateHeightMap();
+        generateHeightMap();            
         TerrainType[][][] mapArray = new TerrainType[MapGeneration.xAxis][MapGeneration.yAxis][MapGeneration.zAxis];
         for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
         {
@@ -107,40 +88,40 @@ public class MapGeneration
                fillMap(x,y,mapArray);
             }
         }
+        findAccessible();
         return mapArray;
     }
    
-    private static void generateHeightMap()
+    private static void generateHeightMap() //Uses the fastnoise library to generate a 2-D height map 
     {
-        Random rand = new Random();
-        FastNoise.seed = 1923123; //rand.nextInt(100000000) + 1;
-        FastNoise.init();
-        for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
+        Random rand = new Random();                                                                             //initiates random
+        FastNoise.seed = rand.nextInt(100000000) + 1;                                                           //set fastnoise see to new random number above 1
+        FastNoise.init();                                                                                       //generates fastnoise
+        for (int x = 0; x < MapGeneration.heightMap.length; x += 1)                                             //iterates through a portion og the fast noise graph to fill out the map
         {
             for (int y = 0; y< MapGeneration.heightMap[x].length; y += 1)
             {
-                float arbritraryNumber = 32.0f; 
-                //heightMap[x][y] = (int)(64.0 * FastNoise.noise(0.1, 1.0));
-                if (((int)(32.0 * FastNoise.noise(x / arbritraryNumber, y / arbritraryNumber)) > 0))
-                {                 
-                    int xd = (heightMap.length / 2 ) - x;
+                float frequency = 32.0f; 
+                if (((int)(32.0 * FastNoise.noise(x / frequency, y / frequency)) > 0))                          //if the fast noise value is above 0 then it is masked 
+                {                                                                                               //(value is normalised towards 0 near the edge of the array are to one near the center)
+                    int xd = (heightMap.length / 2 ) - x;                                                       //the masked value is then added to the height map.
                     float xdf = xd / ((float) (heightMap.length/2));
                     int yd = (heightMap[x].length / 2 ) - y;
                     float ydf = yd / ((float) (heightMap[x].length/2));
                     float mask = (float)(Math.sqrt(1.0f - Math.abs(xdf)) * Math.sqrt(1.0f - Math.abs(ydf)));
-                    float height = (float) (mask * (32.0f * FastNoise.noise(x / arbritraryNumber, y/arbritraryNumber)));
+                    float height = (float) (mask * (32.0f * FastNoise.noise(x / frequency, y/frequency)));
                     MapGeneration.heightMap[x][y] = (int) height;                    
                 }
             }    
         }
     }
     
-    private static void findAccesable()
+    private static void findAccessible() //Finds acceasble locations in the array
     {
-       
+
     }
     
-    private static void fillMap(int x, int y,  TerrainType[][][] mapArray)
+    private static void fillMap(int x, int y,  TerrainType[][][] mapArray)  //sets block textures and fixes holes in the mapArray
     {
          if (MapGeneration.heightMap[x][y] > 0)
                 {
@@ -152,11 +133,11 @@ public class MapGeneration
                     } 
     }
     
-    private static void assignTexture(int x, int y, int z, TerrainType mapArray[][][])
+    private static void assignTexture(int x, int y, int z, TerrainType mapArray[][][]) //assigens textures to boxes based off of their height.
     {
         if (z > 0)
             {
-            if (z <= 3)
+            if (z <= 2)
                         {
                             mapArray[x][z][y] = TerrainType.SAND;
                         }
@@ -167,39 +148,35 @@ public class MapGeneration
             }
     }
     
-    private static void fixHoles(int x, int y,  TerrainType[][][] mapArray)
+    private static void fixHoles(int x, int y,  TerrainType[][][] mapArray) //The purpose of this sub is to check the adjecent and 1 down cubes to see if and are missing from the side of the terrain and patch them up.
     {
-        if ((heightMap[x-1][y] - heightMap[x][y]) > 1)
+        if ((heightMap[x-1][y] - heightMap[x][y]) > 1)                              //checks if the difference between the height of (x-1,y) and (x,y) is more than 1
             {
-                int amountMissing = heightMap[x-1][y] - heightMap[x][y] - 1;
+                int amountMissing = heightMap[x-1][y] - heightMap[x][y] - 1;        //initiates the amount of missing blocks.
                 for (int i = 0; i < amountMissing; i++)
-                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
-                mapArray[x-1][heightMap[x-1][y]+i-1][y] = TerrainType.WOOD;        
+                assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);   
             }
-        else if ((heightMap[x+1][y] - heightMap[x][y]) > 1)
+        if ((heightMap[x+1][y] - heightMap[x][y]) > 1)
             {
                 int amountMissing = heightMap[x+1][y] - heightMap[x][y] - 1;
                 for (int i = 0; i < amountMissing; i++)
-                //assignTexture(x+1,y,heightMap[x+1][y]+i-1,mapArray);
-                mapArray[x+1][heightMap[x+1][y]+i-1][y] = TerrainType.AIR;        
+                assignTexture(x+1,y,heightMap[x+1][y]+i-1,mapArray);     
             }
-        else if ((heightMap[x][y-1] - heightMap[x][y]) > 1)
+        if ((heightMap[x][y-1] - heightMap[x][y]) > 1)
             {
                 int amountMissing = heightMap[x][y-1] - heightMap[x][y] - 1;
                 for (int i = 0; i < amountMissing; i++)
-                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
-                mapArray[x][heightMap[x][y]+i+1][y-1] = TerrainType.STONE;        
+                assignTexture(x,y-1,heightMap[x][y]+i+1,mapArray);       
             }
-        else if ((heightMap[x][y+1] - heightMap[x][y]) > 1)
+        if ((heightMap[x][y+1] - heightMap[x][y]) > 1)
             {
                 int amountMissing = heightMap[x][y+1] - heightMap[x][y] - 1;
                 for (int i = 0; i < amountMissing; i++)
-                //assignTexture(x-1,y,heightMap[x-1][y]+i-1,mapArray);
-                mapArray[x][heightMap[x][y]+i+1][y+1] = TerrainType.DIRT;        
+                assignTexture(x,y+1,heightMap[x][y]+i+1,mapArray);      
             }
     }
     
-    private static void addHitBox(int xCo, int yCo, int zCo)
+    private static void addHitBox(int xCo, int yCo, int zCo)  //This function attaches a hit box to a box on the Co-ordinates input to stop the ship surfing up the terrain.
     {
        Box box = new Box(0.5f, 3f, 0.5f);
        Geometry box_geom = new Geometry("hitBox", box); 
