@@ -28,6 +28,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class CollegeControl extends AbstractControl {
     private GhostControl ghost;
+    private int ghostCounter;
     private final String name;
     private Spatial cannons[];
     private Node collegeNode;
@@ -53,6 +54,7 @@ public class CollegeControl extends AbstractControl {
                    Node collegeNode, PhysicsSpace physicsSpace){
         this.name = name;
         this.ghost = ghost;
+        this.ghostCounter = 0;
         this.cannons = cannons;
         this.collegeNode = collegeNode;
         this.inCombat = false;
@@ -122,7 +124,12 @@ public class CollegeControl extends AbstractControl {
                 if (obj.getUserObject().getClass() == Node.class){
                     Node userObject = (Node)obj.getUserObject();
                     if(userObject.getName().equals("player")){
-                        inCombat = true;
+                        if (ghostCounter > 1){
+                           inCombat = true;
+                        }
+                        else{
+                            ghostCounter++;
+                        }
                     }
                 }
             }
