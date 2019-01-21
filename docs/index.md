@@ -4,7 +4,7 @@
 
 [Assessment 1 Documents](./Assessment-1/assessment1.html)
 
-[Assessment 2 Documents](./Assessment-1/assessment1.html)
+[Assessment 2 Documents](./Assessment-2/assessment2.html)
 
 # THE GAME
 
