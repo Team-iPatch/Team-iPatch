@@ -3,6 +3,7 @@
 # ASSESSMENT DOCUMENTS
 
 [Assessment 1 Documents](./Assessment-1/assessment1.html)
+
 [Assessment 2 Documents](./Assessment-1/assessment1.html)
 
 # THE GAME
