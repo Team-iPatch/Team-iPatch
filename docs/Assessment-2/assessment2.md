@@ -2,7 +2,7 @@
 + [Software Testing Report](Test2.pdf)
   + [Testing Material](testmat.pdf)
 + [Implementation report](Impl2.pdf)
-+ Updated deliverables from assessment 1
++ [Updated deliverables from assessment 1](Updates2.pdf)
   + [Updated requirements](Req2.pdf)
   + [Updated risks](Risk2.pdf)
   + [Updated plan](Plan2.pdf)
