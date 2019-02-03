@@ -56,8 +56,7 @@ public class ShooterControl extends AbstractControl {
         this.damage = 5;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
-        this.physicsSpace = app.getStateManager().getState(BulletAppState.class)
-                                                             .getPhysicsSpace();
+        this.physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
         playerControlState = app.getStateManager().getState(PlayerControlState.class);
     }
     

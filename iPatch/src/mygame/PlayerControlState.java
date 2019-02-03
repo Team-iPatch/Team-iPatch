@@ -270,7 +270,7 @@ public class PlayerControlState extends BaseAppState {
      * Initialises player inputs.
      */
     private void initKeys(){
-    	inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
+    	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
     	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));

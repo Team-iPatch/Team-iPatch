@@ -13,9 +13,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/EnemyControl.java</file>
-            <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/ShooterControl.java</file>
+            <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/MapGeneration.java</file>
+            <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/NiftyController.java</file>
             <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/AIChaserControl.java</file>
+            <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/GameManagementState.java</file>
             <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/PlayerControlState.java</file>
+            <file>file:/E:/Github/Team-iPatch/iPatch/src/mygame/DepartmentControl.java</file>
         </group>
     </open-files>
 </project-private>

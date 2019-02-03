@@ -16,7 +16,6 @@ import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.InputManager;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
@@ -70,7 +69,6 @@ public class GameManagementState extends AbstractAppState {
         this.rootNode = this.app.getRootNode();
         
         playerControlState = new PlayerControlState();
-        
         // Loads GUI first for a rudimentary start menu
         loadGUI();
     }
@@ -195,7 +193,7 @@ public class GameManagementState extends AbstractAppState {
         for(int i = 0; i < 5; i++){
             Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
             rootNode.attachChild(baddie);
-            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace(),niftyController));
         }
     }
     
