@@ -38,6 +38,7 @@ public class CollegeControl extends AbstractControl {
     private int hp;
     private boolean captured;
     PhysicsSpace physicsSpace;
+    NiftyController nifty;
     
     /**
      * Control used to manage Colleges, tracking their health and controlling
@@ -51,7 +52,7 @@ public class CollegeControl extends AbstractControl {
      * @param physicsSpace PhysicsSpace where the College will register collisions.
      */
     CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
-                   Node collegeNode, PhysicsSpace physicsSpace){
+                   Node collegeNode, PhysicsSpace physicsSpace, NiftyController nifty){
         this.name = name;
         this.ghost = ghost;
         this.ghostCounter = 0;
@@ -76,12 +77,16 @@ public class CollegeControl extends AbstractControl {
                 rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);                
         }
         this.physicsSpace = physicsSpace;
+        this.nifty = nifty;
     }
 
     @Override
     protected void controlUpdate(float tpf) {
         if (hp <= 0){
             capture();
+        }
+        if(this.nifty.shop){
+            inCombat = false;
         }
         if(!captured && inCombat) {
             Quaternion rot = collegeNode.getLocalRotation();

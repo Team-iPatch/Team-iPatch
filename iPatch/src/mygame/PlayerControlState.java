@@ -290,7 +290,7 @@ public class PlayerControlState extends BaseAppState {
                 if(name.equals("ChangeRes")) {
                     changeResolution();
                 }
-                if(name.equals("Shoot") && isPressed) {
+                if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).shop) {
                     // Shoots every cannon attached to the player
                     for(int i = 0; i < shooters.size(); i++){
                         shooters.get(i).shootBullet(shooterDirections.get(i).mult(

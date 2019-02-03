@@ -85,7 +85,7 @@ public class BuildingGenerator {
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
         }
-        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace));
+        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace,this.app.getStateManager().getState(NiftyController.class)));
         collegeNode.attachChild(college);
         Geometry box = new Geometry("box", new Sphere(8,8,2f));
         box.setLocalTranslation(0,2,0);
