@@ -34,6 +34,7 @@ public class MapGeneration
     static int yAxis = 64;
     static int zAxis = 220;
     static int[][] heightMap = new int[xAxis][zAxis];
+    static int[][] spawnmap = new int[xAxis][zAxis];
 
     
     public static void loadArrayIntoWorld(TerrainType[][][] worldArray) 
@@ -46,11 +47,13 @@ public class MapGeneration
                 {
                     if (worldArray[x][y][z] != null)
                     {
+                        spawnmap[x][z] = 1;
                         loadBox(x, y, z, worldArray[x][y][z]); 
                     }
                 }
             }
         }
+        fixBounds();
     }
     
     
@@ -78,7 +81,7 @@ public class MapGeneration
                 mat.setColor("Color", ColorRGBA.Orange);
                 break;
             case STONE:
-                mat.setColor("Color", ColorRGBA.Cyan);
+                mat.setColor("Color", ColorRGBA.DarkGray);
                 break;
             default:
                 mat.setColor("Color", ColorRGBA.Green);
@@ -135,9 +138,17 @@ public class MapGeneration
         }
     }
     
-    private static void findAccesable()
+    private static void fixBounds()
     {
+       for(int x=0;x<xAxis;x++){
+           loadBox(x,1,0,TerrainType.STONE);
+           loadBox(x,1,zAxis-1,TerrainType.STONE);
+       }
        
+       for(int z=0;z<zAxis;z++){
+           loadBox(0,1,z,TerrainType.STONE);
+           loadBox(xAxis-1,1,z,TerrainType.STONE);
+       }
     }
     
     private static void fillMap(int x, int y,  TerrainType[][][] mapArray)
