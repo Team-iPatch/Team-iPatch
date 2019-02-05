@@ -37,7 +37,7 @@ public class MapGeneration
     static int[][] spawnmap = new int[xAxis][zAxis];
 
     
-    public static void loadArrayIntoWorld(TerrainType[][][] worldArray) 
+    public static int[][] loadArrayIntoWorld(TerrainType[][][] worldArray) 
     {
         for (int x = 0; x < worldArray.length; x += 1)
         {
@@ -54,6 +54,7 @@ public class MapGeneration
             }
         }
         fixBounds();
+        return spawnmap;
     }
     
     
@@ -223,4 +224,5 @@ public class MapGeneration
        box_geom.setMaterial(mat);
        box_geom.setCullHint(CullHint.Always);
     }
+
 }

@@ -50,6 +50,7 @@ public class GameManagementState extends AbstractAppState {
     Node playerShip;
     PlayerControlState playerControlState;
     BetterCharacterControl characterControl;
+    int[][] spawnmap;
     
     /**
      * Manager app state used to initialise and store the majority of program
@@ -205,13 +206,14 @@ public class GameManagementState extends AbstractAppState {
         MapGeneration.rootNode = rootNode;
         MapGeneration.bulletAppState = bulletAppState;
         TerrainType[][][] testArray = MapGeneration.generateArray();
-        MapGeneration.loadArrayIntoWorld(testArray);
+        spawnmap = MapGeneration.loadArrayIntoWorld(testArray);
     }
     
     /**
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
+        //TODO add code here that dynamically places stuff into the map.
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
         buildingGenerator.generateDepartment("Computer Science", new Vector3f(10,1,10), 5f);
         buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
