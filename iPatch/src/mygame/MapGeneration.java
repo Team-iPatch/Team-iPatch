@@ -141,14 +141,14 @@ public class MapGeneration
     
     private static void fixBounds()
     {
-       for(int x=0;x<xAxis;x++){
-           loadBox(x,1,0,TerrainType.STONE);
-           loadBox(x,1,zAxis-1,TerrainType.STONE);
+       for(int x=-2;x<=xAxis+1;x++){
+           loadBox(x,1,-2,TerrainType.STONE);
+           loadBox(x,1,zAxis+1,TerrainType.STONE);
        }
        
-       for(int z=0;z<zAxis;z++){
-           loadBox(0,1,z,TerrainType.STONE);
-           loadBox(xAxis-1,1,z,TerrainType.STONE);
+       for(int z=-1;z<=zAxis;z++){
+           loadBox(-2,1,z,TerrainType.STONE);
+           loadBox(xAxis+1,1,z,TerrainType.STONE);
        }
     }
     

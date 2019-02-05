@@ -29,6 +29,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import de.lessvoid.nifty.Nifty;
+import java.util.Random;
 
 /**
  * Manager app state used to initialise and store the majority of program code.
@@ -51,6 +52,7 @@ public class GameManagementState extends AbstractAppState {
     PlayerControlState playerControlState;
     BetterCharacterControl characterControl;
     int[][] spawnmap;
+    Vector3f[] spawnlist;
     
     /**
      * Manager app state used to initialise and store the majority of program
@@ -172,8 +174,8 @@ public class GameManagementState extends AbstractAppState {
      */
     private void loadPlayer(){
         playerShip = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
-        playerShip.setLocalTranslation(new Vector3f(0, 3, 0));
-        characterControl = new BetterCharacterControl(1.5f, 3f, 10f);
+        playerShip.setLocalTranslation(spawnlist[0]);
+        characterControl = new BetterCharacterControl(0.2f, 3f, 10f);
         playerShip.addControl(characterControl);
         rootNode.attachChild(playerShip);
         playerShip.setName("player");
@@ -213,12 +215,53 @@ public class GameManagementState extends AbstractAppState {
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
-        //TODO add code here that dynamically places stuff into the map.
+        int buildingcount = 5; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
+        int rowcount = spawnmap.length;
+        int colcount = spawnmap[0].length;
+        spawnlist = new Vector3f[buildingcount];
+        Random rand = new Random();
+
+        while(buildingcount >= 1){
+            int genx = rand.nextInt(rowcount-2);
+            int genz = rand.nextInt(colcount-2);
+            if(genx <2){
+                genx = 2;
+            }
+            if(genz <2){
+                genz = 2;
+            }
+            Vector3f tempvector = new Vector3f(genx+0.5f,1,genz+0.5f);
+            boolean safedistance = true;
+            
+            if(spawnmap[genx][genz] == 1){
+                safedistance = false;
+            }
+            
+            for (int i = 0; i<spawnlist.length;i++) {
+                if(spawnlist[i] != null){
+                    if(spawnlist[i].distance(tempvector)> 200){ // edit number here to change how close stuff can be
+                        safedistance = false;
+                    }
+                }
+            }
+            if(spawnmap[genx+2][genz] == 1 && spawnmap[genx-2][genz] == 1 &&
+                spawnmap[genx][genz+2] == 1 && spawnmap[genx][genz-2] == 1){
+                safedistance = false;
+            }
+            
+            if(safedistance == true){
+                spawnlist[buildingcount-1] = tempvector;
+                buildingcount -= 1;
+            }
+            
+        }
+            
+        
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
-        buildingGenerator.generateDepartment("Computer Science", new Vector3f(10,1,10), 5f);
-        buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
-        buildingGenerator.generateCollege("Alcuin", new Vector3f(108,  1, 90), 15f);
-        buildingGenerator.generateCollege("Vanbrugh", new Vector3f(-20, 1, 20), 15f);
-        buildingGenerator.generateCollege("Derwent", new Vector3f(117, 1, 200), 15f);
+        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f);
+        buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f);
+        buildingGenerator.generateCollege("Alcuin", spawnlist[2], 15f);
+        buildingGenerator.generateCollege("Vanbrugh", spawnlist[3],15f);
+        buildingGenerator.generateCollege("Derwent", spawnlist[4], 15f);
     }
 }
