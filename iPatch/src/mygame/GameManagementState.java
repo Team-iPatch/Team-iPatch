@@ -239,7 +239,8 @@ public class GameManagementState extends AbstractAppState {
             
             for (int i = 0; i<spawnlist.length;i++) {
                 if(spawnlist[i] != null){
-                    if(spawnlist[i].distance(tempvector)> 200){ // edit number here to change how close stuff can be
+                    
+                    if(spawnlist[i].distance(tempvector)< 20){ // edit number here to change how close stuff can be
                         safedistance = false;
                     }
                 }
@@ -250,11 +251,13 @@ public class GameManagementState extends AbstractAppState {
             }
             
             if(safedistance == true){
+                System.out.println(tempvector);
                 spawnlist[buildingcount-1] = tempvector;
                 buildingcount -= 1;
             }
             
         }
+        
             
         
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
