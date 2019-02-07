@@ -98,7 +98,7 @@ public class GameManagementState extends AbstractAppState {
         loadMap();
         loadBuildings();
         loadPlayer();
-        loadBaddies();
+        //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
     
     /**
@@ -122,6 +122,7 @@ public class GameManagementState extends AbstractAppState {
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
         stateManager.attach(playerControlState);
+        this.playerControlState.setbulletappstate(bulletAppState);
     }
     
     /**
@@ -258,7 +259,7 @@ public class GameManagementState extends AbstractAppState {
             
         }
         
-            
+        playerControlState.setspawnlist(spawnmap);
         
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
         buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f);
