@@ -18,6 +18,7 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -81,11 +82,16 @@ public class PlayerControlState extends BaseAppState {
         // Initialises a default cannon which shoots to the right of where
         // the player is facing
         this.viewDirection = controller.getViewDirection();
-        ShooterControl shooterControl = new ShooterControl(
-                       viewDirection, false, this.app);
+        ShooterControl shooterControl = new ShooterControl( viewDirection, false, this.app);
         this.player.addControl(shooterControl);
         shooters.add(shooterControl);
         Quaternion shooterDir = new Quaternion();
+        //Here's where I need to add in the mouse input to change fire direction
+        //Vector2f mouse= inputManager.getCursorPosition();
+        //we only need X,Y 
+        //We need to change this so that EVERY time they fire, they update the 
+        //direction independant of 
+        
         shooterDir.fromAngleAxis(270*FastMath.DEG_TO_RAD, Vector3f.UNIT_Y);
         shooterDirections.add(shooterDir);
         // Caps the frame rate at 60 FPS and initialises the input handler
@@ -201,7 +207,7 @@ public class PlayerControlState extends BaseAppState {
         shooters.add(shooterControl);
         shooterDirections.add(direction);
     }
-    
+    //This is STATIC, problem is we want a new direction independant of movement input
     /**
      * Sets whether the player's bullets pierce.
      * @param piercing
@@ -266,6 +272,13 @@ public class PlayerControlState extends BaseAppState {
         this.settings.setResolution(1600, 900);
     	this.app.restart();
     }
+    
+    public Vector3f getAimdir(){
+        Vector2f cursorPos = inputManager.getCursorPosition();
+        Vector3f playerPos = player.getLocalTranslation();
+        Vector3f mouseaim = new Vector3f(cursorPos.x-playerPos.x,cursorPos.y-playerPos.y,0);
+        return mouseaim;
+    }
 	
     /**
      * Initialises player inputs.
@@ -293,9 +306,9 @@ public class PlayerControlState extends BaseAppState {
                 }
                 if(name.equals("Shoot") && isPressed) {
                     // Shoots every cannon attached to the player
-                    for(int i = 0; i < shooters.size(); i++){
-                        shooters.get(i).shootBullet(shooterDirections.get(i).mult(
-                                                    controller.getViewDirection()));
+                    for(int i = 0; i < shooters.size(); i++){                        
+                        shooters.get(i).shootBullet(shooterDirections.get(i).mult(controller.getViewDirection()));
+                        //this particular line. if I'm correct, shoots a bullet according to geomtry orientation
                     }
                 }
             }
