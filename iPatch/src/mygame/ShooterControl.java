@@ -4,28 +4,17 @@
  * and open the template in the editor.
  */
 package mygame;
-import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
-import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
-import com.jme3.scene.control.Control;
 import com.jme3.scene.shape.Sphere;
-import java.io.IOException;
 
 /**
  * Controls a single "cannon", entity which fires bullets in a certain direction.
@@ -56,8 +45,7 @@ public class ShooterControl extends AbstractControl {
         this.damage = 5;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
-        this.physicsSpace = app.getStateManager().getState(BulletAppState.class)
-                                                             .getPhysicsSpace();
+        this.physicsSpace = app.getStateManager().getState(BulletAppState.class).getPhysicsSpace();
         playerControlState = app.getStateManager().getState(PlayerControlState.class);
     }
     

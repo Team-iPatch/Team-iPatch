@@ -31,6 +31,7 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
     int collisionDamage;
     PlayerControlState player;
     PhysicsSpace physicsSpace;
+    NiftyController nifty;
     boolean alive;
 
     private enum State{
@@ -45,9 +46,10 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
      * @param speed Speed of the entity.
      * @param player PlayerControlState representing the player. Used for dealing damage.
      * @param physicsSpace PhysicsSpace to which the entity will attach its collision listener.
+     * @param nifty the nifty menu to detect if the player is in a menu.
      */
     public AIChaserControl(Spatial target, float speed, 
-                          PlayerControlState player, PhysicsSpace physicsSpace){
+                          PlayerControlState player, PhysicsSpace physicsSpace, NiftyController nifty){
         alive = true;
         this.target = target;
         this.state = State.Idle;
@@ -57,6 +59,7 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
         this.viewDirection = Vector3f.UNIT_XYZ;
         this.player = player;
         this.physicsSpace = physicsSpace;
+        this.nifty = nifty;
         physicsSpace.addCollisionListener(this);
     }
     
@@ -65,12 +68,19 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
         if (!alive){
             physicsSpace.removeCollisionListener(this);
         }
-        switch(this.state){
-            case Idle:
-                Idle();
-            case Chasing:
-                Chase();
+        //code below is new pause. Add other variables to change what swaps the ships back to chase.
+        if(nifty.shop){
+            spatial.getControl(BetterCharacterControl.class).setWalkDirection(Vector3f.ZERO);
+            Idle();
+        }else{
+            Chase();
         }
+        //switch(this.state){
+        //    case Idle:
+        //        Idle();
+        //    case Chasing:
+        //        Chase();
+        //}
     }
     
     private void Idle(){

@@ -16,7 +16,6 @@ import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.InputManager;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
@@ -30,6 +29,7 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import de.lessvoid.nifty.Nifty;
+import java.util.Random;
 
 /**
  * Manager app state used to initialise and store the majority of program code.
@@ -51,6 +51,8 @@ public class GameManagementState extends AbstractAppState {
     Node playerShip;
     PlayerControlState playerControlState;
     BetterCharacterControl characterControl;
+    int[][] spawnmap;
+    Vector3f[] spawnlist;
     
     /**
      * Manager app state used to initialise and store the majority of program
@@ -70,7 +72,6 @@ public class GameManagementState extends AbstractAppState {
         this.rootNode = this.app.getRootNode();
         
         playerControlState = new PlayerControlState();
-        
         // Loads GUI first for a rudimentary start menu
         loadGUI();
     }
@@ -97,7 +98,7 @@ public class GameManagementState extends AbstractAppState {
         loadMap();
         loadBuildings();
         loadPlayer();
-        loadBaddies();
+        //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
     
     /**
@@ -121,6 +122,7 @@ public class GameManagementState extends AbstractAppState {
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
         stateManager.attach(playerControlState);
+        this.playerControlState.setbulletappstate(bulletAppState);
     }
     
     /**
@@ -173,8 +175,8 @@ public class GameManagementState extends AbstractAppState {
      */
     private void loadPlayer(){
         playerShip = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
-        playerShip.setLocalTranslation(new Vector3f(0, 3, 0));
-        characterControl = new BetterCharacterControl(1.5f, 3f, 10f);
+        playerShip.setLocalTranslation(spawnlist[0]);
+        characterControl = new BetterCharacterControl(0.2f, 3f, 10f);
         playerShip.addControl(characterControl);
         rootNode.attachChild(playerShip);
         playerShip.setName("player");
@@ -195,7 +197,7 @@ public class GameManagementState extends AbstractAppState {
         for(int i = 0; i < 5; i++){
             Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
             rootNode.attachChild(baddie);
-            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace()));
+            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace(),niftyController));
         }
     }
     
@@ -207,18 +209,63 @@ public class GameManagementState extends AbstractAppState {
         MapGeneration.rootNode = rootNode;
         MapGeneration.bulletAppState = bulletAppState;
         TerrainType[][][] testArray = MapGeneration.generateArray();
-        MapGeneration.loadArrayIntoWorld(testArray);
+        spawnmap = MapGeneration.loadArrayIntoWorld(testArray);
     }
     
     /**
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
+        int buildingcount = 5; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
+        int rowcount = spawnmap.length;
+        int colcount = spawnmap[0].length;
+        spawnlist = new Vector3f[buildingcount];
+        Random rand = new Random();
+
+        while(buildingcount >= 1){
+            int genx = rand.nextInt(rowcount-2);
+            int genz = rand.nextInt(colcount-2);
+            if(genx <2){
+                genx = 2;
+            }
+            if(genz <2){
+                genz = 2;
+            }
+            Vector3f tempvector = new Vector3f(genx+0.5f,1,genz+0.5f);
+            boolean safedistance = true;
+            
+            if(spawnmap[genx][genz] == 1){
+                safedistance = false;
+            }
+            
+            for (int i = 0; i<spawnlist.length;i++) {
+                if(spawnlist[i] != null){
+                    
+                    if(spawnlist[i].distance(tempvector)< 20){ // edit number here to change how close stuff can be
+                        safedistance = false;
+                    }
+                }
+            }
+            if(spawnmap[genx+2][genz] == 1 && spawnmap[genx-2][genz] == 1 &&
+                spawnmap[genx][genz+2] == 1 && spawnmap[genx][genz-2] == 1){
+                safedistance = false;
+            }
+            
+            if(safedistance == true){
+                System.out.println(tempvector);
+                spawnlist[buildingcount-1] = tempvector;
+                buildingcount -= 1;
+            }
+            
+        }
+        
+        playerControlState.setspawnlist(spawnmap);
+        
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
-        buildingGenerator.generateDepartment("Computer Science", new Vector3f(10,1,10), 5f);
-        buildingGenerator.generateDepartment("Biology", new Vector3f(10,1,-10), 5f);
-        buildingGenerator.generateCollege("Alcuin", new Vector3f(108,  1, 90), 15f);
-        buildingGenerator.generateCollege("Vanbrugh", new Vector3f(-20, 1, 20), 15f);
-        buildingGenerator.generateCollege("Derwent", new Vector3f(117, 1, 200), 15f);
+        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f);
+        buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f);
+        buildingGenerator.generateCollege("Alcuin", spawnlist[2], 15f);
+        buildingGenerator.generateCollege("Vanbrugh", spawnlist[3],15f);
+        buildingGenerator.generateCollege("Derwent", spawnlist[4], 15f);
     }
 }

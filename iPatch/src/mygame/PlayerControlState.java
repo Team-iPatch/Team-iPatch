@@ -8,8 +8,8 @@ package mygame;
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -23,6 +23,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * App state which controls player input and the player's resources.
@@ -46,6 +47,8 @@ public class PlayerControlState extends BaseAppState {
     private ArrayList<ShooterControl> shooters;
     private ArrayList<Quaternion> shooterDirections;
     private Boolean piercing;
+    private int[][] spawnlist;
+    private BulletAppState bulletappstate;
     
     @Override 
     protected void initialize(Application app){
@@ -218,6 +221,14 @@ public class PlayerControlState extends BaseAppState {
         return this.piercing;
     }
     
+    public void setspawnlist(int[][] spawnlist){
+        this.spawnlist = spawnlist;
+    }
+    public void setbulletappstate(BulletAppState bulletappstate){
+        this.bulletappstate = bulletappstate;
+    }
+    
+    
     @Override
     protected void cleanup(Application app) {
         
@@ -250,16 +261,48 @@ public class PlayerControlState extends BaseAppState {
             
             // Detaches player spatial from the rootNode, nulls out player and
             // controller objects.
+            NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
             if(hp<=0){
-                NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
                 niftyController.gameOver();
                 player.removeFromParent();
                 player = null;
                 controller = null;
+            }else{
+                Spatial enemyship = this.rootNode.getChild("baddie");
+                Random rand = new Random();
+                if(enemyship == null){
+                    for(int i=0;i<rand.nextInt(5)+1; i++){
+                        EnemyGenerator enemyspawner = new EnemyGenerator(this.app.getAssetManager(),this.bulletappstate.getPhysicsSpace());
+                        int xangle = rand.nextInt(11)+10;
+                        int zangle = rand.nextInt(11)+10;
+                        if(rand.nextBoolean()){
+                            xangle *= -1;
+                        }
+                        if(rand.nextBoolean()){
+                            zangle *= -1;
+                        }
+                        int playerx = Math.round(this.player.getLocalTranslation().x);
+                        int playerz = Math.round(this.player.getLocalTranslation().z);
+                        Vector3f spawnvector = player.getLocalTranslation().add(xangle,5,zangle);
+
+                        if(playerx+xangle <spawnlist.length && playerz+xangle < spawnlist[0].length 
+                            &&playerz+zangle> 0 && playerx+xangle>0){
+                            if(this.spawnlist[playerx+xangle][playerz+zangle] == 0){
+                                Spatial baddie = enemyspawner.generateEnemy("Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
+                                rootNode.attachChild(baddie);
+                                baddie.addControl(new AIChaserControl(this.player, 3, this, this.bulletappstate.getPhysicsSpace(),niftyController));
+                            }
+                        }
+                    }
+                }else{
+                    if(enemyship.getLocalTranslation().distance(this.player.getLocalTranslation())>30){
+                        enemyship.getControl(EnemyControl.class).setHP(0);
+                    }
+                }
             }
         }
 
-    } 
+    }
     
     // Used to dynamically change resolution, testing method
     private void changeResolution(){
@@ -271,7 +314,7 @@ public class PlayerControlState extends BaseAppState {
      * Initialises player inputs.
      */
     private void initKeys(){
-    	inputManager.addMapping("Forward", new KeyTrigger(KeyInput.KEY_W));
+    	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
     	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
@@ -291,7 +334,7 @@ public class PlayerControlState extends BaseAppState {
                 if(name.equals("ChangeRes")) {
                     changeResolution();
                 }
-                if(name.equals("Shoot") && isPressed) {
+                if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).shop) {
                     // Shoots every cannon attached to the player
                     for(int i = 0; i < shooters.size(); i++){
                         shooters.get(i).shootBullet(shooterDirections.get(i).mult(
