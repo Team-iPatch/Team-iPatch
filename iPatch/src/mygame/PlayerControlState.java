@@ -67,15 +67,8 @@ public class PlayerControlState extends BaseAppState {
         this.maxHP = 100;
         this.hp = 100;
         
-        // Creates a fixed camera, looking down at the player from a steep angle.
-    	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-    	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
-        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
-        chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
-        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
-        // Makes the player unable to zoom the camera.
-        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
-        chaseCam.setMinDistance(chaseCam.getMaxDistance());
+      
+        initCamera();
         
         // Initialises list where player's cannons are stored.
         this.piercing = false;
@@ -95,6 +88,30 @@ public class PlayerControlState extends BaseAppState {
         this.settings.setFrameRate(60);
         this.app.restart();
     	initKeys();
+    }
+    
+    /**
+     * Initialises Camera.
+     */
+    public void initCamera(){
+        // Old camera
+    	/*ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
+    	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
+        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
+        chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
+        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
+        // Makes the player unable to zoom the camera.
+        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
+        chaseCam.setMinDistance(chaseCam.getMaxDistance());*/
+        
+        // New camera
+        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.getPlayerSpatial());
+        chaseCam.setDefaultDistance(50);
+        chaseCam.setMinDistance(10);
+        chaseCam.setMaxDistance(75);
+        chaseCam.setZoomSensitivity(2);
+        chaseCam.setSmoothMotion(true);
+        chaseCam.setChasingSensitivity(10);
     }
     
     /**
