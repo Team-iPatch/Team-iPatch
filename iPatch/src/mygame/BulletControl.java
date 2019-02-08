@@ -118,7 +118,7 @@ public class BulletControl extends AbstractControl
                     // gold to the player
                     CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
                     collegeControl.reduceHP(damage);
-                    if(collegeControl.getHP() <= 0){
+                    if(collegeControl.getHP() == 0){
                         playerControlState.incrementGold(1000);
                         playerControlState.incrementPoints(2000);
                     }
