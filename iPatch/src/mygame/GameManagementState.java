@@ -16,18 +16,24 @@ import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.InputManager;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState.BlendMode;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.post.FilterPostProcessor;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
+import com.jme3.water.WaterFilter;
 import de.lessvoid.nifty.Nifty;
 import java.util.Random;
 
@@ -53,6 +59,7 @@ public class GameManagementState extends AbstractAppState {
     BetterCharacterControl characterControl;
     int[][] spawnmap;
     Vector3f[] spawnlist;
+    private WaterFilter water;
     
     /**
      * Manager app state used to initialise and store the majority of program
@@ -136,24 +143,44 @@ public class GameManagementState extends AbstractAppState {
         RigidBodyControl landscape = new RigidBodyControl(0);
         sceneNode.addControl(landscape);
         bulletAppState.getPhysicsSpace().add(landscape);
-        
-        //determines the size of the water plane, which has no collisions
+
+        // Blue quad plane
         //and is purely for the effect of sailing on the sea
         float waterX = 700;
         float waterY = 700;
         Quad quad = new Quad(waterX, waterY);
         Geometry quad_geom = new Geometry("quad", quad);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        Texture tex = assetManager.loadTexture("Textures/water.jpg");
-        tex.setWrap(Texture.WrapMode.Repeat);
+        mat.setColor("Color", ColorRGBA.Blue);
         quad.scaleTextureCoordinates(new Vector2f(25, 25));
-        mat.setTexture("ColorMap", tex);
         quad_geom.setMaterial(mat);
         Quaternion rot90 = new Quaternion();
         rot90.fromAngleAxis(-90*FastMath.DEG_TO_RAD, Vector3f.UNIT_X);
         quad_geom.setLocalRotation(rot90);
-        quad_geom.setLocalTranslation(-waterX/2, 1.2f, waterY/2);
+        quad_geom.setLocalTranslation(-waterX/2, 1f, waterY/2);
         rootNode.attachChild(quad_geom);
+        sceneNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Skybox.dds", false));
+        
+        // Water wave effects
+        water = new WaterFilter(rootNode, new Vector3f(0f,1f,0f));
+        water.setWaterColor(new ColorRGBA().setAsSrgb(0.0078f, 0.3176f, 0.5f, 1.0f));
+        water.setDeepWaterColor(new ColorRGBA().setAsSrgb(0.0039f, 0.00196f, 0.145f, 1.0f));
+        water.setUnderWaterFogDistance(80);
+        water.setWaterTransparency(0.12f);
+        water.setFoamIntensity(0.4f);        
+        water.setFoamHardness(0.3f);
+        water.setFoamExistence(new Vector3f(0.8f, 8f, 1f));
+        water.setReflectionDisplace(50);
+        water.setRefractionConstant(0.25f);
+        water.setColorExtinction(new Vector3f(30, 50, 70));
+        water.setCausticsIntensity(0.4f);        
+        water.setWaveScale(0.002f);
+        water.setMaxAmplitude(1f);
+        water.setRefractionStrength(0.2f);
+        water.setWaterHeight(1f);
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.addFilter(water);
+        this.app.getViewPort().addProcessor(fpp);
     }
     
     /**
