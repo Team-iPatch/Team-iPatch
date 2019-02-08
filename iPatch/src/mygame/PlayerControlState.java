@@ -302,7 +302,7 @@ public class PlayerControlState extends BaseAppState {
                         int playerz = Math.round(this.player.getLocalTranslation().z);
                         Vector3f spawnvector = player.getLocalTranslation().add(xangle,5,zangle);
 
-                        if(playerx+xangle <spawnlist.length && playerz+xangle < spawnlist[0].length 
+                        if(playerx+xangle <spawnlist.length && playerz+zangle < spawnlist[0].length 
                             &&playerz+zangle> 0 && playerx+xangle>0){
                             if(this.spawnlist[playerx+xangle][playerz+zangle] == 0){
                                 Spatial baddie = enemyspawner.generateEnemy("Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
