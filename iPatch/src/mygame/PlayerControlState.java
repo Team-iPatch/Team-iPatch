@@ -9,7 +9,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.CharacterControl;
+//import com.jme3.bullet.control.CharacterControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -47,6 +47,11 @@ public class PlayerControlState extends BaseAppState {
     private ArrayList<ShooterControl> shooters;
     private ArrayList<Quaternion> shooterDirections;
     private Boolean piercing;
+    private int enemycount;
+    private int collegecount;
+    private int treasurecount;
+    private int shotsfired;
+    
     
     @Override 
     protected void initialize(Application app){
@@ -64,6 +69,13 @@ public class PlayerControlState extends BaseAppState {
         this.gold = 40;
         this.maxHP = 100;
         this.hp = 100;
+        
+        // Define the quest trackers
+        
+        this.enemycount=0;
+        this.collegecount=0;
+        this.treasurecount=0;
+        this.shotsfired=0;
         
         // Creates a fixed camera, looking down at the player from a steep angle.
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
@@ -92,7 +104,6 @@ public class PlayerControlState extends BaseAppState {
         //We need to change this so that EVERY time they fire, they update the 
         //direction independant of 
         
-        shooterDir.fromAngleAxis(270*FastMath.DEG_TO_RAD, Vector3f.UNIT_Y);
         shooterDirections.add(shooterDir);
         // Caps the frame rate at 60 FPS and initialises the input handler
         this.settings.setFrameRate(60);
@@ -204,6 +215,7 @@ public class PlayerControlState extends BaseAppState {
     public void addShooter(Quaternion direction, SimpleApplication app){
 	ShooterControl shooterControl = new ShooterControl(viewDirection, false, app);
         player.addControl(shooterControl);
+            
         shooters.add(shooterControl);
         shooterDirections.add(direction);
     }
@@ -247,6 +259,8 @@ public class PlayerControlState extends BaseAppState {
     public void update(float tpf) {
         // Handles player movement while player and character controller are
         // both initialised. Does nothing if the player is destroyed.
+       
+//        this.shooterDirections[0] =  
         if(player == null || controller == null){
             
         } else {
@@ -275,8 +289,17 @@ public class PlayerControlState extends BaseAppState {
     
     public Vector3f getAimdir(){
         Vector2f cursorPos = inputManager.getCursorPosition();
-        Vector3f playerPos = player.getLocalTranslation();
-        Vector3f mouseaim = new Vector3f(cursorPos.x-playerPos.x,cursorPos.y-playerPos.y,0);
+        
+
+        int x = this.settings.getWidth()/2;
+        int y = this.settings.getHeight()/2;
+        Vector2f centrePos = new Vector2f (x,y);
+        cursorPos=cursorPos.subtract(centrePos);
+        Vector3f mouseaim = new Vector3f(cursorPos.x,0,cursorPos.y);
+        System.out.println(mouseaim);
+        mouseaim.normalizeLocal();
+        System.out.println(mouseaim);
+
         return mouseaim;
     }
 	
@@ -306,8 +329,10 @@ public class PlayerControlState extends BaseAppState {
                 }
                 if(name.equals("Shoot") && isPressed) {
                     // Shoots every cannon attached to the player
-                    for(int i = 0; i < shooters.size(); i++){                        
-                        shooters.get(i).shootBullet(shooterDirections.get(i).mult(controller.getViewDirection()));
+                    for(int i = 0; i < shooters.size(); i++){
+                        Vector3f mouseAim = getAimdir();
+//                        System.out.println(mouseAim);
+                        shooters.get(i).shootBullet(mouseAim);
                         //this particular line. if I'm correct, shoots a bullet according to geomtry orientation
                     }
                 }
