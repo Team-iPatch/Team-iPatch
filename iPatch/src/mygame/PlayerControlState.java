@@ -295,7 +295,7 @@ public class PlayerControlState extends BaseAppState {
         int y = this.settings.getHeight()/2;
         Vector2f centrePos = new Vector2f (x,y);
         cursorPos=cursorPos.subtract(centrePos);
-        Vector3f mouseaim = new Vector3f(cursorPos.x,0,cursorPos.y);
+        Vector3f mouseaim = new Vector3f(-cursorPos.y,0,-cursorPos.x);
         System.out.println(mouseaim);
         mouseaim.normalizeLocal();
         System.out.println(mouseaim);
