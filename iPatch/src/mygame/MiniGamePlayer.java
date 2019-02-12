@@ -10,6 +10,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.BaseAppState;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.BetterCharacterControl;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
@@ -141,9 +142,6 @@ public class MiniGamePlayer extends BaseAppState {
         if(player == null || controller == null){
             
         } else {
-            Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
-            controller.setWalkDirection(playerRotation.mult(speed));
-            speed *= 0.99;
             
             // Detaches player spatial from the rootNode, nulls out player and
             // controller objects.
@@ -157,19 +155,17 @@ public class MiniGamePlayer extends BaseAppState {
             }else{
                 Spatial Block = this.rootNode.getChild("Block");
                 Random rand = new Random();
+                MiniGameBlockBuilder blockspawner = new MiniGameBlockBuilder(this.app.getAssetManager(),this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace(),this);
                     for(int i=0;i<rand.nextInt(5)+1; i++){
-                        MiniGameBlockBuilder blockspawner = new MiniGameBlockBuilder(this);
                       
-      
-
-                        
-                        Spatial BlockSpacial = blockspawner.generateBlock("BLOCKMODLE___Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
+                        //Use random values to generate spawn vector
+                        Vector3f tempvector = new Vector3f(0,0,0); //REPLACE ME
+                        Spatial BlockSpacial = blockspawner.generateBlock("BLOCKMODLE___Models/pirateship/mesh.j3o",tempvector);
                         rootNode.attachChild(BlockSpacial);
-                        BlockSpacial.addControl(new AIChaserControl(this.player, 3, this, this.bulletappstate.getPhysicsSpace(),niftyController));
+                        
                             }
-                        }
                     
-                
+                        }
                 
             }
         }

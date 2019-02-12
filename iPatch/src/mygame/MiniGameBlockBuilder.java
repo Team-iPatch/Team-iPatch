@@ -20,24 +20,25 @@ import com.jme3.scene.Spatial;
 public class MiniGameBlockBuilder {
     AssetManager assetManager;
     PhysicsSpace physicsSpace;
+    MiniGamePlayer player;
 	
     /**
      * Class used to generate a simple enemy template.
      * @param assetManager Application's AssetManager.
      * @param physicsSpace Application's PhysicsSpace.
      */
-    MiniGameBlockBuilder(AssetManager assetManager, PhysicsSpace physicsSpace){
+    MiniGameBlockBuilder(AssetManager assetManager, PhysicsSpace physicsSpace, MiniGamePlayer player){
             this.physicsSpace = physicsSpace;
             this.assetManager = assetManager;
+            this.player = player;
     }
-    public Spatial generateBlock(String modelLocation,Vector3f translation,
-                                        float radius, float height){
+    public Spatial generateBlock(String modelLocation,Vector3f translation){
         Spatial block = assetManager.loadModel(modelLocation);
         block.setLocalTranslation(translation);
-        BetterCharacterControl characterControl = new BetterCharacterControl(radius, height, 20f);
+        BetterCharacterControl characterControl = new BetterCharacterControl(1f, 1f, 20f); // CHANGE THESE
         block.addControl(characterControl);
         //BetterCharacterControl has to be added to the spatial BEFORE any AI control!
-        block.addControl(new MiniGameBlockControl(physicsSpace));
+        block.addControl(new MiniGameBlockControl(physicsSpace,new RigidBodyControl(0.0f),this.player));
         block.setName("Block");
         physicsSpace.add(characterControl);
         return block;

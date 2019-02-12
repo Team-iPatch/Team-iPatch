@@ -6,6 +6,7 @@
 package mygame;
 
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -27,28 +28,21 @@ import java.io.IOException;
  */
 public class MiniGameBlockControl extends AbstractControl  implements PhysicsCollisionListener {
     PhysicsSpace physicsSpace;
-    private int despawnTime;
     private final float speed = 30f;
-    public Vector3f direction;
     float lifeExpectancy = 2f; //Seconds before it is erased
     float lifetime; //Counts up to lifeExpectancy
     boolean isEnemy;
-    RigidBodyControl bullet_phys; //Remove the physics control on deletion
-    PlayerControlState playerControlState;
+    RigidBodyControl block_phys; //Remove the physics control on deletion
     
-    MiniGameBlockControl(Vector3f direction, int damage, boolean isEnemy,
-                      PhysicsSpace physicsSpace, RigidBodyControl bullet_phys,
-                      MiniGamePlayer MiniGamePlayer) {
+    MiniGameBlockControl(PhysicsSpace physicsSpace,RigidBodyControl block_phy, 
+            MiniGamePlayer MiniGamePlayer) {
         
         
-        this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.physicsSpace = physicsSpace;
-        this.bullet_phys = bullet_phys;
-        this.playerControlState = playerControlState;
+        this.block_phys = block_phy;
         physicsSpace.addCollisionListener(this);
         this.physicsSpace = physicsSpace;
-        this.despawnTime = 0;
         physicsSpace.addCollisionListener(this);
 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -61,17 +55,16 @@ public class MiniGameBlockControl extends AbstractControl  implements PhysicsCol
 
     @Override
     protected void controlUpdate(float tpf) {
-        if(this.despawnTime <= 4f){
+        lifetime += tpf;
+        if(this.lifetime >= lifeExpectancy){
                 destroy();
         }        
-        //TODO: add code that controls Spatial,
-        //e.g. spatial.rotate(tpf,tpf,tpf);
+
     }
-        // Do not call outside of controlUpdate, set hp to 0 instead
      
     
     public void destroy(){
-        physicsSpace.remove(bullet_phys);
+        physicsSpace.remove(block_phys);
         physicsSpace.removeCollisionListener(this);
         spatial.removeFromParent();
         spatial.getParent().detachChild(spatial);
@@ -98,6 +91,12 @@ public class MiniGameBlockControl extends AbstractControl  implements PhysicsCol
         OutputCapsule out = ex.getCapsule(this);
         //TODO: save properties of this Control, e.g.
         //out.write(this.value, "name", defaultValue);
+    }
+
+    @Override
+    public void collision(PhysicsCollisionEvent event) {
+        // EDIT THIS
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
