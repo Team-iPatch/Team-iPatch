@@ -48,6 +48,10 @@ public class BuildingGenerator {
             case "Biology":
                 mat1.setColor("Color", new ColorRGBA(0,0.4f,0,1));
                 break;
+            case "Dep3":
+                mat1.setColor("Color", ColorRGBA.Orange);
+                break;
+            
         }
         department.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
@@ -56,6 +60,32 @@ public class BuildingGenerator {
         department.addControl(new DepartmentControl(name, ghost, app));
         app.getRootNode().attachChild(department);
         return department;
+    }
+    
+    public void generateTreasure(String name, Vector3f location, float ghostRadius){
+
+        Node treasureNode = new Node();
+        treasureNode.setLocalTranslation(location);
+        Spatial treasure = app.getAssetManager().loadModel("Models/iPatchTreasure/iPatchTreasure.j3o");    
+        treasure.setName(name);
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(ghostRadius));
+        Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
+        switch(name){
+            case "Treasure1":
+                mat1.setColor("Color", ColorRGBA.Brown);
+                break;
+            case "Treasure2":
+                mat1.setColor("Color", ColorRGBA.Brown);
+                break;            
+        }
+        treasure.setMaterial(mat1);
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
+        treasure.addControl(ghost);
+        PlayerControlState player = app.getStateManager().getState(PlayerControlState.class);
+        treasure.addControl(new TreasureControl(name, ghost, app));
+        treasureNode.attachChild(treasure);
+        app.getRootNode().attachChild(treasureNode);
+
     }
     
     public void generateCollege(String name, Vector3f location, float ghostRadius){
@@ -94,12 +124,18 @@ public class BuildingGenerator {
                 mat1.setColor("Color", ColorRGBA.LightGray);
                 break;
             case "Vanbrugh":
-                mat1.setColor("Color", new ColorRGBA(0.5f,0,0.5f,1));
+                mat1.setColor("Color", ColorRGBA.Cyan);
                 break;
             case "Alcuin":
                 mat1.setColor("Color", ColorRGBA.Red);
                 break;
-        }
+            case "Constantine":
+                mat1.setColor("Color", ColorRGBA.Pink);
+                break;
+            case "Goodricke":
+                mat1.setColor("Color", ColorRGBA.Brown);
+                break;
+        } 
         box.setMaterial(mat1);
         collegeNode.attachChild(box);
         app.getRootNode().attachChild(collegeNode);

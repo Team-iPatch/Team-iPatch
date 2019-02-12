@@ -243,7 +243,7 @@ public class GameManagementState extends AbstractAppState {
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
-        int buildingcount = 5; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
+        int buildingcount = 10; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
         int rowcount = spawnmap.length;
         int colcount = spawnmap[0].length;
         spawnlist = new Vector3f[buildingcount];
@@ -279,7 +279,6 @@ public class GameManagementState extends AbstractAppState {
             }
             
             if(safedistance == true){
-                System.out.println(tempvector);
                 spawnlist[buildingcount-1] = tempvector;
                 buildingcount -= 1;
             }
@@ -289,10 +288,15 @@ public class GameManagementState extends AbstractAppState {
         playerControlState.setspawnlist(spawnmap);
         
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
-        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f);
-        buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f);
-        buildingGenerator.generateCollege("Alcuin", spawnlist[2], 15f);
-        buildingGenerator.generateCollege("Vanbrugh", spawnlist[3],15f);
-        buildingGenerator.generateCollege("Derwent", spawnlist[4], 15f);
+        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); //0
+        buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f); //1
+        buildingGenerator.generateDepartment("Dep3", spawnlist[2], 5f);
+        buildingGenerator.generateCollege("Alcuin", spawnlist[3], 15f); //2
+        buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],15f); //3
+        buildingGenerator.generateCollege("Derwent", spawnlist[5], 15f); //4
+        buildingGenerator.generateCollege("Constantine", spawnlist[6],15f);
+        buildingGenerator.generateCollege("Goodricke", spawnlist[7], 15f);
+        buildingGenerator.generateTreasure("Treasure1", spawnlist[8], 2f);
+        buildingGenerator.generateTreasure("Treasure2", spawnlist[9], 2f);
     }
 }

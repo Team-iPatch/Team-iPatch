@@ -33,9 +33,15 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     Screen screen;
     Boolean shop;
     String shopName;
+    Boolean tPopup;
+    String tPopupName;
     PlayerControlState playerControlState;
     List<String> shopsUpgraded;
-    
+    List<String> treasureCollected;
+    int implementedTreasures;
+    String remainingTreasure;
+    Boolean inmenu;
+     
     @Override
     public void bind(Nifty nifty, Screen screen){
         this.nifty = nifty;
@@ -51,6 +57,11 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.shop = false;
         this.shopName = "none";
         this.shopsUpgraded = new ArrayList();
+        this.tPopup = false;
+        this.tPopupName = "none";
+        this.treasureCollected = new ArrayList();
+        this.implementedTreasures = 2;
+        this.inmenu = false;
     }
 
     
@@ -63,9 +74,14 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updatePoints();
             updateGold();
             updateShop();
+            updateTPopup();
         }
         showShop(false);
+        showTPopup(false);
+        this.inmenu = false;
     }
+    
+    
     
     /**
      * Called by Department entities to show that the player is NOT in their range.
@@ -76,6 +92,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     public void showShop(Boolean inShop){
         this.shop = inShop;
         this.shopName = "none";
+        this.inmenu = inShop;
     }
     
     /**
@@ -87,6 +104,19 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     public void showShop(Boolean inShop, String shopName){
         this.shop = inShop;
         this.shopName = shopName;
+        this.inmenu = inShop;
+    }
+ 
+    public void showTPopup(Boolean inTPopup){
+        this.tPopup = inTPopup;
+        this.tPopupName = "none";
+        this.inmenu = inTPopup;
+    }
+    
+    public void showTPopup(Boolean inTPopup, String tPopupName){
+        this.tPopup = inTPopup;
+        this.tPopupName = tPopupName;
+        this.inmenu = inTPopup;
     }
     
     @Override
@@ -154,6 +184,16 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                         upgradeButton.setText("Upgrade: +100 max HP (50 gold)");    
                     }
                     break;
+                case "Dep3":
+                    departmentLabel.setText("Dep3 Department");
+                    // If the player already bought the Biology upgrade,
+                    // displays a different message.
+                    if(this.shopsUpgraded.contains("Dep3")){
+                        upgradeButton.setText("Upgrade: Sold out");
+                    } else {
+                        upgradeButton.setText("Upgrade: +5 damage (50 gold)");    
+                    }
+                    break;
                 default:
                     System.out.println("Sorry, nothing");
             }
@@ -163,10 +203,52 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         }
     }
     
-    /**
-     * Called when the player clicks the topmost, unique upgrade button.
-     * Functionality depends on the shop the player is in.
-     */
+    public void updateTPopup(){
+        // Gets UI elements as defined by mainMenu.xml. Only changes elements
+        // that aren't constant, ie the header label and upgrade button
+        Element layer = nifty.getScreen("hudScreen").findElementById("tPopupPanel");
+        Button collectButton = screen.findNiftyControl("CollectButton", Button.class);
+        Label treasureLabel = screen.findNiftyControl("treasureLabel", Label.class);
+        remainingTreasure = ((implementedTreasures - treasureCollected.size()) + " treasures remaining");
+        
+        // Checks if the player is currently within range of a Treasure.
+        if(this.tPopup){
+            layer.show();
+            // Displays different text depending on whether the Treasure
+            // is named Treasure1 or Treasure2. Additional Treasures
+            // have to have their UI functionality implemented here.
+            switch(this.tPopupName){
+                case "Treasure1":
+                    String labelText = ("Treasure1 - " + remainingTreasure);
+                    treasureLabel.setText(labelText);
+                    // If the player already collected this treasure, 
+                    // displays a different message.
+                    if(this.treasureCollected.contains("Treasure1")){
+                        collectButton.setText("Treasure has already been collected");
+                    } else {
+                        collectButton.setText("Click to collect 50 gold");
+                    }
+                    break;
+                case "Treasure2":
+                    String labelText2 = ("Treasure2 - " + remainingTreasure);
+                    treasureLabel.setText(labelText2);
+                    // If the player already collected this treasure,
+                    // displays a different message.
+                    if(this.treasureCollected.contains("Treasure2")){
+                        collectButton.setText("Treasure has already been collected");
+                    } else {
+                        collectButton.setText("Click to collect 20 gold");    
+                    }
+                    break;
+                default:
+                    System.out.println("Sorry, nothing");
+            }
+        } else {
+            // Hides the UI layer if the player is not close to a Department.
+            layer.hide();
+        }
+    }
+    
     public void shopUpgrade(){
         playerControlState = stateManager.getState(PlayerControlState.class);
         
@@ -183,6 +265,11 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                 this.shopsUpgraded.add("Biology");
                 playerControlState.incrementGold(-50);
             }
+            else if(this.shopName.equals("Dep3") && !this.shopsUpgraded.contains("Dep3")){
+                this.app.getRootNode().getChild(shopName).getControl(DepartmentControl.class).increaseShotDamage(5);
+                this.shopsUpgraded.add("Dep3");
+                playerControlState.incrementGold(-50);
+            }
         }
     }
     
@@ -197,6 +284,20 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             playerControlState.setHP(maxHP);
             playerControlState.incrementGold(-20);
         }
+    }
+    
+    public void collectTreasure(){
+        playerControlState = stateManager.getState(PlayerControlState.class);
+        
+        if(this.tPopupName.equals("Treasure1") && !this.treasureCollected.contains("Treasure1")){
+            this.treasureCollected.add("Treasure1");
+            playerControlState.incrementGold(50);
+        }
+        else if(this.tPopupName.equals("Treasure2") && !this.treasureCollected.contains("Treasure2")){
+            this.treasureCollected.add("Treasure2");
+            playerControlState.incrementGold(20);
+        }
+        
     }
     
     /**

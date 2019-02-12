@@ -84,55 +84,54 @@ public class CollegeControl extends AbstractControl {
         if (hp <= 0){
             capture();
         }
-        if(this.nifty.shop){
-            inCombat = false;
-        }
-        if(!captured && inCombat) {
-            Quaternion rot = collegeNode.getLocalRotation();
-            switch(name) {
-                case "Derwent":
-                    collegeNode.setLocalRotation(rot.mult(rotation));
-                    for(Spatial cannon : cannons){
-                        if(Math.random() < shootChance){
-                            cannon.getControl(ShooterControl.class).shootBullet(
-                                        rot.mult(cannon.getLocalTranslation().
-                                                            normalizeLocal()));
+        if(!this.nifty.inmenu){
+            if(!captured && inCombat) {
+                Quaternion rot = collegeNode.getLocalRotation();
+                switch(name) {
+                    case "Derwent":
+                        collegeNode.setLocalRotation(rot.mult(rotation));
+                        for(Spatial cannon : cannons){
+                            if(Math.random() < shootChance){
+                                cannon.getControl(ShooterControl.class).shootBullet(
+                                            rot.mult(cannon.getLocalTranslation().
+                                                                normalizeLocal()));
+                            }
+                        } break;
+                    case "Vanbrugh":
+                        for(Spatial cannon : cannons){
+                            if(Math.random() < shootChance){
+                                cannon.getControl(ShooterControl.class).shootBullet(
+                                            rot.mult(cannon.getLocalTranslation().
+                                                                normalizeLocal()));
+                            }
+                        } break;
+                    case "Alcuin":
+                        if(Math.random() < 0.001){
+                            rotation = rotation.inverse();
                         }
-                    } break;
-                case "Vanbrugh":
-                    for(Spatial cannon : cannons){
-                        if(Math.random() < shootChance){
-                            cannon.getControl(ShooterControl.class).shootBullet(
-                                        rot.mult(cannon.getLocalTranslation().
-                                                            normalizeLocal()));
-                        }
-                    } break;
-                case "Alcuin":
-                    if(Math.random() < 0.001){
-                        rotation = rotation.inverse();
-                    }
-                    collegeNode.setLocalRotation(rot.mult(rotation));
-                    for(Spatial cannon : cannons){
-                        if(Math.random() < shootChance){
-                            cannon.getControl(ShooterControl.class).shootBullet(
-                                        rot.mult(cannon.getLocalTranslation().
-                                                            normalizeLocal()));
-                        }
-                    } break;
-                default:
-                    throw new NotImplementedException();
-            }
-        } 
-        else if(!captured) {
-            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
-                if (obj.getUserObject().getClass() == Node.class){
-                    Node userObject = (Node)obj.getUserObject();
-                    if(userObject.getName().equals("player")){
-                        if (ghostCounter > 1){
-                           inCombat = true;
-                        }
-                        else{
-                            ghostCounter++;
+                        collegeNode.setLocalRotation(rot.mult(rotation));
+                        for(Spatial cannon : cannons){
+                            if(Math.random() < shootChance){
+                                cannon.getControl(ShooterControl.class).shootBullet(
+                                            rot.mult(cannon.getLocalTranslation().
+                                                                normalizeLocal()));
+                            }
+                        } break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            } 
+            else if(!captured) {
+                for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+                    if (obj.getUserObject().getClass() == Node.class){
+                        Node userObject = (Node)obj.getUserObject();
+                        if(userObject.getName().equals("player")){
+                            if (ghostCounter > 1){
+                               inCombat = true;
+                            }
+                            else{
+                                ghostCounter++;
+                            }
                         }
                     }
                 }

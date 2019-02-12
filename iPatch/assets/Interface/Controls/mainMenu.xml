@@ -31,8 +31,19 @@
                     <interact onClick="shopHeal()"/>
                 </control>
             </panel>
-        </layer>
-    </screen>
+			<panel id="tPopupPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
+                <control id="treasureLabel" name="label" text="Treasure: " width="100%"/>
+                <control id="CollectButton" name="button" label="Collect:" align="center" visibleToMouse="true" width="80%"> 
+                	<interact onClick="collectTreasure()"/>   
+                </control>                
+         	</panel>
+		</layer>
+	</screen>
+			
+	<screen id="treasureScreen" controller="mygame.NiftyController">
+		
+	</screen>
+	
     <screen id="gameoverScreen" controller="mygame.NiftyController">
         <layer id="gameoverLayer" childLayout="center">
             <panel id="gameoverPanel" childLayout="center" width="100%" height="100%" align="center" valign="center" backgroundColor="#830000aa">

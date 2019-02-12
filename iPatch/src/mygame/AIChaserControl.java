@@ -69,7 +69,7 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
             physicsSpace.removeCollisionListener(this);
         }
         //code below is new pause. Add other variables to change what swaps the ships back to chase.
-        if(nifty.shop){
+        if(nifty.inmenu){
             spatial.getControl(BetterCharacterControl.class).setWalkDirection(Vector3f.ZERO);
             Idle();
         }else{
