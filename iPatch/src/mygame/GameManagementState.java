@@ -15,6 +15,8 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.input.InputManager;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
@@ -24,13 +26,19 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.DepthOfFieldFilter;
+import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.ViewPort;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
+import com.jme3.shadow.DirectionalLightShadowFilter;
+import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.WaterFilter;
@@ -161,6 +169,7 @@ public class GameManagementState extends AbstractAppState {
         rootNode.attachChild(quad_geom);
         sceneNode.attachChild(SkyFactory.createSky(assetManager, "Textures/Sky/Skybox.dds", false));
         
+        
         // Water wave effects
         water = new WaterFilter(rootNode, new Vector3f(0f,1f,0f));
         water.setWaterColor(new ColorRGBA().setAsSrgb(0.0078f, 0.3176f, 0.5f, 1.0f));
@@ -177,10 +186,12 @@ public class GameManagementState extends AbstractAppState {
         water.setWaveScale(0.002f);
         water.setMaxAmplitude(1f);
         water.setRefractionStrength(0.2f);
-        water.setWaterHeight(1f);
+        water.setWaterHeight(1.1f);
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(water);
         this.app.getViewPort().addProcessor(fpp);
+        
+        
     }
     
     /**
