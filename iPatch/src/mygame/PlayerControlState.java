@@ -37,7 +37,12 @@ public class PlayerControlState extends BaseAppState {
     private Spatial player;
     private InputManager inputManager;
     private BetterCharacterControl controller;
-    private float speed;
+    
+    private float currentSpeed;
+    private float maxSpeed;
+    private float acceleration;
+    private float deceleration;
+    
     private AppSettings settings; 
     private Integer points;
     private Integer hp;
@@ -52,7 +57,11 @@ public class PlayerControlState extends BaseAppState {
     
     @Override 
     protected void initialize(Application app){
-        speed = 0f;
+        this.currentSpeed = 0f;
+        this.maxSpeed = 6f;
+        this.acceleration = 0.3f;
+        this.deceleration = 0.15f;
+        
         this.app = (SimpleApplication)app;
         this.rootNode = this.app.getRootNode();
     	this.player = this.rootNode.getChild("player");
@@ -94,21 +103,23 @@ public class PlayerControlState extends BaseAppState {
      * Initialises Camera.
      */
     public void initCamera(){
-        // Old camera
-    	/*ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-    	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
-        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
-        chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
-        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
-        // Makes the player unable to zoom the camera.
-        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
-        chaseCam.setMinDistance(chaseCam.getMaxDistance());*/
+    	/** //Old camera
+         * 
+         * ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
+    	 * chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
+         * chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
+         * chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
+         * chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
+         * // Makes the player unable to zoom the camera.
+         * chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
+         * chaseCam.setMinDistance(chaseCam.getMaxDistance());
+         */
         
         // New camera
         ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.getPlayerSpatial());
-        chaseCam.setDefaultDistance(50);
+        chaseCam.setDefaultDistance(30);
         chaseCam.setMinDistance(10);
-        chaseCam.setMaxDistance(75);
+        chaseCam.setMaxDistance(55);
         chaseCam.setZoomSensitivity(2);
         chaseCam.setSmoothMotion(true);
         chaseCam.setChasingSensitivity(10);
@@ -273,8 +284,13 @@ public class PlayerControlState extends BaseAppState {
             
         } else {
             Vector3f playerRotation = player.getWorldRotation().mult(Vector3f.UNIT_Z);
-            controller.setWalkDirection(playerRotation.mult(speed));
-            speed *= 0.99;
+            controller.setWalkDirection(playerRotation.mult(currentSpeed));
+            if (currentSpeed > 0){
+                currentSpeed -= deceleration;
+                if (currentSpeed < 0){
+                    currentSpeed = 0;
+                }
+            }
             
             // Detaches player spatial from the rootNode, nulls out player and
             // controller objects.
@@ -332,7 +348,6 @@ public class PlayerControlState extends BaseAppState {
      */
     private void initKeys(){
     	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
-    	inputManager.addMapping("Backward",  new KeyTrigger(KeyInput.KEY_S));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
     	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
@@ -387,14 +402,16 @@ public class PlayerControlState extends BaseAppState {
                 }
 
                 if (name.equals("Forward"))
-                    if (speed < 15)
-                        speed += 1;
-
-                if (name.equals("Backward")) 
-                    if(speed>1)
-                        speed -= 0.1;
+                    if (currentSpeed < maxSpeed){
+                        currentSpeed += acceleration;
+                        if (currentSpeed > maxSpeed) {
+                            currentSpeed = maxSpeed;
+                        }
+                    }
                 }
             }
 
     };
 }
+
+   
