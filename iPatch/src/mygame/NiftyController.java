@@ -9,6 +9,7 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.math.Quaternion;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.Button;
@@ -45,8 +46,8 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     int totalPoints;
     Boolean inmenu;
     int collegesdefeated;
-    
-     
+    List<String> questList;
+	
     @Override
     public void bind(Nifty nifty, Screen screen){
         this.nifty = nifty;
@@ -75,6 +76,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         updateTreasuresFound();
         Element label = nifty.getScreen("hudScreen").findElementById("PointObjectiveLabel");
         label.getRenderer(TextRenderer.class).setText(" Points Required: " + totalPoints);
+        this.questList = new ArrayList();
     }
 
     
@@ -89,6 +91,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updateShop();
             updateTPopup();
             updateTreasuresFound();
+			updateQuest();
         }
         if(treasureCollected.size() == totalTreasures 
                 && collegesdefeated == totalColleges 
@@ -175,8 +178,10 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         // that aren't constant, ie the header label and upgrade button
         Element layer = nifty.getScreen("hudScreen").findElementById("shopPanel");
         Button upgradeButton = screen.findNiftyControl("UpgradeButton", Button.class);
+        Button acceptQuest = screen.findNiftyControl("acceptQuest", Button.class);
+        Button completeQuest = screen.findNiftyControl("completeQuest", Button.class);
         Label departmentLabel = screen.findNiftyControl("departmentLabel", Label.class);
-        
+        playerControlState=stateManager.getState(PlayerControlState.class);
         // Checks if the player is currently within range of a Department.
         if(this.shop){
             layer.show();
@@ -185,6 +190,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             // have to have their UI functionality implemented here.
             switch(this.shopName){
                 case "Computer Science":
+                    int killShip=5;
                     departmentLabel.setText("Computer Science Department");
                     // If the player already bought the Comp Sci upgrade, 
                     // displays a different message.
@@ -193,15 +199,58 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                     } else {
                         upgradeButton.setText("Upgrade: Piercing Cannonballs (50 gold)");
                     }
+                    //Check whether they're on a quest, and whether the current one is done
+                    if (this.questList.contains("Computer Science")){
+                        acceptQuest.setText("Quest already finished");
+                        completeQuest.disable();
+                    }   else if (playerControlState.getQuestState()==true &&                            
+                            playerControlState.isKillQuest()==false){
+                        acceptQuest.setText("You are currently busy on another quest");
+                    }   else if (playerControlState.getQuestState()==true &&
+                            playerControlState.getQuestProgress()>0){
+                        acceptQuest.setText("You have not complete our quest yet");
+                    }   else if (playerControlState.getQuestState()==true &&
+                            playerControlState.getQuestProgress()==0){
+                        acceptQuest.setText("");
+                        completeQuest.enable();                      
+                    }   else{
+                        acceptQuest.setText("Kill "+ killShip +" ships for us");                      
+                        completeQuest.disable();
+                    }
                     break;
                 case "Biology":
+                    int treasureTarget=10;
                     departmentLabel.setText("Biology Department");
                     // If the player already bought the Biology upgrade,
                     // displays a different message.
+                    
                     if(this.shopsUpgraded.contains("Biology")){
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: +100 max HP (50 gold)");    
+                    }
+                    //Check whether they're on a quest, and whether the current one is done
+                    if (this.questList.contains("Biology")){
+                        acceptQuest.setText("Quest already finished");
+                        completeQuest.disable();
+                    }
+                    else if (playerControlState.getQuestState()==true &&                            
+                            playerControlState.isTreasureQuest()==false
+                            ){
+                        acceptQuest.setText("You are currently busy on another quest");
+                    }
+                    else if (playerControlState.getQuestState()==true &&
+                            playerControlState.getQuestProgress()>0){
+                        acceptQuest.setText("You have not complete our quest yet");
+                    }
+                    else if (playerControlState.getQuestState()==true &&
+                            playerControlState.getQuestProgress()>0){
+                        acceptQuest.setText("");
+                        completeQuest.enable();                      
+                    }
+                    else{
+                        acceptQuest.setText("Find "+ treasureTarget +" treasures for us");
+                        completeQuest.disable();
                     }
                     break;
                 case "Maths":
@@ -268,7 +317,52 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             layer.hide();
         }
     }
+    /**
+     * Same procedure for implementing quests
+     * For now we'll have one quest per department
+     */
     
+    public void acceptQuest(){
+        playerControlState=stateManager.getState(PlayerControlState.class);
+        if (playerControlState.getQuestState()==false){
+            if(this.shopName.equals("Computer Science") &&
+               !this.questList.contains("Computer Science")){
+                playerControlState.questStart();
+                playerControlState.takeKillQuest(5);
+                System.out.println("Fite");
+                
+            }
+            else if (this.shopName.equals("Biology") &&
+                    !this.questList.contains("Biology")){
+                playerControlState.questStart();
+                playerControlState.takeTreasureQuest(10);
+            }
+                
+        }
+    
+    }
+	
+    public void completeQuest(){
+        playerControlState=stateManager.getState(PlayerControlState.class);
+        if (playerControlState.getQuestProgress()==0){
+            if(this.shopName.equals("Computer Science")){
+                //reward, set quest complete, add to completed quest list
+                this.questList.add("Computer Science");
+                playerControlState.setMaxHP(playerControlState.getMaxHP()+50);    
+                playerControlState.endQuest();
+                playerControlState.endkillQuest();
+            } else if (this.shopName.equals("Biology")){
+                playerControlState.addShooter(Quaternion.DIRECTION_Z, app);
+                playerControlState.endQuest();
+                playerControlState.endTreasureQuest();
+            }
+        }
+         
+    }
+    /**
+     * Called when the player clicks the topmost, unique upgrade button.
+     * Functionality depends on the shop the player is in.
+     */
     public void shopUpgrade(){
         playerControlState = stateManager.getState(PlayerControlState.class);
         
@@ -344,6 +438,35 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         Integer maxHP = stateManager.getState(PlayerControlState.class).getMaxHP();
         Element label = nifty.getScreen("hudScreen").findElementById("HPLabel");
         label.getRenderer(TextRenderer.class).setText(" HP: " + hp + "/" + maxHP);
+    }
+    public void updateQuest(){
+        Label QuestLabel = screen.findNiftyControl("QuestLabel", Label.class);
+        playerControlState = stateManager.getState(PlayerControlState.class);
+        if (playerControlState.getQuestState()==true){
+            int total = playerControlState.getCounter();
+            int progress = playerControlState.getProgress();
+            int questProgress=playerControlState.getQuestProgress();
+            if (playerControlState.isKillQuest()==true){
+                if (questProgress==0){
+                    QuestLabel.setText("Quest Complete, Return to Computer Science");
+                }
+                else{
+                    QuestLabel.setText(progress + "/" + total + " Ships killed");      
+                }                      
+            }
+            else if (playerControlState.isTreasureQuest()==true){
+                if (questProgress==0){
+                    QuestLabel.setText("Quest Complete, Return to Biology");
+                }
+                else{
+                QuestLabel.setText(progress + "/" + total + " Treasure found");                
+            }
+            }
+        }
+        else{
+            QuestLabel.setText("No active Quest");
+        }
+        
     }
     
     /**

@@ -18,6 +18,7 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -54,7 +55,12 @@ public class PlayerControlState extends BaseAppState {
     private Boolean piercing;
     private int[][] spawnlist;
     private BulletAppState bulletappstate;
-    
+    private Boolean killQuest;
+    private Boolean treasureQuest;
+    private Boolean onQuest;
+    private Integer Questcounter;
+    private Integer Questprogress;
+	
     @Override 
     protected void initialize(Application app){
         this.currentSpeed = 0f;
@@ -76,8 +82,14 @@ public class PlayerControlState extends BaseAppState {
         this.maxHP = 100;
         this.hp = 100;
         
-      
         initCamera();
+		
+        // Define the quest trackers
+        this.killQuest=false;
+        this.treasureQuest=false;
+        this.onQuest =false;
+        this.Questcounter =0;
+        this.Questprogress=0;
         
         // Initialises list where player's cannons are stored.
         this.piercing = false;
@@ -86,12 +98,16 @@ public class PlayerControlState extends BaseAppState {
         // Initialises a default cannon which shoots to the right of where
         // the player is facing
         this.viewDirection = controller.getViewDirection();
-        ShooterControl shooterControl = new ShooterControl(
-                       viewDirection, false, this.app);
+        ShooterControl shooterControl = new ShooterControl( viewDirection, false, this.app);
         this.player.addControl(shooterControl);
         shooters.add(shooterControl);
         Quaternion shooterDir = new Quaternion();
-        shooterDir.fromAngleAxis(270*FastMath.DEG_TO_RAD, Vector3f.UNIT_Y);
+        //Here's where I need to add in the mouse input to change fire direction
+        //Vector2f mouse= inputManager.getCursorPosition();
+        //we only need X,Y 
+        //We need to change this so that EVERY time they fire, they update the 
+        //direction independant of 
+        
         shooterDirections.add(shooterDir);
         // Caps the frame rate at 60 FPS and initialises the input handler
         this.settings.setFrameRate(60);
@@ -131,7 +147,57 @@ public class PlayerControlState extends BaseAppState {
     public Integer getMaxHP(){
         return this.maxHP;
     }
+    /**
+     * Returns player quest state
+     */
+    public Boolean getQuestState(){
+        return this.onQuest;
+    }
+    public void  takeKillQuest(int killcount){
+        this.killQuest=true;    
+        this.Questcounter=killcount;
+    }
+    public void takeTreasureQuest(int treasurecount){
+        this.treasureQuest=true;
+        this.Questcounter=treasurecount;
+    }
+    public Integer getQuestProgress(){
+        int Progress=this.Questcounter-this.Questprogress;
+        return Progress;
+    }
+    public Boolean isKillQuest(){
+        return this.killQuest;
+    }
     
+    public Boolean isTreasureQuest(){
+        return this.treasureQuest;
+    }
+    public int getProgress(){
+        return this.Questprogress;
+    }
+    public int getCounter(){
+        return this.Questcounter;
+    }
+    
+    public void questStart(){
+        this.onQuest=true;
+        this.Questprogress=0;
+    }
+    public void Questprogress(int increment){
+        this.Questprogress+=increment;
+    }
+    public void endQuest(){
+        this.Questcounter=0;
+        this.Questprogress=0;
+        this.onQuest=false;          
+                
+    }
+    public void endkillQuest(){
+        this.killQuest=false;
+    }
+    public void endTreasureQuest(){
+        this.treasureQuest=false;
+    }
     /**
      * Changes player's max HP.
      * @param amount New maximum HP cap.
@@ -228,10 +294,11 @@ public class PlayerControlState extends BaseAppState {
     public void addShooter(Quaternion direction, SimpleApplication app){
 	ShooterControl shooterControl = new ShooterControl(viewDirection, false, app);
         player.addControl(shooterControl);
+            
         shooters.add(shooterControl);
         shooterDirections.add(direction);
     }
-    
+    //This is STATIC, problem is we want a new direction independant of movement input
     /**
      * Sets whether the player's bullets pierce.
      * @param piercing
@@ -279,6 +346,8 @@ public class PlayerControlState extends BaseAppState {
     public void update(float tpf) {
         // Handles player movement while player and character controller are
         // both initialised. Does nothing if the player is destroyed.
+       
+//        this.shooterDirections[0] =  
         if(player == null || controller == null){
             
         } else {
@@ -341,6 +410,17 @@ public class PlayerControlState extends BaseAppState {
         this.settings.setResolution(1600, 900);
     	this.app.restart();
     }
+    
+    public Vector3f getAimdir(){
+        Vector2f cursorPos = inputManager.getCursorPosition();
+        int x = this.settings.getWidth()/2;
+        int y = this.settings.getHeight()/2;
+        Vector2f centrePos = new Vector2f (x,y);
+        cursorPos=cursorPos.subtract(centrePos);
+        Vector3f mouseaim = new Vector3f(-cursorPos.y,0,-cursorPos.x);
+        mouseaim.normalizeLocal();
+        return mouseaim;
+    }
 	
     /**
      * Initialises player inputs.
@@ -369,8 +449,10 @@ public class PlayerControlState extends BaseAppState {
                 if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).inmenu) {
                     // Shoots every cannon attached to the player
                     for(int i = 0; i < shooters.size(); i++){
-                        shooters.get(i).shootBullet(shooterDirections.get(i).mult(
-                                                    controller.getViewDirection()));
+                        Vector3f mouseAim = getAimdir();
+//                        System.out.println(mouseAim);
+                        shooters.get(i).shootBullet(mouseAim);
+                        //this particular line. if I'm correct, shoots a bullet according to geomtry orientation
                     }
                 }
                 if(name.equals("ToggleObjective")){

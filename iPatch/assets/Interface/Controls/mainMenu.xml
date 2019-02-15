@@ -22,11 +22,13 @@
                 <control id="PointLabel" name="label" text=" Points: " align="center" width="100%"/>
                 <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>  
             </panel>
+			
             <panel id="ObjectivePanel" childLayout="vertical" width="20%" height="10%" align="right" valign="top" backgroundColor="#00000055" visibletoMouse="false">
                 <control id="PointObjectiveLabel" name="label" text=" Points Required: " align="center" width="100%"/>
                 <control id="CollegeObjectiveLabel" name="label" text=" Colleges defeated: " align="center" width="100%"/>
                 <control id="TreasureObjectiveLabel" name="label" text=" Treasures found: " align="center" width="100%"/>
             </panel>
+			
             <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
                 <control id="departmentLabel" name="label" text="Department: " width="100%"/>
                 <control id="UpgradeButton" name="button" label="Upgrade:" align="center" visibleToMouse="true" width="80%"> 
@@ -35,13 +37,21 @@
                 <control id="HealButton" name="button" label="Restore HP (20 gold)" align="center" visibleToMouse="true" width="80%">
                     <interact onClick="shopHeal()"/>
                 </control>
+                <control id="acceptQuest" name="button" label="Accept quest:" align="center" visibleToMouse="true" width="80%">
+                    <interact onClick="acceptQuest()"/>
+                </control>
+                <control id="completeQuest" name="button" label="Turn in quest" align="center" visibleToMouse="false" width="80%">
+                    <interact onClick="completeQuest()"/>
+                </control>
             </panel>
+			
             <panel id="tPopupPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
                 <control id="treasureLabel" name="label" text="Treasure: " width="100%"/>
                 <control id="CollectButton" name="button" label="Collect:" align="center" visibleToMouse="true" width="80%"> 
                 <interact onClick="collectTreasure()"/>   
                 </control>                
             </panel>
+			
 	</layer>
     </screen>
 	

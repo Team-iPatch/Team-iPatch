@@ -115,7 +115,8 @@ public class GameManagementState extends AbstractAppState {
         loadPlayer();
         //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
-    
+
+
     /**
      * Initialises GUI code.
      */
@@ -127,6 +128,7 @@ public class GameManagementState extends AbstractAppState {
         guiViewPort.addProcessor(niftyDisplay);
         nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
         nifty.setIgnoreKeyboardEvents(true);
+        
     }
     
     /**
