@@ -30,6 +30,7 @@ public class MiniGame extends AbstractAppState {
     InputManager inputManager;
     AudioRenderer audioRenderer;
     Node rootNode;
+    Node mainNode;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -39,22 +40,30 @@ public class MiniGame extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
         this.rootNode = this.app.getRootNode();
+        rootNode.attachChild(mainNode);
         
         //TODO: initialize your AppState, e.g. attach spatials to rootNode
         //this is called on the OpenGL thread after the AppState has been attached
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public void update(float tpf) {
-        //TODO: implement behavior during runtime
     }
     
     @Override
     public void cleanup() {
         super.cleanup();
-        //TODO: clean up what you initialized in the initialize method,
-        //e.g. remove all spatials from rootNode
-        //this is called on the OpenGL thread after the AppState has been detached
+        
+        
     }
     
     

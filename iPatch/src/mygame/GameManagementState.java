@@ -214,7 +214,7 @@ public class GameManagementState extends AbstractAppState {
     private void loadPlayer(){
         playerShip = (Node)assetManager.loadModel("Models/pirateship/mesh.j3o");
         playerShip.setLocalTranslation(spawnlist[0]);
-        characterControl = new BetterCharacterControl(0.2f, 3f, 10f);
+        characterControl = new BetterCharacterControl(0.8f, 3f, 10f);
         playerShip.addControl(characterControl);
         rootNode.attachChild(playerShip);
         playerShip.setName("player");

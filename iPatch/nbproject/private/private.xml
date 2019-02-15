@@ -13,10 +13,19 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/PlayerControlState.java</file>
-            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/GameManagementState.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/assets/Interface/Controls/mainMenu.xml</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/MiniGameBlockBuilder.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/MapGeneration.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/MiniGameBlockControl.java</file>
             <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/NiftyController.java</file>
             <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/CollegeControl.java</file>
             <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/AIChaserControl.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/TreasureControl.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/MiniGame.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/GameManagementState.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/BulletControl.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/DepartmentControl.java</file>
+            <file>file:/E:/Github/Team-iPatch-Main/iPatch/src/mygame/MiniGamePlayer.java</file>
         </group>
     </open-files>
 </project-private>
