@@ -65,25 +65,25 @@ public class CollegeControl extends AbstractControl {
         
         switch(name){
             case "Derwent":
-                this.hp = 100;
-                shootGap = 2000;
+                this.hp = 200;
+                shootGap = 1000;
                 rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
                 break;
             case "Vanbrugh":
-                this.hp = 200;
-                shootGap = 1500;
+                this.hp = 250;
+                shootGap = 750;
                 break;
             case "Alcuin":
-                this.hp = 70;
-                shootGap = 750;
+                this.hp = 160;
+                shootGap = 450;
                 rotation.fromAngleAxis(0.02f, Vector3f.UNIT_Y);
             case "Constantine":
-                this.hp = 80;
-                shootGap = 1000;
+                this.hp = 120;
+                shootGap = 500;
                 rotation.fromAngleAxis(0.015f, Vector3f.UNIT_Y);
             case "Goodricke":
-                this.hp = 90;
-                shootGap = 1250;
+                this.hp = 140;
+                shootGap = 625;
                 rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);
         }
         this.physicsSpace = physicsSpace;

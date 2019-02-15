@@ -35,12 +35,17 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     String shopName;
     Boolean tPopup;
     String tPopupName;
+    Boolean objective;
     PlayerControlState playerControlState;
     List<String> shopsUpgraded;
     List<String> treasureCollected;
-    int implementedTreasures;
+    int totalTreasures;
     String remainingTreasure;
+    int totalColleges;
+    int totalPoints;
     Boolean inmenu;
+    int collegesdefeated;
+    
      
     @Override
     public void bind(Nifty nifty, Screen screen){
@@ -60,8 +65,16 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.tPopup = false;
         this.tPopupName = "none";
         this.treasureCollected = new ArrayList();
-        this.implementedTreasures = 2;
+        this.totalTreasures = 2; //These 3 must be edited cross several classes and are the final objectives
+        this.totalColleges = 5;
+        this.totalPoints = 750;
         this.inmenu = false;
+        this.collegesdefeated = 0;
+        showObjective(false);
+        updateCollegesDefeated(0);
+        updateTreasuresFound();
+        Element label = nifty.getScreen("hudScreen").findElementById("PointObjectiveLabel");
+        label.getRenderer(TextRenderer.class).setText(" Points Required: " + totalPoints);
     }
 
     
@@ -75,6 +88,13 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updateGold();
             updateShop();
             updateTPopup();
+            updateTreasuresFound();
+        }
+        if(treasureCollected.size() == totalTreasures 
+                && collegesdefeated == totalColleges 
+                && stateManager.getState(PlayerControlState.class).getPoints() 
+                >= this.totalPoints){
+            this.win();
         }
         showShop(false);
         showTPopup(false);
@@ -184,11 +204,11 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                         upgradeButton.setText("Upgrade: +100 max HP (50 gold)");    
                     }
                     break;
-                case "Dep3":
-                    departmentLabel.setText("Dep3 Department");
+                case "Maths":
+                    departmentLabel.setText("Maths Department");
                     // If the player already bought the Biology upgrade,
                     // displays a different message.
-                    if(this.shopsUpgraded.contains("Dep3")){
+                    if(this.shopsUpgraded.contains("Maths")){
                         upgradeButton.setText("Upgrade: Sold out");
                     } else {
                         upgradeButton.setText("Upgrade: +5 damage (50 gold)");    
@@ -209,7 +229,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         Element layer = nifty.getScreen("hudScreen").findElementById("tPopupPanel");
         Button collectButton = screen.findNiftyControl("CollectButton", Button.class);
         Label treasureLabel = screen.findNiftyControl("treasureLabel", Label.class);
-        remainingTreasure = ((implementedTreasures - treasureCollected.size()) + " treasures remaining");
+        remainingTreasure = ((totalTreasures - treasureCollected.size()) + " treasures remaining");
         
         // Checks if the player is currently within range of a Treasure.
         if(this.tPopup){
@@ -265,9 +285,9 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                 this.shopsUpgraded.add("Biology");
                 playerControlState.incrementGold(-50);
             }
-            else if(this.shopName.equals("Dep3") && !this.shopsUpgraded.contains("Dep3")){
+            else if(this.shopName.equals("Maths") && !this.shopsUpgraded.contains("Maths")){
                 this.app.getRootNode().getChild(shopName).getControl(DepartmentControl.class).increaseShotDamage(5);
-                this.shopsUpgraded.add("Dep3");
+                this.shopsUpgraded.add("Maths");
                 playerControlState.incrementGold(-50);
             }
         }
@@ -291,13 +311,29 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         
         if(this.tPopupName.equals("Treasure1") && !this.treasureCollected.contains("Treasure1")){
             this.treasureCollected.add("Treasure1");
-            playerControlState.incrementGold(50);
+            playerControlState.incrementGold(25);
+            playerControlState.incrementPoints(25);
         }
         else if(this.tPopupName.equals("Treasure2") && !this.treasureCollected.contains("Treasure2")){
             this.treasureCollected.add("Treasure2");
             playerControlState.incrementGold(20);
+            playerControlState.incrementPoints(25);
         }
         
+    }
+    /**
+     * Shows the menu .
+     * @param show false unless holding down the key to show the menu.
+     */
+    public void showObjective(boolean show){
+        Element layer = nifty.getScreen("hudScreen").findElementById("ObjectivePanel");
+        if(show){
+            layer.show();
+            objective = true;
+        }else{
+            layer.hide();
+            objective = false;
+        }
     }
     
     /**
@@ -328,10 +364,27 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         label.getRenderer(TextRenderer.class).setText(" Gold: " + gold);
     }
     
+    public void updateCollegesDefeated(int killnum){
+        collegesdefeated += killnum;
+        Element label = nifty.getScreen("hudScreen").findElementById("CollegeObjectiveLabel");
+        label.getRenderer(TextRenderer.class).setText(" Colleges Defeated: " + collegesdefeated + "/"+totalColleges);
+    }
+    public void updateTreasuresFound(){
+        Element label = nifty.getScreen("hudScreen").findElementById("TreasureObjectiveLabel");
+        label.getRenderer(TextRenderer.class).setText(" Treasures Found: " + treasureCollected.size() + "/" + totalTreasures);
+    }
+    
     /**
      * Called when the player dies, displays a game over screen.
      */
     public void gameOver(){
         nifty.gotoScreen("gameoverScreen");
+    }
+    
+    /**
+     * Called when player completes all objectives, a win screen.
+     */
+    public void win(){
+        nifty.gotoScreen("winScreen");
     }
 }

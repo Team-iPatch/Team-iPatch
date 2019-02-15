@@ -104,8 +104,8 @@ public class BulletControl extends AbstractControl
                     testNode.getControl(EnemyControl.class).reduceHP(damage);
 
                     if(testNode.getControl(EnemyControl.class).getHP() <= 0){
-                        playerControlState.incrementPoints(20);
-                        playerControlState.incrementGold(10);
+                        playerControlState.incrementPoints(10);
+                        playerControlState.incrementGold(5);
                     }
                     
                     // Makes the bullet expire if it hits an enemy and is not
@@ -119,8 +119,9 @@ public class BulletControl extends AbstractControl
                     CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
                     collegeControl.reduceHP(damage);
                     if(collegeControl.getHP() == 0){
-                        playerControlState.incrementGold(1000);
-                        playerControlState.incrementPoints(2000);
+                        playerControlState.incrementGold(50);
+                        playerControlState.incrementPoints(100);
+                        playerControlState.getStateManager().getState(NiftyController.class).updateCollegesDefeated(1);
                     }
                     
                     // Makes the bullet expire it it hits an enemy and is not 

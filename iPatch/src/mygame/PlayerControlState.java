@@ -58,9 +58,9 @@ public class PlayerControlState extends BaseAppState {
     @Override 
     protected void initialize(Application app){
         this.currentSpeed = 0f;
-        this.maxSpeed = 6f;
-        this.acceleration = 0.3f;
-        this.deceleration = 0.15f;
+        this.maxSpeed = 10f;
+        this.acceleration = 0.5f;
+        this.deceleration = 0.4f;
         
         this.app = (SimpleApplication)app;
         this.rootNode = this.app.getRootNode();
@@ -315,7 +315,7 @@ public class PlayerControlState extends BaseAppState {
                         }
                         int playerx = Math.round(this.player.getLocalTranslation().x);
                         int playerz = Math.round(this.player.getLocalTranslation().z);
-                        Vector3f spawnvector = player.getLocalTranslation().add(xangle,5,zangle);
+                        Vector3f spawnvector = player.getLocalTranslation().add(xangle,1,zangle);
 
                         if(playerx+xangle <spawnlist.length && playerz+zangle < spawnlist[0].length 
                             &&playerz+zangle> 0 && playerx+xangle>0){
@@ -350,9 +350,10 @@ public class PlayerControlState extends BaseAppState {
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
     	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
+        inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("Shoot",     new KeyTrigger(KeyInput.KEY_SPACE));
     	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
-    	inputManager.addListener(actionListener, "ChangeRes", "Shoot");
+    	inputManager.addListener(actionListener, "ChangeRes", "Shoot","ToggleObjective");
     }
 	
     private final ActionListener actionListener = new ActionListener(){
@@ -371,6 +372,10 @@ public class PlayerControlState extends BaseAppState {
                         shooters.get(i).shootBullet(shooterDirections.get(i).mult(
                                                     controller.getViewDirection()));
                     }
+                }
+                if(name.equals("ToggleObjective")){
+                    NiftyController nifty = app.getStateManager().getState(NiftyController.class);
+                    nifty.showObjective(!nifty.objective);
                 }
             }
             

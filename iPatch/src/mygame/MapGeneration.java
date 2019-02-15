@@ -117,7 +117,7 @@ public class MapGeneration
     private static void generateHeightMap()
     {
         Random rand = new Random();
-        FastNoise.seed = 1923123; //rand.nextInt(100000000) + 1;
+        FastNoise.seed = rand.nextInt(100000000) + 1;
         FastNoise.init();
         for (int x = 0; x < MapGeneration.heightMap.length; x += 1)
         {

@@ -301,7 +301,7 @@ public class GameManagementState extends AbstractAppState {
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
         buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); //0
         buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f); //1
-        buildingGenerator.generateDepartment("Dep3", spawnlist[2], 5f);
+        buildingGenerator.generateDepartment("Maths", spawnlist[2], 5f);
         buildingGenerator.generateCollege("Alcuin", spawnlist[3], 15f); //2
         buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],15f); //3
         buildingGenerator.generateCollege("Derwent", spawnlist[5], 15f); //4
