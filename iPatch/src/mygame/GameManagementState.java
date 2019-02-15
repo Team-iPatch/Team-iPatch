@@ -256,7 +256,7 @@ public class GameManagementState extends AbstractAppState {
      * Initialises departments and colleges.
      */
     private void loadBuildings(){
-        int buildingcount = 10; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
+        int buildingcount = 12; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
         int rowcount = spawnmap.length;
         int colcount = spawnmap[0].length;
         spawnlist = new Vector3f[buildingcount];
@@ -311,5 +311,6 @@ public class GameManagementState extends AbstractAppState {
         buildingGenerator.generateCollege("Goodricke", spawnlist[7], 15f);
         buildingGenerator.generateTreasure("Treasure1", spawnlist[8], 2f);
         buildingGenerator.generateTreasure("Treasure2", spawnlist[9], 2f);
+        
     }
 }
