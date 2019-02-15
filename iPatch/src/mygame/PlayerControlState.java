@@ -103,26 +103,25 @@ public class PlayerControlState extends BaseAppState {
      * Initialises Camera.
      */
     public void initCamera(){
-    	/** //Old camera
-         * 
-         * ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-    	 * chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
-         * chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
-         * chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
-         * chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
-         * // Makes the player unable to zoom the camera.
-         * chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
-         * chaseCam.setMinDistance(chaseCam.getMaxDistance());
-         */
+         
+        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
+    	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
+        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
+        chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
+        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
+        // Makes the player unable to zoom the camera.
+        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
+        chaseCam.setMinDistance(chaseCam.getMaxDistance());
+        
         
         // New camera
-        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.getPlayerSpatial());
-        chaseCam.setDefaultDistance(30);
-        chaseCam.setMinDistance(10);
-        chaseCam.setMaxDistance(55);
-        chaseCam.setZoomSensitivity(2);
-        chaseCam.setSmoothMotion(true);
-        chaseCam.setChasingSensitivity(10);
+//        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.getPlayerSpatial());
+//        chaseCam.setDefaultDistance(30);
+//        chaseCam.setMinDistance(10);
+//        chaseCam.setMaxDistance(55);
+//        chaseCam.setZoomSensitivity(2);
+//        chaseCam.setSmoothMotion(true);
+//        chaseCam.setChasingSensitivity(10);
     }
     
     /**

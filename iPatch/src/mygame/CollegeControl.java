@@ -33,11 +33,13 @@ public class CollegeControl extends AbstractControl {
     private Node collegeNode;
     private boolean inCombat;
     private Quaternion rotation;
-    private double shootChance;
+    private float shootGap;
     private int hp;
     private boolean captured;
     PhysicsSpace physicsSpace;
     NiftyController nifty;
+    private long timeCount = 0;
+    
     
     /**
      * Control used to manage Colleges, tracking their health and controlling
@@ -60,20 +62,29 @@ public class CollegeControl extends AbstractControl {
         this.inCombat = false;
         this.rotation = new Quaternion();
         captured = false;
+        
         switch(name){
             case "Derwent":
                 this.hp = 100;
-                shootChance = 0.05;
+                shootGap = 2000;
                 rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
                 break;
             case "Vanbrugh":
                 this.hp = 200;
-                shootChance = 0.1;
+                shootGap = 1500;
                 break;
             case "Alcuin":
                 this.hp = 70;
-                shootChance = 0.05;
-                rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);                
+                shootGap = 750;
+                rotation.fromAngleAxis(0.02f, Vector3f.UNIT_Y);
+            case "Constantine":
+                this.hp = 80;
+                shootGap = 1000;
+                rotation.fromAngleAxis(0.015f, Vector3f.UNIT_Y);
+            case "Goodricke":
+                this.hp = 90;
+                shootGap = 1250;
+                rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);
         }
         this.physicsSpace = physicsSpace;
         this.nifty = nifty;
@@ -84,54 +95,109 @@ public class CollegeControl extends AbstractControl {
         if (hp <= 0){
             capture();
         }
-        if(!this.nifty.inmenu){
-            if(!captured && inCombat) {
-                Quaternion rot = collegeNode.getLocalRotation();
-                switch(name) {
-                    case "Derwent":
-                        collegeNode.setLocalRotation(rot.mult(rotation));
-                        for(Spatial cannon : cannons){
-                            if(Math.random() < shootChance){
-                                cannon.getControl(ShooterControl.class).shootBullet(
-                                            rot.mult(cannon.getLocalTranslation().
-                                                                normalizeLocal()));
-                            }
-                        } break;
-                    case "Vanbrugh":
-                        for(Spatial cannon : cannons){
-                            if(Math.random() < shootChance){
-                                cannon.getControl(ShooterControl.class).shootBullet(
-                                            rot.mult(cannon.getLocalTranslation().
-                                                                normalizeLocal()));
-                            }
-                        } break;
-                    case "Alcuin":
-                        if(Math.random() < 0.001){
-                            rotation = rotation.inverse();
+        
+        if (timeCount == 0){
+            timeCount = System.currentTimeMillis();
+        }
+        Boolean hasfired = false;
+        
+        if(!captured && inCombat) {
+            Quaternion rot = collegeNode.getLocalRotation();
+            switch(name) {
+                case "Derwent":
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(System.currentTimeMillis() - timeCount > shootGap){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                            hasfired = true;
                         }
-                        collegeNode.setLocalRotation(rot.mult(rotation));
-                        for(Spatial cannon : cannons){
-                            if(Math.random() < shootChance){
-                                cannon.getControl(ShooterControl.class).shootBullet(
-                                            rot.mult(cannon.getLocalTranslation().
-                                                                normalizeLocal()));
-                            }
-                        } break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            } 
-            else if(!captured) {
-                for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
-                    if (obj.getUserObject().getClass() == Node.class){
-                        Node userObject = (Node)obj.getUserObject();
-                        if(userObject.getName().equals("player")){
-                            if (ghostCounter > 1){
-                               inCombat = true;
-                            }
-                            else{
-                                ghostCounter++;
-                            }
+                    }
+                    if (hasfired){
+                        timeCount = System.currentTimeMillis();
+                    }
+                     break;
+                    
+                case "Vanbrugh":
+                    for(Spatial cannon : cannons){
+                        if(System.currentTimeMillis() - timeCount > shootGap){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                            hasfired = true;
+                        }
+                    }
+                    if (hasfired){
+                            timeCount = System.currentTimeMillis();
+                    } break;
+                    
+                case "Alcuin":
+                    if(Math.random() < 0.001){
+                        rotation = rotation.inverse();
+                    }
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(System.currentTimeMillis() - timeCount > shootGap){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                            hasfired = true;
+                        }
+                    }
+                    if (hasfired){
+                            timeCount = System.currentTimeMillis();
+                    } break;
+                    
+                case "Constantine":
+                    if(Math.random() < 0.001){
+                        rotation = rotation.inverse();
+                    }
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(System.currentTimeMillis() - timeCount > shootGap){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                            hasfired = true;
+                        }
+                    }
+                    if (hasfired){
+                        timeCount = System.currentTimeMillis();
+                    }
+                    break;
+                    
+                case "Goodricke":
+                    if(Math.random() < 0.001){
+                        rotation = rotation.inverse();
+                    }
+                    collegeNode.setLocalRotation(rot.mult(rotation));
+                    for(Spatial cannon : cannons){
+                        if(System.currentTimeMillis() - timeCount > shootGap){
+                            cannon.getControl(ShooterControl.class).shootBullet(
+                                        rot.mult(cannon.getLocalTranslation().
+                                                            normalizeLocal()));
+                            hasfired = true;
+                        }
+                    }
+                    if (hasfired){
+                        timeCount = System.currentTimeMillis();
+                    } break;
+                    
+                default:
+                    throw new NotImplementedException();
+            }
+        } 
+        else if(!captured) {
+            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+                if (obj.getUserObject().getClass() == Node.class){
+                    Node userObject = (Node)obj.getUserObject();
+                    if(userObject.getName().equals("player")){
+                        if (ghostCounter > 1){
+                           inCombat = true;
+                        }
+                        else{
+                            ghostCounter++;
                         }
                     }
                 }
