@@ -113,6 +113,12 @@ public class BulletControl extends AbstractControl
                     if(testNode.getControl(EnemyControl.class).getHP() <= 0){
                         playerControlState.incrementPoints(20);
                         playerControlState.incrementGold(10);
+                        //this is a shitty way of implementing rewards but fuck it 
+                        if (playerControlState.isKillQuest()==true &&
+                            playerControlState.getQuestProgress()>0){
+                            playerControlState.Questprogress(1);
+                        }
+                       
                     }
                     
                     // Makes the bullet expire if it hits an enemy and is not

@@ -47,12 +47,11 @@ public class PlayerControlState extends BaseAppState {
     private ArrayList<ShooterControl> shooters;
     private ArrayList<Quaternion> shooterDirections;
     private Boolean piercing;
-    private int enemycount;
-    private int collegecount;
-    private int treasurecount;
-    private int shotsfired;
-    
-    
+    private Boolean killQuest;
+    private Boolean treasureQuest;
+    private Boolean onQuest;
+    private Integer Questcounter;
+    private Integer Questprogress;
     @Override 
     protected void initialize(Application app){
         speed = 0f;
@@ -71,11 +70,12 @@ public class PlayerControlState extends BaseAppState {
         this.hp = 100;
         
         // Define the quest trackers
+        this.killQuest=false;
+        this.treasureQuest=false;
+        this.onQuest =false;
+        this.Questcounter =0;
+        this.Questprogress=0;
         
-        this.enemycount=0;
-        this.collegecount=0;
-        this.treasurecount=0;
-        this.shotsfired=0;
         
         // Creates a fixed camera, looking down at the player from a steep angle.
     	ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
@@ -118,7 +118,57 @@ public class PlayerControlState extends BaseAppState {
     public Integer getMaxHP(){
         return this.maxHP;
     }
+    /**
+     * Returns player quest state
+     */
+    public Boolean getQuestState(){
+        return this.onQuest;
+    }
+    public void  takeKillQuest(int killcount){
+        this.killQuest=true;    
+        this.Questcounter=killcount;
+    }
+    public void takeTreasureQuest(int treasurecount){
+        this.treasureQuest=true;
+        this.Questcounter=treasurecount;
+    }
+    public Integer getQuestProgress(){
+        int Progress=this.Questcounter-this.Questprogress;
+        return Progress;
+    }
+    public Boolean isKillQuest(){
+        return this.killQuest;
+    }
     
+    public Boolean isTreasureQuest(){
+        return this.treasureQuest;
+    }
+    public int getProgress(){
+        return this.Questprogress;
+    }
+    public int getCounter(){
+        return this.Questcounter;
+    }
+    
+    public void questStart(){
+        this.onQuest=true;
+        this.Questprogress=0;
+    }
+    public void Questprogress(int increment){
+        this.Questprogress+=increment;
+    }
+    public void endQuest(){
+        this.Questcounter=0;
+        this.Questprogress=0;
+        this.onQuest=false;          
+                
+    }
+    public void endkillQuest(){
+        this.killQuest=false;
+    }
+    public void endTreasureQuest(){
+        this.treasureQuest=false;
+    }
     /**
      * Changes player's max HP.
      * @param amount New maximum HP cap.
@@ -268,8 +318,6 @@ public class PlayerControlState extends BaseAppState {
             controller.setWalkDirection(playerRotation.mult(speed));
             speed *= 0.99;
             
-            // Detaches player spatial from the rootNode, nulls out player and
-            // controller objects.
             if(hp<=0){
                 NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
                 niftyController.gameOver();
@@ -289,17 +337,12 @@ public class PlayerControlState extends BaseAppState {
     
     public Vector3f getAimdir(){
         Vector2f cursorPos = inputManager.getCursorPosition();
-        
-
         int x = this.settings.getWidth()/2;
         int y = this.settings.getHeight()/2;
         Vector2f centrePos = new Vector2f (x,y);
         cursorPos=cursorPos.subtract(centrePos);
         Vector3f mouseaim = new Vector3f(-cursorPos.y,0,-cursorPos.x);
-        System.out.println(mouseaim);
         mouseaim.normalizeLocal();
-        System.out.println(mouseaim);
-
         return mouseaim;
     }
 	

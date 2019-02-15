@@ -21,6 +21,7 @@
                 <control id="HPLabel" name="label" text=" HP: " align="center" width="100%"/>
                 <control id="PointLabel" name="label" text=" Points: " align="center" width="100%"/>
                 <control id="GoldLabel" name="label" text=" Gold: " align="center" width="100%"/>    
+                <control id="QuestLabel" name="label" text=" Quest: " align="center" width="100%"/>   
             </panel>
             <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
                 <control id="departmentLabel" name="label" text="Department: " width="100%"/>
@@ -29,6 +30,12 @@
                 </control>
                 <control id="HealButton" name="button" label="Restore HP (20 gold)" align="center" visibleToMouse="true" width="80%">
                     <interact onClick="shopHeal()"/>
+                </control>
+                <control id="acceptQuest" name="button" label="Accept quest:" align="center" visibleToMouse="true" width="80%">
+                    <interact onClick="acceptQuest()"/>
+                </control>
+                <control id="completeQuest" name="button" label="Turn in quest" align="center" visibleToMouse="false" width="80%">
+                    <interact onClick="completeQuest()"/>
                 </control>
             </panel>
         </layer>

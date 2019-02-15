@@ -57,7 +57,7 @@ public class EnemyControl extends AbstractControl{
     public void kill(){
         // Do not call outside of controlUpdate, set hp to 0 instead
         spatial.getParent().detachChild(spatial);
-        physicsSpace.remove(spatial.getControl(BetterCharacterControl.class));
+        physicsSpace.remove(spatial.getControl(BetterCharacterControl.class));                                                                                                                              
     }
     
     /**

@@ -12,10 +12,16 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/metal/Documents/Team-Quest%20implementation/Team-iPatch/iPatch/src/mygame/PlayerControlState.java</file>
-            <file>file:/C:/Users/metal/Documents/Team-Quest%20implementation/Team-iPatch/iPatch/src/mygame/NiftyController.java</file>
-            <file>file:/C:/Users/metal/Documents/Team-Quest%20implementation/Team-iPatch/iPatch/assets/Interface/Controls/mainMenu.xml</file>
-            <file>file:/C:/Users/metal/Documents/Team-Quest%20implementation/Team-iPatch/iPatch/src/mygame/GameManagementState.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/assets/Interface/Controls/mainMenu.xml</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/ShooterControl.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/BulletControl.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/NiftyController.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/Main.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/CollegeControl.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/AIChaserControl.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/PlayerControlState.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/DepartmentControl.java</file>
+            <file>file:/C:/Users/Julian/Documents/GitHub/Team-iPatch/iPatch/src/mygame/GameManagementState.java</file>
         </group>
     </open-files>
 </project-private>

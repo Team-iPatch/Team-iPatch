@@ -117,6 +117,7 @@ public class AIChaserControl extends AbstractControl implements PhysicsCollision
             alive = false;
             player.reduceHP(collisionDamage);
             spatial.getControl(EnemyControl.class).setHP(0);
+            //define increment 
         }
     }
 }

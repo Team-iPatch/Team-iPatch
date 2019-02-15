@@ -99,7 +99,8 @@ public class GameManagementState extends AbstractAppState {
         loadPlayer();
         loadBaddies();
     }
-    
+
+
     /**
      * Initialises GUI code.
      */
@@ -111,6 +112,7 @@ public class GameManagementState extends AbstractAppState {
         guiViewPort.addProcessor(niftyDisplay);
         nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
         nifty.setIgnoreKeyboardEvents(true);
+        
     }
     
     /**
