@@ -101,7 +101,7 @@ public class CollegeControl extends AbstractControl {
         }
         Boolean hasfired = false;
         
-        if(!captured && inCombat) {
+        if(!captured && inCombat && !nifty.inmenu) {
             Quaternion rot = collegeNode.getLocalRotation();
             switch(name) {
                 case "Derwent":

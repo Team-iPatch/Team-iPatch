@@ -31,6 +31,7 @@ public class MiniGame extends AbstractAppState {
     AudioRenderer audioRenderer;
     Node rootNode;
     Node mainNode;
+    MiniGamePlayer player;
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -40,18 +41,11 @@ public class MiniGame extends AbstractAppState {
         this.inputManager = this.app.getInputManager();
         this.audioRenderer = this.app.getAudioRenderer();
         this.rootNode = this.app.getRootNode();
-        rootNode.attachChild(mainNode);
         
-        //TODO: initialize your AppState, e.g. attach spatials to rootNode
-        //this is called on the OpenGL thread after the AppState has been attached
+        player = new MiniGamePlayer();
+        
+        //call method to setup
     }
-    
-    
-    
-    
-    
-    
-    
     
     
     

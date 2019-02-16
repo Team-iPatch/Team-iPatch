@@ -13,9 +13,11 @@ import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
@@ -60,7 +62,9 @@ public class PlayerControlState extends BaseAppState {
     private Boolean onQuest;
     private Integer Questcounter;
     private Integer Questprogress;
-	
+    
+    int weathertimer = 0;
+    
     @Override 
     protected void initialize(Application app){
         this.currentSpeed = 0f;
@@ -122,7 +126,7 @@ public class PlayerControlState extends BaseAppState {
          
         ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
     	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
-        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
+        chaseCam.setDragToRotate(false); // If true, player has to click and drag the screen to move the camera
         chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
         chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
         // Makes the player unable to zoom the camera.
@@ -359,11 +363,18 @@ public class PlayerControlState extends BaseAppState {
                     currentSpeed = 0;
                 }
             }
+            if(this.weathertimer >= 750){
+                this.incrementGold(5);
+                this.incrementPoints(5);
+                this.reduceHP(2);
+                this.weathertimer = 0;
+            }
+            
             
             // Detaches player spatial from the rootNode, nulls out player and
             // controller objects.
             NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
-            if(hp<=0){
+            if(hp<=0 && niftyController.winner != true){
                 niftyController.gameOver();
                 player.removeFromParent();
                 player = null;
@@ -384,7 +395,7 @@ public class PlayerControlState extends BaseAppState {
                         }
                         int playerx = Math.round(this.player.getLocalTranslation().x);
                         int playerz = Math.round(this.player.getLocalTranslation().z);
-                        Vector3f spawnvector = player.getLocalTranslation().add(xangle,1,zangle);
+                        Vector3f spawnvector = player.getLocalTranslation().add(xangle+0.5f,1,zangle+0.5f);
 
                         if(playerx+xangle <spawnlist.length && playerz+zangle < spawnlist[0].length 
                             &&playerz+zangle> 0 && playerx+xangle>0){
@@ -426,12 +437,13 @@ public class PlayerControlState extends BaseAppState {
      * Initialises player inputs.
      */
     private void initKeys(){
+        inputManager.setCursorVisible(true);
     	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
     	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
-        inputManager.addMapping("Shoot",     new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("Shoot",     new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
     	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
     	inputManager.addListener(actionListener, "ChangeRes", "Shoot","ToggleObjective");
     }

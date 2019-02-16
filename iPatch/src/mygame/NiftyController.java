@@ -47,6 +47,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     Boolean inmenu;
     int collegesdefeated;
     List<String> questList;
+    Boolean winner;
 	
     @Override
     public void bind(Nifty nifty, Screen screen){
@@ -183,6 +184,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         Label departmentLabel = screen.findNiftyControl("departmentLabel", Label.class);
         playerControlState=stateManager.getState(PlayerControlState.class);
         // Checks if the player is currently within range of a Department.
+        
         if(this.shop){
             layer.show();
             // Displays different text depending on whether the Department
@@ -359,6 +361,15 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         }
          
     }
+    
+    public void StartMinigame(){
+        MiniGame play = new MiniGame();
+        stateManager.attach(play);
+        play.initialize(stateManager, app);
+        
+    }
+    
+    
     /**
      * Called when the player clicks the topmost, unique upgrade button.
      * Functionality depends on the shop the player is in.
@@ -392,7 +403,6 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
      */
     public void shopHeal(){
         playerControlState = stateManager.getState(PlayerControlState.class);
-
         if(playerControlState.getGold()>=20){
             Integer maxHP = playerControlState.getMaxHP();
             playerControlState.setHP(maxHP);
@@ -509,5 +519,6 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
      */
     public void win(){
         nifty.gotoScreen("winScreen");
+        winner =true;
     }
 }

@@ -8,12 +8,15 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.SphereCollisionShape;
 import com.jme3.bullet.control.GhostControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -140,4 +143,30 @@ public class BuildingGenerator {
         collegeNode.attachChild(box);
         app.getRootNode().attachChild(collegeNode);
     }
+    public void generateBadWeather(String name,Vector3f centre, int[][] spawnmap){
+        Material cloudmat = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
+        cloudmat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        Node cloudNode = new Node();
+        for(int y = -4;y<=4;y++){
+            for(int x = -4;x<=4;x++){
+                Vector3f spawnlocation = centre.add(x,0.5f,y);
+                if(spawnlocation.x>219 || spawnlocation.y> 219 || spawnlocation.x <0 || spawnlocation.y<0){ }else{
+                    if(Math.abs(x)+Math.abs(y) <= 4 && spawnmap[(int)spawnlocation.x][(int)spawnlocation.z] != 1){
+                        Spatial cloud = app.getAssetManager().loadModel("Models/IPatchcloud/IPatchcloud.j3o");
+                        cloud.setMaterial(cloudmat);
+                        cloud.setQueueBucket(RenderQueue.Bucket.Transparent);
+                        cloud.setLocalTranslation(spawnlocation.add(0.5f,0,0.5f));
+                        GhostControl ghost = new GhostControl(new BoxCollisionShape(new Vector3f(0.5f,1,0.5f)));
+                        cloud.addControl(ghost);
+                        cloud.addControl(new BadWeatherControl("Bad Weather",ghost,app));
+                        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
+                        cloudNode.attachChild(cloud);
+                    }
+                }
+            }
+        }
+        app.getRootNode().attachChild(cloudNode);
+    }
+    
+    
 }

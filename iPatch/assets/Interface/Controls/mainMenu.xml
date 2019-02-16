@@ -44,6 +44,11 @@
                 <control id="completeQuest" name="button" label="Turn in quest" align="center" visibleToMouse="false" width="80%">
                     <interact onClick="completeQuest()"/>
                 </control>
+                
+                <control id="PlayMinigame" name="button" label="Play the minigame for a chance to win money" align="center" visibleToMouse="false" width="80%">
+                    <interact onClick="StartMinigame()"/>
+                </control>
+                
             </panel>
 			
             <panel id="tPopupPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
