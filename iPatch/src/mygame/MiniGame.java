@@ -24,8 +24,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
- * @author fc831
+ * setups and controls the minigame and helps swap back on completion. 
+ * @author fc831 & MagicSid
  */
 public class MiniGame extends AbstractAppState {
     

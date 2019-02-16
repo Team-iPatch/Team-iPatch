@@ -20,8 +20,8 @@ import fastnoise.FastNoise;
 
 
 /**
- *
- * @author Joseph Leigh
+ * Generates the main static Map based off the fastnoise class.
+ * @author Joseph Leigh & MagicSid
  */
 public class MapGeneration 
         

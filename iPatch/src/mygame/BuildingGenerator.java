@@ -24,8 +24,8 @@ import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Sphere;
 
 /**
- *
- * @author cpl512
+ * Generates all static objects for the main map.
+ * @author cpl512 & team 1
  */
 public class BuildingGenerator {
     

@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
 
 /**
  * Controls interactions with Treasures, which act as a means of gold income.
- * @author Team iPatch
+ * @author team 1
  */
 public class TreasureControl extends AbstractControl{
     private GhostControl ghost;

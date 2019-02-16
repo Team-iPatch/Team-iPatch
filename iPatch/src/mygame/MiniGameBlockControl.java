@@ -19,12 +19,11 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
-import com.jme3.scene.control.Control;
 import java.io.IOException;
 
 /**
- *
- * @author fc831
+ * Implements the physics of the Rocks to create the necessary interactions to fail the minigame.
+ * @author fc831 & MagicSid
  */
 public class MiniGameBlockControl extends AbstractControl  implements PhysicsCollisionListener {
     PhysicsSpace physicsSpace;

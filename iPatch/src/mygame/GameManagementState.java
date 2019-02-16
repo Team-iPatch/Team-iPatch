@@ -48,7 +48,7 @@ import java.util.Random;
 /**
  * Manager app state used to initialise and store the majority of program code.
  * Effectively a substitute for Main() which can be accessed at runtime.
- * @author Team iPatch
+ * @author Team iPatch & team 1
  */
 public class GameManagementState extends AbstractAppState {
     
@@ -253,7 +253,7 @@ public class GameManagementState extends AbstractAppState {
     }
     
     /**
-     * Initialises departments and colleges.
+     * Initialises departments, colleges, and treasures.
      */
     private void loadBuildings(){
         int buildingcount = 12; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.

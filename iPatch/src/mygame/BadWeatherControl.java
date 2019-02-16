@@ -14,8 +14,8 @@ import com.jme3.scene.Node;
 import com.jme3.scene.control.AbstractControl;
 
 /**
- *
- * @author jake
+ * Implements the weather physics and increments a player variable to give them money and deal damage.
+ * @author MagicSid
  */
 public class BadWeatherControl extends AbstractControl{
 

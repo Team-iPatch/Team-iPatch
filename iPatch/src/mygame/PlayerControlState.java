@@ -31,7 +31,7 @@ import java.util.Random;
 /**
  * App state which controls player input and the player's resources.
  *
- * @author Blue 
+ * @author Blue & team 1
  */
 public class PlayerControlState extends BaseAppState {
 

@@ -13,8 +13,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
- *
- * @author fc831
+ * Generates Rocks for the player to dodge in the minigame.
+ * @author fc831 & MagicSid
  */
 
 public class MiniGameBlockBuilder {

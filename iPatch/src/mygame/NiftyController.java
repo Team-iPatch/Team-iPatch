@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * App state used to manipulate the GUI and implement UI events.
- * @author Team iPatch
+ * @author Team iPatch & team 1
  */
 public class NiftyController extends AbstractAppState implements ScreenController{
     

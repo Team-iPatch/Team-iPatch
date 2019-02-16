@@ -27,9 +27,8 @@ import java.util.Random;
 
 /**
  * 
- * 
- *
- * @author fc831
+ * Controls the players ship in the minigame and spawns the rocks.
+ * @author fc831 & MagicSid
  */
 public class MiniGamePlayer extends BaseAppState {
 
