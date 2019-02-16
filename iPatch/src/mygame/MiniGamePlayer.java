@@ -39,79 +39,30 @@ public class MiniGamePlayer extends BaseAppState {
     private InputManager inputManager;
     private BetterCharacterControl controller;
     private float speed;
-    private AppSettings settings; 
-    private Integer points;
-    private Vector3f viewDirection;
-    private int[][] spawnlist;
-    private BulletAppState bulletappstate;
+    private Integer pointsearnt;
+    private AppSettings settings;
+    private long timeleft;
     
     @Override
-    
-     
     protected void initialize(Application app) {
         speed = 0f;
-        this.app = (SimpleApplication)app;
+        this.app =(SimpleApplication) app;
         this.rootNode = this.app.getRootNode();
-    	this.player = this.rootNode.getChild("player");
+    	this.player = this.rootNode.getChild("minigameplayer");
     	this.inputManager = this.app.getInputManager();
-    	this.controller = player.getControl(BetterCharacterControl.class);
-        this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
         
+        timeleft = System.currentTimeMillis();
         // Defines the player's points, gold, and HP
-    	this.points = 0;
-        
-      
-        initCamera();
-        
-    }
-        //It is technically safe to do all initialization and cleanup in the  
-        //onEnable()/onDisable() methods. Choosing to use initialize() and  
-        //cleanup() for this is a matter of performance specifics for the  
-        //implementor. 
-        //TODO: initialize your AppState, e.g. attach spatials to rootNode 
-    
-    
-    
-    public void initCamera(){
-        // Old camera
-    	/*ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
-    	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
-        chaseCam.setDragToRotate(true); // If true, player has to click and drag the screen to move the camera
-        chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
-        chaseCam.setDefaultVerticalRotation(70*FastMath.DEG_TO_RAD); // Sets the angle at which the camera looks down at the player
-        // Makes the player unable to zoom the camera.
-        chaseCam.setDefaultDistance(chaseCam.getMaxDistance());
-        chaseCam.setMinDistance(chaseCam.getMaxDistance());*/
-        
-        // New camera
-        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.getPlayerSpatial());
-        chaseCam.setDefaultDistance(50);
-        chaseCam.setMinDistance(10);
-        chaseCam.setMaxDistance(75);
-        chaseCam.setZoomSensitivity(2);
-        chaseCam.setSmoothMotion(true);
-        chaseCam.setChasingSensitivity(10);
+        initKeys();        
     }
     
-    
-
-    public void incrementPoints(int points){
-        this.points += points;
-    }
-    
-    public Spatial getPlayerSpatial(){
-        return this.player;
-    }
     @Override
     protected void cleanup(Application app) {
-        //TODO: clean up what you initialized in the initialize method, 
-        //e.g. remove all spatials from rootNode 
+
     }
      
-    //onEnable()/onDisable() can be used for managing things that should  
-    //only exist while the state is enabled. Prime examples would be scene  
-    //graph attachment or input listener attachment. 
+
     @Override
 
      
@@ -139,36 +90,16 @@ public class MiniGamePlayer extends BaseAppState {
         //TODO: implement behavior during runtime 
         // Handles player movement while player and character controller are
         // both initialised. Does nothing if the player is destroyed.
-        if(player == null || controller == null){
-            
-        } else {
-            
-            // Detaches player spatial from the rootNode, nulls out player and
-            // controller objects.
-            NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
-            if(10<=1){
-                niftyController.gameOver();
-                player.removeFromParent();
-                player = null;
-                controller = null;
-                
-            }else{
-                Spatial Block = this.rootNode.getChild("Block");
-                Random rand = new Random();
-                MiniGameBlockBuilder blockspawner = new MiniGameBlockBuilder(this.app.getAssetManager(),this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace(),this);
-                    for(int i=0;i<rand.nextInt(5)+1; i++){
-                      
-                        //Use random values to generate spawn vector
-                        Vector3f tempvector = new Vector3f(0,0,0); //REPLACE ME
-                        Spatial BlockSpacial = blockspawner.generateBlock("BLOCKMODLE___Models/pirateship/mesh.j3o",tempvector);
-                        rootNode.attachChild(BlockSpacial);
-                        
-                            }
-                    
-                        }
-                
+        if(System.currentTimeMillis()-timeleft >= 4000){
+            timeleft = System.currentTimeMillis();
+            Spatial Block = this.rootNode.getChild("Block");
+            Random rand = new Random();
+            MiniGameBlockBuilder blockspawner = new MiniGameBlockBuilder(this.app,this.app.getStateManager().getState(BulletAppState.class).getPhysicsSpace(),this);
+            for(int z=-rand.nextInt(1)-1;z<=(float)rand.nextInt(1);z++){
+                blockspawner.generateBlock(player.getLocalTranslation().add(z*4,1.0f,15));
             }
         }
+    }
 
     
         
@@ -177,31 +108,23 @@ public class MiniGamePlayer extends BaseAppState {
      
     private void initKeys(){
     
-    	inputManager.addMapping("Left",   new KeyTrigger(KeyInput.KEY_A));
-    	inputManager.addMapping("Right",  new KeyTrigger(KeyInput.KEY_D));
-    	inputManager.addListener(analogListener, "Left", "Right");
+    	inputManager.addMapping("MLeft",   new KeyTrigger(KeyInput.KEY_A));
+    	inputManager.addMapping("MRight",  new KeyTrigger(KeyInput.KEY_D));
+    	inputManager.addListener(analogListener, "MLeft", "MRight");
     }
     private final AnalogListener analogListener = new AnalogListener(){
 	@Override
 	public void onAnalog(String name, float value, float tpf){
             // Handles player input when not in a game over state.
-            if(player == null || controller == null){
                 
-            } else {
-                if(name.equals("Left")) {
-                    if (speed < 15)
-                        speed += 1;
-                }
-
-                if(name.equals("Right")) {
-                    if (speed < 15)
-                        speed += 1;	
-                }
-
-              
+            if(name.equals("MLeft") && player.getWorldTranslation().x < -12) {
+                player.move(10*tpf, 0, 0);
             }
+
+            if(name.equals("MRight") && player.getWorldTranslation().x > -30) {
+                player.move(-10*tpf, 0, 0);
+            }
+            
         }
     };
-            
-        
 }

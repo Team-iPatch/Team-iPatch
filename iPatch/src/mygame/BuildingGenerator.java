@@ -150,7 +150,7 @@ public class BuildingGenerator {
         for(int y = -4;y<=4;y++){
             for(int x = -4;x<=4;x++){
                 Vector3f spawnlocation = centre.add(x,0.5f,y);
-                if(spawnlocation.x>219 || spawnlocation.y> 219 || spawnlocation.x <0 || spawnlocation.y<0){ }else{
+                if(spawnlocation.x>219 || spawnlocation.z> 219 || spawnlocation.x <0 || spawnlocation.z<0){ }else{
                     if(Math.abs(x)+Math.abs(y) <= 4 && spawnmap[(int)spawnlocation.x][(int)spawnlocation.z] != 1){
                         Spatial cloud = app.getAssetManager().loadModel("Models/IPatchcloud/IPatchcloud.j3o");
                         cloud.setMaterial(cloudmat);

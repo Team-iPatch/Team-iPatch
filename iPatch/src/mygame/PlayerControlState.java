@@ -124,7 +124,7 @@ public class PlayerControlState extends BaseAppState {
      */
     public void initCamera(){
          
-        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), this.player, inputManager);
+        ChaseCamera chaseCam = new ChaseCamera(app.getCamera(), player, inputManager);
     	chaseCam.setSmoothMotion(false); // If true, camera automatically adjusts
         chaseCam.setDragToRotate(false); // If true, player has to click and drag the screen to move the camera
         chaseCam.setRotationSpeed(0); // Sets the speed at which the player rotates the camera. 0 means no movement.
@@ -436,7 +436,7 @@ public class PlayerControlState extends BaseAppState {
     /**
      * Initialises player inputs.
      */
-    private void initKeys(){
+    public void initKeys(){
         inputManager.setCursorVisible(true);
     	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
@@ -444,7 +444,7 @@ public class PlayerControlState extends BaseAppState {
     	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("Shoot",     new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Backward");
+    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward");
     	inputManager.addListener(actionListener, "ChangeRes", "Shoot","ToggleObjective");
     }
 	

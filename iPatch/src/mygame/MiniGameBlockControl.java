@@ -5,16 +5,16 @@
  */
 package mygame;
 
+import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.control.BetterCharacterControl;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
@@ -29,23 +29,23 @@ import java.io.IOException;
 public class MiniGameBlockControl extends AbstractControl  implements PhysicsCollisionListener {
     PhysicsSpace physicsSpace;
     private final float speed = 30f;
-    float lifeExpectancy = 2f; //Seconds before it is erased
-    float lifetime; //Counts up to lifeExpectancy
+    float lifeExpectancy = 3000; //milliseconds before it is erased
+    long lifetime; //time of creation.
     boolean isEnemy;
-    RigidBodyControl block_phys; //Remove the physics control on deletion
+    BetterCharacterControl block_phys; //Remove the physics control on deletion
+    Spatial self;
+    SimpleApplication app;
     
-    MiniGameBlockControl(PhysicsSpace physicsSpace,RigidBodyControl block_phy, 
+    MiniGameBlockControl(SimpleApplication app ,BetterCharacterControl block_phy, 
             MiniGamePlayer MiniGamePlayer) {
         
-        
-        this.lifetime = 0;
-        this.physicsSpace = physicsSpace;
+        this.app = app;
+        this.lifetime = System.currentTimeMillis();
+        this.physicsSpace = this.app.getStateManager().getState(BulletAppState.class)
+                .getPhysicsSpace();
         this.block_phys = block_phy;
         physicsSpace.addCollisionListener(this);
-        this.physicsSpace = physicsSpace;
-        physicsSpace.addCollisionListener(this);
-
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
 
     }
     
@@ -55,21 +55,19 @@ public class MiniGameBlockControl extends AbstractControl  implements PhysicsCol
 
     @Override
     protected void controlUpdate(float tpf) {
-        lifetime += tpf;
-        if(this.lifetime >= lifeExpectancy){
+        if(System.currentTimeMillis()-lifetime >= lifeExpectancy ){
                 destroy();
-        }        
-
+        }
     }
      
     
     public void destroy(){
         physicsSpace.remove(block_phys);
         physicsSpace.removeCollisionListener(this);
-        spatial.removeFromParent();
-        spatial.getParent().detachChild(spatial);
+        this.app.getRootNode().detachChild(this.getSpatial());
         physicsSpace.remove(spatial.getControl(BetterCharacterControl.class));
     }
+    
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
         //Only needed for rendering-related operations,
@@ -95,8 +93,21 @@ public class MiniGameBlockControl extends AbstractControl  implements PhysicsCol
 
     @Override
     public void collision(PhysicsCollisionEvent event) {
-        // EDIT THIS
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Spatial testnode = null;
+        
+        if(event.getNodeA().getName().equals("rock")){
+            testnode = event.getNodeB();
+        }else if(event.getNodeB().getName().equals("rock")){
+            testnode = event.getNodeA();
+        }
+        if(testnode != null){
+            if(testnode.getName().equals("minigameplayer")){
+                MiniGame game = app.getStateManager().getState(MiniGame.class);
+                if(game != null){
+                    game.end = true;
+                }
+            }
+        }
     }
     
 }
