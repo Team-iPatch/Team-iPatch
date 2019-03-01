@@ -51,7 +51,7 @@ public class BuildingGenerator {
             case "Biology":
                 mat1.setColor("Color", new ColorRGBA(0,0.4f,0,1));
                 break;
-            case "Dep3":
+            case "Maths":
                 mat1.setColor("Color", ColorRGBA.Orange);
                 break;
             
@@ -116,7 +116,7 @@ public class BuildingGenerator {
             cannons[i].addControl(new ShooterControl(direction, true, app));
             collegeNode.attachChild(cannons[i]);
         }
-        college.addControl(new CollegeControl(name, ghost, cannons, collegeNode, physicsSpace,this.app.getStateManager().getState(NiftyController.class)));
+        college.addControl(new CollegeControl(name, cannons, collegeNode, physicsSpace,this.app.getStateManager().getState(NiftyController.class)));
         collegeNode.attachChild(college);
         Geometry box = new Geometry("box", new Sphere(8,8,2f));
         box.setLocalTranslation(0,2,0);

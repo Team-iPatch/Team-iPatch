@@ -26,8 +26,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Team iPatch
  */
 public class CollegeControl extends AbstractControl {
-    private GhostControl ghost;
-    private int ghostCounter;
     private final String name;
     private Spatial cannons[];
     private Node collegeNode;
@@ -46,17 +44,13 @@ public class CollegeControl extends AbstractControl {
      * where they fire.
      * @param name Name indicates the functionality of the college. Names have to
      * be hardcoded in the body of the code.
-     * @param ghost GhostControl used to detect proximity collisions with the player.
-     * Currently unused internally.
      * @param cannons Array of spatials of cannons. Indicates shooting direction.
      * @param collegeNode Node used to store the College entity.
      * @param physicsSpace PhysicsSpace where the College will register collisions.
      */
-    CollegeControl(String name, GhostControl ghost, Spatial[] cannons, 
+    CollegeControl(String name, Spatial[] cannons, 
                    Node collegeNode, PhysicsSpace physicsSpace, NiftyController nifty){
         this.name = name;
-        this.ghost = ghost;
-        this.ghostCounter = 0;
         this.cannons = cannons;
         this.collegeNode = collegeNode;
         this.inCombat = false;
@@ -187,26 +181,12 @@ public class CollegeControl extends AbstractControl {
                 default:
                     throw new NotImplementedException();
             }
-        } 
-        else if(!captured) {
-            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
-                if (obj.getUserObject().getClass() == Node.class){
-                    Node userObject = (Node)obj.getUserObject();
-                    if(userObject.getName().equals("player")){
-                        if (ghostCounter > 1){
-                           inCombat = true;
-                        }
-                        else{
-                            ghostCounter++;
-                        }
-                    }
-                }
-            }
         }
     }
     
     public void reduceHP(int hp){
         this.hp -= hp;
+        inCombat = true;
     }
     
     public int getHP(){

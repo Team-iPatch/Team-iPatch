@@ -304,11 +304,11 @@ public class GameManagementState extends AbstractAppState {
         buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); 
         buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f); 
         buildingGenerator.generateDepartment("Maths", spawnlist[2], 5f);
-        buildingGenerator.generateCollege("Alcuin", spawnlist[3], 15f); 
-        buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],15f); 
-        buildingGenerator.generateCollege("Derwent", spawnlist[5], 15f); 
-        buildingGenerator.generateCollege("Constantine", spawnlist[6],15f);
-        buildingGenerator.generateCollege("Goodricke", spawnlist[7], 15f);
+        buildingGenerator.generateCollege("Alcuin", spawnlist[3], 5f); 
+        buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],5f); 
+        buildingGenerator.generateCollege("Derwent", spawnlist[5], 5f); 
+        buildingGenerator.generateCollege("Constantine", spawnlist[6],5f);
+        buildingGenerator.generateCollege("Goodricke", spawnlist[7], 5f);
         buildingGenerator.generateTreasure("Treasure1", spawnlist[8], 2f);
         buildingGenerator.generateTreasure("Treasure2", spawnlist[9], 2f);
         buildingGenerator.generateBadWeather("Weather1", spawnlist[10], spawnmap);
