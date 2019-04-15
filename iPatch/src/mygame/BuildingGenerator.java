@@ -143,6 +143,7 @@ public class BuildingGenerator {
         collegeNode.attachChild(box);
         app.getRootNode().attachChild(collegeNode);
     }
+    
     public void generateBadWeather(String name,Vector3f centre, int[][] spawnmap){
         Material cloudmat = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
         cloudmat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -167,6 +168,5 @@ public class BuildingGenerator {
         }
         app.getRootNode().attachChild(cloudNode);
     }
-    
     
 }

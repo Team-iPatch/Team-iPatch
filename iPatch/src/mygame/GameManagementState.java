@@ -18,7 +18,6 @@ import com.jme3.input.InputManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -26,20 +25,12 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.DepthOfFieldFilter;
-import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.ViewPort;
-import com.jme3.renderer.queue.RenderQueue;
-import com.jme3.renderer.queue.RenderQueue.Bucket;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
-import com.jme3.shadow.DirectionalLightShadowFilter;
-import com.jme3.shadow.DirectionalLightShadowRenderer;
-import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.WaterFilter;
 import de.lessvoid.nifty.Nifty;
@@ -107,12 +98,14 @@ public class GameManagementState extends AbstractAppState {
     public void startGame(){
         //loadPhysics() has to be executed first
         loadPhysics();
+        loadLighting();
         loadEnemyGenerator();
         loadScene();
         //loadBox(); // used to test physics, allows the ship to "surf" into the air
         loadMap();
         loadBuildings();
         loadPlayer();
+        loadBox();
         //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
 
@@ -191,23 +184,32 @@ public class GameManagementState extends AbstractAppState {
         water.setWaterHeight(1.1f);
         FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
         fpp.addFilter(water);
-        this.app.getViewPort().addProcessor(fpp);
+        this.app.getViewPort().addProcessor(fpp);        
+    }
+    
+    /**
+     * Loads the lighting for the scene
+     */
+    private void loadLighting(){
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection(new Vector3f(0,0,-1));
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun);
         
-        
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White);
+        rootNode.addLight(ambient);
     }
     
     /**
      * Loads a box.
      */
     private void loadBox(){
-        Box box = new Box(1, 1, 1);
-        Geometry box_geom = new Geometry("box", box);
-        box_geom.setMaterial(new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"));
-        box_geom.setLocalTranslation(new Vector3f(10f, 1f, 0));
-        rootNode.attachChild(box_geom);
-        RigidBodyControl box_phys = new RigidBodyControl(0f);
-        box_geom.addControl(box_phys);
-        bulletAppState.getPhysicsSpace().add(box_geom);
+        Spatial box = assetManager.loadModel("Models/whirlpool/untitled.j3o");
+        box.scale(5);
+        box.setLocalTranslation(spawnlist[0].add(0,4f,0));
+        box.setName("box");
+        rootNode.attachChild(box);
     }
     
     /**
@@ -301,14 +303,14 @@ public class GameManagementState extends AbstractAppState {
         playerControlState.setspawnlist(spawnmap);
         
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
-        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); 
+        //buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); 
         buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f); 
         buildingGenerator.generateDepartment("Maths", spawnlist[2], 5f);
-        buildingGenerator.generateCollege("Alcuin", spawnlist[3], 5f); 
-        buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],5f); 
-        buildingGenerator.generateCollege("Derwent", spawnlist[5], 5f); 
-        buildingGenerator.generateCollege("Constantine", spawnlist[6],5f);
-        buildingGenerator.generateCollege("Goodricke", spawnlist[7], 5f);
+        buildingGenerator.generateCollege("Alcuin", spawnlist[3], 3.5f); 
+        buildingGenerator.generateCollege("Vanbrugh", spawnlist[4],3.5f); 
+        buildingGenerator.generateCollege("Derwent", spawnlist[5], 3.5f); 
+        buildingGenerator.generateCollege("Constantine", spawnlist[6],3.5f);
+        buildingGenerator.generateCollege("Goodricke", spawnlist[7], 3.5f);
         buildingGenerator.generateTreasure("Treasure1", spawnlist[8], 2f);
         buildingGenerator.generateTreasure("Treasure2", spawnlist[9], 2f);
         buildingGenerator.generateBadWeather("Weather1", spawnlist[10], spawnmap);
