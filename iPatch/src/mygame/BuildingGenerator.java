@@ -30,9 +30,11 @@ import com.jme3.scene.shape.Sphere;
 public class BuildingGenerator {
     
     SimpleApplication app;
+    PlayerControlState player;
    
     BuildingGenerator(SimpleApplication app) {
         this.app = app;
+        this.player = app.getStateManager().getState(PlayerControlState.class);
     }
     
    //They require app in their parameters because of an issue with null pointers
@@ -59,7 +61,6 @@ public class BuildingGenerator {
         department.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         department.addControl(ghost);
-        PlayerControlState player = app.getStateManager().getState(PlayerControlState.class);
         department.addControl(new DepartmentControl(name, ghost, app));
         app.getRootNode().attachChild(department);
         return department;
@@ -84,7 +85,6 @@ public class BuildingGenerator {
         treasure.setMaterial(mat1);
         app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
         treasure.addControl(ghost);
-        PlayerControlState player = app.getStateManager().getState(PlayerControlState.class);
         treasure.addControl(new TreasureControl(name, ghost, app));
         treasureNode.attachChild(treasure);
         app.getRootNode().attachChild(treasureNode);
@@ -167,6 +167,19 @@ public class BuildingGenerator {
             }
         }
         app.getRootNode().attachChild(cloudNode);
+    }
+    
+    public void generateWhirlpool(String name, Vector3f centre, Vector3f teleportTo){
+        Spatial whirlpool = app.getAssetManager().loadModel("Models/whirlpool/untitled.j3o");
+        whirlpool.scale(5);
+        whirlpool.setLocalTranslation(centre.add(0,4f,0));
+        whirlpool.setName("box");
+        GhostControl ghost = new GhostControl(new SphereCollisionShape(2f));
+        app.getStateManager().getState(BulletAppState.class).getPhysicsSpace().add(ghost);
+        WhirlpoolControl whirlpoolControl = new WhirlpoolControl(teleportTo, ghost, player);
+        whirlpool.addControl(ghost);
+        whirlpool.addControl(whirlpoolControl);
+        app.getRootNode().attachChild(whirlpool);
     }
     
 }

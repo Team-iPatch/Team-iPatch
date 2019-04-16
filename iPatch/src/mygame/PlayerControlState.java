@@ -153,6 +153,7 @@ public class PlayerControlState extends BaseAppState {
     }
     /**
      * Returns player quest state
+     * @return onQuest
      */
     public Boolean getQuestState(){
         return this.onQuest;
@@ -319,13 +320,33 @@ public class PlayerControlState extends BaseAppState {
         return this.piercing;
     }
     
-    public void setspawnlist(int[][] spawnlist){
+    public void setSpawnList(int[][] spawnlist){
         this.spawnlist = spawnlist;
     }
-    public void setbulletappstate(BulletAppState bulletappstate){
+    
+    public void setBulletAppState(BulletAppState bulletappstate){
         this.bulletappstate = bulletappstate;
     }
     
+    /**
+     * Rotate the ship by a given angle
+     * @param angle Clockwise rotation in radians
+     */
+    public void rotateBy(float angle){
+        Vector3f dir = controller.getViewDirection();
+        Quaternion quat = new Quaternion();
+        quat.fromAngleAxis(FastMath.PI*(angle), Vector3f.UNIT_Y);
+        quat.multLocal(dir);
+        controller.setViewDirection(dir);
+    }
+    
+    /**
+     * Move the ship to a given position
+     * @param position 
+     */
+    public void setPosition(Vector3f position){
+        rootNode.move(0, 0, 0);
+    }
     
     @Override
     protected void cleanup(Application app) {
@@ -351,7 +372,6 @@ public class PlayerControlState extends BaseAppState {
         // Handles player movement while player and character controller are
         // both initialised. Does nothing if the player is destroyed.
        
-//        this.shooterDirections[0] =  
         if(player == null || controller == null){
             
         } else {
@@ -413,13 +433,6 @@ public class PlayerControlState extends BaseAppState {
                 }
             }
         }
-
-    }
-    
-    // Used to dynamically change resolution, testing method
-    private void changeResolution(){
-        this.settings.setResolution(1600, 900);
-    	this.app.restart();
     }
     
     public Vector3f getAimdir(){
@@ -441,11 +454,10 @@ public class PlayerControlState extends BaseAppState {
     	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
     	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
-    	inputManager.addMapping("ChangeRes", new KeyTrigger(KeyInput.KEY_T));
         inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("Shoot",     new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
     	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward");
-    	inputManager.addListener(actionListener, "ChangeRes", "Shoot","ToggleObjective");
+    	inputManager.addListener(actionListener, "Shoot","ToggleObjective");
     }
 	
     private final ActionListener actionListener = new ActionListener(){
@@ -455,9 +467,6 @@ public class PlayerControlState extends BaseAppState {
             if(player == null || controller == null){
           
             } else {
-                if(name.equals("ChangeRes")) {
-                    changeResolution();
-                }
                 if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).inmenu) {
                     // Shoots every cannon attached to the player
                     for(int i = 0; i < shooters.size(); i++){
@@ -484,19 +493,11 @@ public class PlayerControlState extends BaseAppState {
                 
             } else {
                 if(name.equals("RotLeft")) {
-                    Vector3f dir = controller.getViewDirection();
-                    Quaternion quat = new Quaternion();
-                    quat.fromAngleAxis(FastMath.PI*value*0.75f, Vector3f.UNIT_Y);
-                    quat.multLocal(dir);
-                    controller.setViewDirection(dir);
+                    rotateBy(value*0.75f);
                 }
 
                 if(name.equals("RotRight")) {
-                    Vector3f dir = controller.getViewDirection();
-                    Quaternion quat = new Quaternion();
-                    quat.fromAngleAxis(FastMath.PI*-(value*0.75f), Vector3f.UNIT_Y);
-                    quat.multLocal(dir);
-                    controller.setViewDirection(dir);	
+                    rotateBy(-value*0.75f);
                 }
 
                 if (name.equals("Forward"))

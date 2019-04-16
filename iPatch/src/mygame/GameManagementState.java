@@ -105,7 +105,6 @@ public class GameManagementState extends AbstractAppState {
         loadMap();
         loadBuildings();
         loadPlayer();
-        loadBox();
         //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
 
@@ -132,7 +131,7 @@ public class GameManagementState extends AbstractAppState {
         bulletAppState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
         stateManager.attach(bulletAppState);
         stateManager.attach(playerControlState);
-        this.playerControlState.setbulletappstate(bulletAppState);
+        this.playerControlState.setBulletAppState(bulletAppState);
     }
     
     /**
@@ -202,17 +201,6 @@ public class GameManagementState extends AbstractAppState {
     }
     
     /**
-     * Loads a box.
-     */
-    private void loadBox(){
-        Spatial box = assetManager.loadModel("Models/whirlpool/untitled.j3o");
-        box.scale(5);
-        box.setLocalTranslation(spawnlist[0].add(0,4f,0));
-        box.setName("box");
-        rootNode.attachChild(box);
-    }
-    
-    /**
      * Initialises player.
      */
     private void loadPlayer(){
@@ -258,7 +246,7 @@ public class GameManagementState extends AbstractAppState {
      * Initialises departments, colleges, and treasures.
      */
     private void loadBuildings(){
-        int buildingcount = 12; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
+        int buildingcount = 13; // EDIT THIS WHEN YOU ADD MORE BUILDINGS. IF YOU DON'T YOU WILL CRASH.
         int rowcount = spawnmap.length;
         int colcount = spawnmap[0].length;
         spawnlist = new Vector3f[buildingcount];
@@ -300,10 +288,10 @@ public class GameManagementState extends AbstractAppState {
             
         }
         
-        playerControlState.setspawnlist(spawnmap);
+        playerControlState.setSpawnList(spawnmap);
         
         BuildingGenerator buildingGenerator = new BuildingGenerator(app);
-        //buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f); 
+        buildingGenerator.generateDepartment("Computer Science", spawnlist[0], 5f);
         buildingGenerator.generateDepartment("Biology", spawnlist[1], 5f); 
         buildingGenerator.generateDepartment("Maths", spawnlist[2], 5f);
         buildingGenerator.generateCollege("Alcuin", spawnlist[3], 3.5f); 
@@ -314,6 +302,7 @@ public class GameManagementState extends AbstractAppState {
         buildingGenerator.generateTreasure("Treasure1", spawnlist[8], 2f);
         buildingGenerator.generateTreasure("Treasure2", spawnlist[9], 2f);
         buildingGenerator.generateBadWeather("Weather1", spawnlist[10], spawnmap);
-        //buildingGenerator.generateBadWeather("Weather2", spawnlist[11], spawnmap);
+        buildingGenerator.generateWhirlpool("Whirl1", spawnlist[11], spawnlist[0]);
+        buildingGenerator.generateWhirlpool("Whirl2", spawnlist[12], spawnlist[0]);
     }
 }
