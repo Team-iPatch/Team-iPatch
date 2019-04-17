@@ -63,49 +63,6 @@ public class DepartmentControl extends AbstractControl{
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
     }
-    /**
-     * Sets player HP to their maximum.
-     */
-    public void healPlayer(){
-        player.setHP(player.getMaxHP());
-    }
-    
-    /**
-     * Increses player's max HP by an integer
-     * @param amount HP to add to the player's max
-     */
-    public void healthUpgrade(int amount){
-        int newMaxHP = player.getMaxHP() + amount;
-        player.setMaxHP(newMaxHP);
-        player.setHP(newMaxHP);
-    }
-    
-    /**
-     * Gives the player an extra cannon facing backwards.
-     */
-    public void addBackwardsShooter(){
-        Quaternion quaternion = new Quaternion();
-        quaternion.fromAngleAxis(180, Vector3f.UNIT_Y);
-        player.addShooter(quaternion, app);
-    }
-    
-    /**
-     * Gives the player an extra cannon facing to their right.
-     */
-    public void addRightShooter(){
-        Quaternion quaternion = new Quaternion();
-        quaternion.fromAngleAxis(90, Vector3f.UNIT_Y);
-        player.addShooter(quaternion, app);
-    }
-    
-    /**
-     * Gives the player an extra cannon facing to their left.
-     */
-    public void addLeftShooter(){
-        Quaternion quaternion = new Quaternion();
-        quaternion.fromAngleAxis(270, Vector3f.UNIT_Y);
-        player.addShooter(quaternion, app);
-    }
     
     /**
      * Increases the amount of damage dealt by each shot the player fires.

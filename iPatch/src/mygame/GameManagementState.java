@@ -99,13 +99,10 @@ public class GameManagementState extends AbstractAppState {
         //loadPhysics() has to be executed first
         loadPhysics();
         loadLighting();
-        loadEnemyGenerator();
         loadScene();
-        //loadBox(); // used to test physics, allows the ship to "surf" into the air
         loadMap();
         loadBuildings();
         loadPlayer();
-        //loadBaddies(); //used to test baddies, depreciated due to enemy spawning now implemented
     }
 
 
@@ -211,24 +208,6 @@ public class GameManagementState extends AbstractAppState {
         rootNode.attachChild(playerShip);
         playerShip.setName("player");
         bulletAppState.getPhysicsSpace().add(characterControl);
-    }
-    
-    /**
-     * Initialises enemy generator.
-     */
-    private void loadEnemyGenerator(){
-        enemyGenerator = new EnemyGenerator(assetManager, bulletAppState.getPhysicsSpace());
-    }
-    
-    /**
-     * Initialises enemies, edit enemy instantiation here.
-     */
-    private void loadBaddies(){
-        for(int i = 0; i < 5; i++){
-            Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o", new Vector3f(15, 3, 0), 1.5f, 3f, 10);
-            rootNode.attachChild(baddie);
-            baddie.addControl(new AIChaserControl(this.playerShip, 3, playerControlState, bulletAppState.getPhysicsSpace(),niftyController));
-        }
     }
     
     /**

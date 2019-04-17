@@ -395,7 +395,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                 playerControlState.incrementGold(-50);
             }
             else if(this.shopName.equals("Maths") && !this.shopsUpgraded.contains("Maths")){
-                this.app.getRootNode().getChild(shopName).getControl(DepartmentControl.class).increaseShotDamage(5);
+                
                 this.shopsUpgraded.add("Maths");
                 playerControlState.incrementGold(-50);
             }
@@ -453,6 +453,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         Element label = nifty.getScreen("hudScreen").findElementById("HPLabel");
         label.getRenderer(TextRenderer.class).setText(" HP: " + hp + "/" + maxHP);
     }
+    
     public void updateQuest(){
         Label QuestLabel = screen.findNiftyControl("QuestLabel", Label.class);
         playerControlState = stateManager.getState(PlayerControlState.class);
