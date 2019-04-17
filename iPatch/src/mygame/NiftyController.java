@@ -73,6 +73,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.totalPoints = 750;
         this.inmenu = false;
         this.collegesdefeated = 0;
+        this.winner = false;
         showObjective(false);
         updateCollegesDefeated(0);
         updateTreasuresFound();

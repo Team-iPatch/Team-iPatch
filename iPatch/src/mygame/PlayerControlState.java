@@ -397,6 +397,7 @@ public class PlayerControlState extends BaseAppState {
             // Detaches player spatial from the rootNode, nulls out player and
             // controller objects.
             NiftyController niftyController = this.app.getStateManager().getState(NiftyController.class);
+
             if(hp<=0 && niftyController.winner != true){
                 niftyController.gameOver();
                 player.removeFromParent();

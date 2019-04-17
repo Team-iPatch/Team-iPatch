@@ -39,30 +39,35 @@ public class WhirlpoolControl extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        BetterCharacterControl playerControl = player.getPlayerSpatial().
-                               getControl(BetterCharacterControl.class);
         inWhirlpool = false;
-        for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
-            if (obj.getUserObject().getClass() == Node.class){
-                Node userObject = (Node)obj.getUserObject();
-                if(userObject.getName().equals("player")){
-                    inWhirlpool = true;
+        if(player.getHP() > 0){
+            BetterCharacterControl playerControl = player.getPlayerSpatial().
+                               getControl(BetterCharacterControl.class);
+        
+            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+                if (obj.getUserObject().getClass() == Node.class){
+                    Node userObject = (Node)obj.getUserObject();
+                    if(userObject.getName().equals("player")){
+                        inWhirlpool = true;
+                    }
+                }
+            }
+            if (!inWhirlpool) {
+                animationTimer = animationTime;
+            } else {
+                if (animationTimer == animationTime){
+                    playerControl.warp(spatial.getWorldTranslation());
+                }
+                player.rotateBy(rotationSpeed);
+                animationTimer -= tpf;
+                System.out.println(animationTimer);
+                if (animationTimer <= 0){
+                    playerControl.warp(teleportPosition);
                 }
             }
         }
-        if (!inWhirlpool) {
-            animationTimer = animationTime;
-        } else {
-            if (animationTimer == animationTime){
-                playerControl.warp(spatial.getWorldTranslation());
-            }
-            player.rotateBy(rotationSpeed);
-            animationTimer -= tpf;
-            System.out.println(animationTimer);
-            if (animationTimer <= 0){
-                playerControl.warp(teleportPosition);
-            }
-        }
+        
+
     }
     
     @Override
