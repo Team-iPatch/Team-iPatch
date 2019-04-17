@@ -40,6 +40,7 @@ public class PlayerControlState extends BaseAppState {
     private Spatial player;
     private InputManager inputManager;
     private BetterCharacterControl controller;
+    EnemyGenerator enemyGenerator;
     
     private float currentSpeed;
     private float maxSpeed;
@@ -56,7 +57,7 @@ public class PlayerControlState extends BaseAppState {
     private ArrayList<Quaternion> shooterDirections;
     private Boolean piercing;
     private int[][] spawnlist;
-    private BulletAppState bulletappstate;
+    private BulletAppState bulletAppState;
     private Boolean killQuest;
     private Boolean treasureQuest;
     private Boolean onQuest;
@@ -79,6 +80,8 @@ public class PlayerControlState extends BaseAppState {
     	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
+        enemyGenerator = new EnemyGenerator(this.app.getAssetManager(),
+                             this.bulletAppState.getPhysicsSpace());
         
         // Defines the player's points, gold, and HP
     	this.points = 0;
@@ -325,7 +328,7 @@ public class PlayerControlState extends BaseAppState {
     }
     
     public void setBulletAppState(BulletAppState bulletappstate){
-        this.bulletappstate = bulletappstate;
+        this.bulletAppState = bulletappstate;
     }
     
     /**
@@ -404,7 +407,7 @@ public class PlayerControlState extends BaseAppState {
                 Random rand = new Random();
                 if(enemyship == null){
                     for(int i=0;i<rand.nextInt(5)+1; i++){
-                        EnemyGenerator enemyspawner = new EnemyGenerator(this.app.getAssetManager(),this.bulletappstate.getPhysicsSpace());
+                        
                         int xangle = rand.nextInt(11)+10;
                         int zangle = rand.nextInt(11)+10;
                         if(rand.nextBoolean()){
@@ -420,9 +423,9 @@ public class PlayerControlState extends BaseAppState {
                         if(playerx+xangle <spawnlist.length && playerz+zangle < spawnlist[0].length 
                             &&playerz+zangle> 0 && playerx+xangle>0){
                             if(this.spawnlist[playerx+xangle][playerz+zangle] == 0){
-                                Spatial baddie = enemyspawner.generateEnemy("Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
+                                Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
                                 rootNode.attachChild(baddie);
-                                baddie.addControl(new AIChaserControl(this.player, 3, this, this.bulletappstate.getPhysicsSpace(),niftyController));
+                                baddie.addControl(new AIChaserControl(this.player, 3, this, this.bulletAppState.getPhysicsSpace(),niftyController));
                             }
                         }
                     }
