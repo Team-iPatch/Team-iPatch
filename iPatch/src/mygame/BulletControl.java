@@ -1,4 +1,4 @@
-package mygame;
+ package mygame;
 
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
@@ -18,11 +18,11 @@ import com.jme3.scene.control.AbstractControl;
  * @author Team iPatch
  */
 public class BulletControl extends AbstractControl 
-                           implements PhysicsCollisionListener{
+                           implements PhysicsCollisionListener {
     
     private final float speed = 30f;
     public Vector3f direction;
-    private int damage;
+    private final int damage;
     float lifeExpectancy = 2f; //Seconds before it is erased
     float lifetime; //Counts up to lifeExpectancy
     boolean isEnemy;
