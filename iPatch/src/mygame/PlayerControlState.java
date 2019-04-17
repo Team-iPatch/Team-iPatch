@@ -448,6 +448,12 @@ public class PlayerControlState extends BaseAppState {
         mouseaim.normalizeLocal();
         return mouseaim;
     }
+    
+    private void shoot(Vector3f direction){
+        for(int i = 0; i < shooters.size(); i++){
+            shooters.get(i).shootBullet(direction);
+        }
+    }
 	
     /**
      * Initialises player inputs.
@@ -472,12 +478,7 @@ public class PlayerControlState extends BaseAppState {
             } else {
                 if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).inmenu) {
                     // Shoots every cannon attached to the player
-                    for(int i = 0; i < shooters.size(); i++){
-                        Vector3f mouseAim = getAimdir();
-//                        System.out.println(mouseAim);
-                        shooters.get(i).shootBullet(mouseAim);
-                        //this particular line. if I'm correct, shoots a bullet according to geomtry orientation
-                    }
+                    shoot(getAimdir());
                 }
                 if(name.equals("ToggleObjective")){
                     NiftyController nifty = app.getStateManager().getState(NiftyController.class);
