@@ -56,9 +56,8 @@ public class WhirlpoolControl extends AbstractControl {
             if (animationTimer == animationTime){
                 playerControl.warp(spatial.getWorldTranslation());
             }
-            player.rotateBy(rotationSpeed);
+            player.rotateShip(rotationSpeed);
             animationTimer -= tpf;
-            System.out.println(animationTimer);
             if (animationTimer <= 0){
                 playerControl.warp(teleportPosition);
             }

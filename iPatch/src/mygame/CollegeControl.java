@@ -5,6 +5,9 @@
  */
 package mygame;
 
+import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
+import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
@@ -32,6 +35,7 @@ public class CollegeControl extends AbstractControl {
     private float shootGap;
     private int hp;
     private boolean captured;
+    SimpleApplication app;
     PhysicsSpace physicsSpace;
     NiftyController nifty;
     private long timeCount = 0;
@@ -47,7 +51,7 @@ public class CollegeControl extends AbstractControl {
      * @param physicsSpace PhysicsSpace where the College will register collisions.
      */
     CollegeControl(String name, Spatial[] cannons, 
-                   Node collegeNode, PhysicsSpace physicsSpace, NiftyController nifty){
+                   Node collegeNode, Application app){
         this.name = name;
         this.cannons = cannons;
         this.collegeNode = collegeNode;
@@ -78,13 +82,15 @@ public class CollegeControl extends AbstractControl {
                 shootGap = 625;
                 rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);
         }
-        this.physicsSpace = physicsSpace;
-        this.nifty = nifty;
+        this.app = (SimpleApplication)app;
+        this.physicsSpace = app.getStateManager().
+                getState(BulletAppState.class).getPhysicsSpace();
+        this.nifty = app.getStateManager().getState(NiftyController.class);
     }
 
     @Override
     protected void controlUpdate(float tpf) {
-        if (hp <= 0){
+        if (hp <= 0 && !captured){
             capture();
         }
         
@@ -193,6 +199,7 @@ public class CollegeControl extends AbstractControl {
     
     public void capture(){
         captured = true;
+        app.getStateManager().getState(PlayerControlState.class).addShooter();
         Geometry box = (Geometry) collegeNode.getChild("box");
         box.getMaterial().setColor("Color", ColorRGBA.Green);
     }

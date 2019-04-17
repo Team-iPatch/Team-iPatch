@@ -53,6 +53,7 @@ public class PlayerControlState extends BaseAppState {
     private Integer gold;
     private Vector3f viewDirection;
     private ShooterControl shooter;
+    private int shooterCount;
     private Boolean piercing;
     private int[][] spawnlist;
     private BulletAppState bulletAppState;
@@ -102,6 +103,7 @@ public class PlayerControlState extends BaseAppState {
         // the player is facing
         this.viewDirection = controller.getViewDirection();
         shooter = new ShooterControl( viewDirection, false, this.app);
+        shooterCount = 1;
         this.player.addControl(shooter);
         // Caps the frame rate at 60 FPS and initialises the input handler
         this.settings.setFrameRate(60);
@@ -286,6 +288,10 @@ public class PlayerControlState extends BaseAppState {
         return this.shooter;
     }
     
+    public void addShooter(){
+        this.shooterCount += 1;
+    }
+    
     //This is STATIC, problem is we want a new direction independant of movement input
     /**
      * Sets whether the player's bullets pierce.
@@ -311,16 +317,19 @@ public class PlayerControlState extends BaseAppState {
         this.bulletAppState = bulletappstate;
     }
     
+    public Vector3f rotate(Vector3f vector, float angle){
+        Quaternion quat = new Quaternion();
+        quat.fromAngleAxis(FastMath.PI*(angle), Vector3f.UNIT_Y);
+        return quat.mult(vector);
+    }
+    
     /**
      * Rotate the ship by a given angle
      * @param angle Clockwise rotation in radians
      */
-    public void rotateBy(float angle){
+    public void rotateShip(float angle){
         Vector3f dir = controller.getViewDirection();
-        Quaternion quat = new Quaternion();
-        quat.fromAngleAxis(FastMath.PI*(angle), Vector3f.UNIT_Y);
-        quat.multLocal(dir);
-        controller.setViewDirection(dir);
+        controller.setViewDirection(rotate(dir, angle));
     }
     
     /**
@@ -430,7 +439,25 @@ public class PlayerControlState extends BaseAppState {
     }
     
     private void shoot(Vector3f direction){
-        shooter.shootBullet(direction);
+        switch(shooterCount){
+            case 5:
+                shooter.shootBullet(rotate(direction, 0.25f));
+                shooter.shootBullet(rotate(direction, -0.25f));
+            case 3:
+                shooter.shootBullet(rotate(direction, 0.15f));
+                shooter.shootBullet(rotate(direction, -0.15f));
+            case 1:
+                shooter.shootBullet(direction);
+                break;
+            case 4:
+                shooter.shootBullet(rotate(direction, 0.20f));
+                shooter.shootBullet(rotate(direction, -0.20f));
+            case 2:
+                shooter.shootBullet(rotate(direction, 0.1f));
+                shooter.shootBullet(rotate(direction, -0.1f));
+                break;
+                
+        }
     }
 	
     /**
@@ -475,11 +502,11 @@ public class PlayerControlState extends BaseAppState {
                 
             } else {
                 if(name.equals("RotLeft")) {
-                    rotateBy(value*0.75f);
+                    rotateShip(value*0.75f);
                 }
 
                 if(name.equals("RotRight")) {
-                    rotateBy(-value*0.75f);
+                    rotateShip(-value*0.75f);
                 }
 
                 if (name.equals("Forward"))
