@@ -25,7 +25,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -53,8 +52,7 @@ public class PlayerControlState extends BaseAppState {
     private Integer maxHP;
     private Integer gold;
     private Vector3f viewDirection;
-    private ArrayList<ShooterControl> shooters;
-    private ArrayList<Quaternion> shooterDirections;
+    private ShooterControl shooter;
     private Boolean piercing;
     private int[][] spawnlist;
     private BulletAppState bulletAppState;
@@ -100,22 +98,11 @@ public class PlayerControlState extends BaseAppState {
         
         // Initialises list where player's cannons are stored.
         this.piercing = false;
-        shooters = new ArrayList<>();
-        shooterDirections = new ArrayList<>();
         // Initialises a default cannon which shoots to the right of where
         // the player is facing
         this.viewDirection = controller.getViewDirection();
-        ShooterControl shooterControl = new ShooterControl( viewDirection, false, this.app);
-        this.player.addControl(shooterControl);
-        shooters.add(shooterControl);
-        Quaternion shooterDir = new Quaternion();
-        //Here's where I need to add in the mouse input to change fire direction
-        //Vector2f mouse= inputManager.getCursorPosition();
-        //we only need X,Y 
-        //We need to change this so that EVERY time they fire, they update the 
-        //direction independant of 
-        
-        shooterDirections.add(shooterDir);
+        shooter = new ShooterControl( viewDirection, false, this.app);
+        this.player.addControl(shooter);
         // Caps the frame rate at 60 FPS and initialises the input handler
         this.settings.setFrameRate(60);
         this.app.restart();
@@ -206,6 +193,15 @@ public class PlayerControlState extends BaseAppState {
     public void endTreasureQuest(){
         this.treasureQuest=false;
     }
+    
+    /**
+     * Increase the player's max speed
+     * @param amount 
+     */
+    public void increaseSpeed(float amount){
+        this.maxSpeed += amount;
+    }
+    
     /**
      * Changes player's max HP.
      * @param amount New maximum HP cap.
@@ -286,26 +282,10 @@ public class PlayerControlState extends BaseAppState {
         return this.player;
     }
     
-    /**
-     * Returns list of all cannons attached to the player.
-     * @return ArrayList of ShooterControl
-     */
-    public ArrayList<ShooterControl> getShooters(){
-        return shooters;
+    public ShooterControl getShooter(){
+        return this.shooter;
     }
     
-    /**
-     * Initialises new cannon, attaches it to player.
-     * @param direction Quaternion indicating firing direction.
-     * @param app SimpleApplication
-     */
-    public void addShooter(Quaternion direction, SimpleApplication app){
-	ShooterControl shooterControl = new ShooterControl(viewDirection, false, app);
-        player.addControl(shooterControl);
-            
-        shooters.add(shooterControl);
-        shooterDirections.add(direction);
-    }
     //This is STATIC, problem is we want a new direction independant of movement input
     /**
      * Sets whether the player's bullets pierce.
@@ -450,9 +430,7 @@ public class PlayerControlState extends BaseAppState {
     }
     
     private void shoot(Vector3f direction){
-        for(int i = 0; i < shooters.size(); i++){
-            shooters.get(i).shootBullet(direction);
-        }
+        shooter.shootBullet(direction);
     }
 	
     /**

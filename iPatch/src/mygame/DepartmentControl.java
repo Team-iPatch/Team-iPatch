@@ -69,8 +69,7 @@ public class DepartmentControl extends AbstractControl{
      * @param amount Extra damage dealt by player.
      */
     public void increaseShotDamage(int amount){
-        for(ShooterControl shooter : player.getShooters()){
-            shooter.setDamage(shooter.getDamage() + amount);
-        }
+        ShooterControl shooter = player.getShooter();
+        shooter.setDamage(shooter.getDamage() + amount);
     }
 }

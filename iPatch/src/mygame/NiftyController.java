@@ -355,7 +355,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
                 playerControlState.endQuest();
                 playerControlState.endkillQuest();
             } else if (this.shopName.equals("Biology")){
-                playerControlState.addShooter(Quaternion.DIRECTION_Z, app);
+                playerControlState.increaseSpeed(5f);
                 playerControlState.endQuest();
                 playerControlState.endTreasureQuest();
             }

@@ -50,32 +50,6 @@ public class ShooterControl extends AbstractControl {
     }
     
     /**
-     * Used to make the cannon fire a single bullet
-     */
-//    public void shootBullet(){    
-//        // Makes the bullet a simple white sphere
-//        Geometry bullet_geo = new Geometry("cannon ball", sphere);
-//        Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-//        bullet_geo.setMaterial(mat);
-//        app.getRootNode().attachChild(bullet_geo);
-//        // Spawns the bullet at the location of the cannon
-//	bullet_geo.setLocalTranslation(spatial.getWorldTranslation().add(
-//                                       direction.mult(1f).add(0, 1f, 0))); 
-//        // add(0,1f,0) raises bullet off floor
-//        // addition is required for the bullets not to spawn underneath ships
-//        
-//        // Creates a collider for the bullet, instantiates a BulletControl
-//        // to handle bullet trajectory.
-//	RigidBodyControl bullet_phys = new RigidBodyControl(2f);
-//	bullet_geo.addControl(bullet_phys);
-//	physicsSpace.add(bullet_phys);
-//	bullet_phys.setKinematic(true);
-//	bulletControl = new BulletControl(direction, damage, isEnemy, physicsSpace,
-//                                          bullet_phys, playerControlState);
-//        bullet_geo.addControl(bulletControl);
-//    }
-    
-    /**
      * Used to make the cannon fire a bullet in a particular direction.
      * @param direction Vector3f indicating direction to fire.
      */
