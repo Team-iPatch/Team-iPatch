@@ -19,16 +19,16 @@ import com.jme3.scene.control.AbstractControl;
  * @author chris
  */
 public class WhirlpoolControl extends AbstractControl {
-    
+
     private Vector3f teleportPosition;
     private GhostControl ghost;
     private PlayerControlState player;
     private Boolean inWhirlpool;
     private float animationTimer;
     private final float rotationSpeed = 0.5f;
-    
+
     private final float animationTime = 2f;
-    
+
     public WhirlpoolControl(Vector3f teleportPosition, GhostControl ghost, PlayerControlState player){
         this.teleportPosition = teleportPosition;
         this.ghost = ghost;
@@ -39,31 +39,35 @@ public class WhirlpoolControl extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        BetterCharacterControl playerControl = player.getPlayerSpatial().
-                               getControl(BetterCharacterControl.class);
         inWhirlpool = false;
-        for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
-            if (obj.getUserObject().getClass() == Node.class){
-                Node userObject = (Node)obj.getUserObject();
-                if(userObject.getName().equals("player")){
-                    inWhirlpool = true;
+        if(player.getHP() > 0){
+            BetterCharacterControl playerControl = player.getPlayerSpatial().
+                               getControl(BetterCharacterControl.class);
+
+            for(PhysicsCollisionObject obj : ghost.getOverlappingObjects()){
+                if (obj.getUserObject().getClass() == Node.class){
+                    Node userObject = (Node)obj.getUserObject();
+                    if(userObject.getName().equals("player")){
+                        inWhirlpool = true;
+                    }
+                }
+            }
+            if (!inWhirlpool) {
+                animationTimer = animationTime;
+            } else {
+                if (animationTimer == animationTime){
+                    playerControl.warp(spatial.getWorldTranslation());
+                }
+                player.rotateBy(rotationSpeed);
+                animationTimer -= tpf;
+                System.out.println(animationTimer);
+                if (animationTimer <= 0){
+                    playerControl.warp(teleportPosition);
                 }
             }
         }
-        if (!inWhirlpool) {
-            animationTimer = animationTime;
-        } else {
-            if (animationTimer == animationTime){
-                playerControl.warp(spatial.getWorldTranslation());
-            }
-            player.rotateShip(rotationSpeed);
-            animationTimer -= tpf;
-            if (animationTimer <= 0){
-                playerControl.warp(teleportPosition);
-            }
-        }
     }
-    
+
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
         //Only needed for rendering-related operations,
