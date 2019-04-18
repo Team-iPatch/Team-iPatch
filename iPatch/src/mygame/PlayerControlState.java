@@ -309,6 +309,15 @@ public class PlayerControlState extends BaseAppState {
         return this.piercing;
     }
     
+    
+    /**
+     * Increases the amount of damage dealt by each shot the player fires.
+     * @param amount Extra damage dealt by player.
+     */
+    public void increaseShotDamage(int amount){
+        shooter.setDamage(shooter.getDamage() + amount);
+    }
+    
     public void setSpawnList(int[][] spawnlist){
         this.spawnlist = spawnlist;
     }
@@ -451,11 +460,11 @@ public class PlayerControlState extends BaseAppState {
                 shooter.shootBullet(direction);
                 break;
             case 4:
-                shooter.shootBullet(rotate(direction, 0.20f));
-                shooter.shootBullet(rotate(direction, -0.20f));
-            case 2:
                 shooter.shootBullet(rotate(direction, 0.1f));
                 shooter.shootBullet(rotate(direction, -0.1f));
+            case 2:
+                shooter.shootBullet(rotate(direction, 0.05f));
+                shooter.shootBullet(rotate(direction, -0.05f));
                 break;
                 
         }

@@ -63,13 +63,4 @@ public class DepartmentControl extends AbstractControl{
         //Only needed for rendering-related operations,
         //not called when spatial is culled.
     }
-    
-    /**
-     * Increases the amount of damage dealt by each shot the player fires.
-     * @param amount Extra damage dealt by player.
-     */
-    public void increaseShotDamage(int amount){
-        ShooterControl shooter = player.getShooter();
-        shooter.setDamage(shooter.getDamage() + amount);
-    }
 }
