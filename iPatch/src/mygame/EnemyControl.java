@@ -34,10 +34,10 @@ public class EnemyControl extends AbstractControl{
      * Used to manage the health of an enemy Spatial, cleaning up the entity
      * after it is destroyed.
      * @param physicsSpace PhysicsSpace of the application.
-     * @param hp Enemy health.
+     * @param level Enemy level. Each level increase makes them more resilient.
      */
-    public EnemyControl(PhysicsSpace physicsSpace, int hp){
-        this.hp = hp;
+    public EnemyControl(PhysicsSpace physicsSpace, int level){
+        this.hp = level * 5 + 5;
         this.physicsSpace = physicsSpace;
     }
     

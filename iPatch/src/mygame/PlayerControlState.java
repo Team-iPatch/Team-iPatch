@@ -79,12 +79,11 @@ public class PlayerControlState extends BaseAppState {
     	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
-        enemyGenerator = new EnemyGenerator(this.app.getAssetManager(),
-                             this.bulletAppState.getPhysicsSpace());
+        enemyGenerator = new EnemyGenerator(this.app);
         
         // Defines the player's points, gold, and HP
     	this.points = 0;
-        this.gold = 40;
+        this.gold = 0;
         this.maxHP = 100;
         this.hp = 100;
         
@@ -422,7 +421,7 @@ public class PlayerControlState extends BaseAppState {
                         if(playerx+xangle <spawnlist.length && playerz+zangle < spawnlist[0].length 
                             &&playerz+zangle> 0 && playerx+xangle>0){
                             if(this.spawnlist[playerx+xangle][playerz+zangle] == 0){
-                                Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",spawnvector,1.5f, 3f,10);
+                                Spatial baddie = enemyGenerator.generateEnemy("Models/pirateship/mesh.j3o",spawnvector);
                                 rootNode.attachChild(baddie);
                                 baddie.addControl(new AIChaserControl(this.player, 3, this, this.bulletAppState.getPhysicsSpace(),niftyController));
                             }
@@ -448,25 +447,11 @@ public class PlayerControlState extends BaseAppState {
         return mouseaim;
     }
     
-    private void shoot(Vector3f direction){
-        switch(shooterCount){
-            case 5:
-                shooter.shootBullet(rotate(direction, 0.25f));
-                shooter.shootBullet(rotate(direction, -0.25f));
-            case 3:
-                shooter.shootBullet(rotate(direction, 0.15f));
-                shooter.shootBullet(rotate(direction, -0.15f));
-            case 1:
-                shooter.shootBullet(direction);
-                break;
-            case 4:
-                shooter.shootBullet(rotate(direction, 0.1f));
-                shooter.shootBullet(rotate(direction, -0.1f));
-            case 2:
-                shooter.shootBullet(rotate(direction, 0.05f));
-                shooter.shootBullet(rotate(direction, -0.05f));
-                break;
-                
+    private void shoot(Vector3f direction, float shotSeparation){
+        float shotAngle = (shooterCount / 2) * shotSeparation;
+        for (int i = 0; i < shooterCount; i++){
+            shooter.shootBullet(rotate(direction, shotAngle));
+            shotAngle -= shotSeparation;
         }
     }
 	
@@ -493,7 +478,7 @@ public class PlayerControlState extends BaseAppState {
             } else {
                 if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).inmenu) {
                     // Shoots every cannon attached to the player
-                    shoot(getAimdir());
+                    shoot(getAimdir(), 0.05f);
                 }
                 if(name.equals("ToggleObjective")){
                     NiftyController nifty = app.getStateManager().getState(NiftyController.class);

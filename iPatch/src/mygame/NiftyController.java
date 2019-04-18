@@ -69,7 +69,6 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.tPopup = false;
         this.tPopupName = "none";
         this.treasureCollected = new ArrayList();
-        this.totalTreasures = 2; //These 3 must be edited cross several classes and are the final objectives
         this.totalColleges = 5;
         this.totalPoints = 750;
         this.inmenu = false;
@@ -97,10 +96,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updateTreasuresFound();
 			updateQuest();
         }
-        if(treasureCollected.size() == totalTreasures 
-                && collegesdefeated == totalColleges 
-                && stateManager.getState(PlayerControlState.class).getPoints() 
-                >= this.totalPoints){
+        if(collegesdefeated == totalColleges){
             this.win();
         }
         showShop(false);
