@@ -22,6 +22,7 @@ public class EnemyGenerator {
         SimpleApplication app;
         PhysicsSpace physicsSpace;
         AssetManager assetManager;
+        PlayerControlState player;
 	
         /**
          * Class used to generate a simple enemy template.
@@ -30,9 +31,10 @@ public class EnemyGenerator {
          */
 	EnemyGenerator(Application app){
             this.app = (SimpleApplication) app;
-		this.physicsSpace = app.getStateManager().
+            this.physicsSpace = app.getStateManager().
                         getState(BulletAppState.class).getPhysicsSpace();
-		this.assetManager = app.getAssetManager();
+            this.assetManager = app.getAssetManager();
+            this.player = app.getStateManager().getState(PlayerControlState.class);
 	}
 	
         /**
@@ -49,7 +51,7 @@ public class EnemyGenerator {
             BetterCharacterControl characterControl = new BetterCharacterControl(1.5f, 3f, 20f);
             enemy.addControl(characterControl);
             //BetterCharacterControl has to be added to the spatial BEFORE any AI control!
-            enemy.addControl(new EnemyControl(physicsSpace));
+            enemy.addControl(new EnemyControl(physicsSpace, player.getLevel()));
             enemy.setName("baddie");
             physicsSpace.add(characterControl);
             return enemy;

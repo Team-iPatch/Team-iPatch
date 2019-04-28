@@ -118,8 +118,8 @@ public class BuildingGenerator {
         }
         college.addControl(new CollegeControl(name, cannons, collegeNode, app));
         collegeNode.attachChild(college);
-        Geometry box = new Geometry("box", new Sphere(8,8,2f));
-        box.setLocalTranslation(0,2,0);
+        Geometry sphere = new Geometry("sphere", new Sphere(8,8,2f));
+        sphere.setLocalTranslation(0,2,0);
         
         Material mat1 = new Material(app.getAssetManager(),"Common/MatDefs/Misc/Unshaded.j3md");
         switch(name){
@@ -139,8 +139,8 @@ public class BuildingGenerator {
                 mat1.setColor("Color", ColorRGBA.Brown);
                 break;
         } 
-        box.setMaterial(mat1);
-        collegeNode.attachChild(box);
+        sphere.setMaterial(mat1);
+        collegeNode.attachChild(sphere);
         app.getRootNode().attachChild(collegeNode);
     }
     

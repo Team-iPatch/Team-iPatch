@@ -32,6 +32,7 @@ public class CollegeControl extends AbstractControl {
     private Node collegeNode;
     private boolean inCombat;
     private Quaternion rotation;
+    private float rotSpeed;
     private float shootGap;
     private int hp;
     private boolean captured;
@@ -63,7 +64,7 @@ public class CollegeControl extends AbstractControl {
             case "Derwent":
                 this.hp = 200;
                 shootGap = 1000;
-                rotation.fromAngleAxis(0.005f, Vector3f.UNIT_Y);
+                rotSpeed = 0.005f;
                 break;
             case "Vanbrugh":
                 this.hp = 250;
@@ -72,15 +73,15 @@ public class CollegeControl extends AbstractControl {
             case "Alcuin":
                 this.hp = 160;
                 shootGap = 450;
-                rotation.fromAngleAxis(0.02f, Vector3f.UNIT_Y);
+                rotSpeed = 0.02f;
             case "Constantine":
                 this.hp = 120;
                 shootGap = 500;
-                rotation.fromAngleAxis(0.015f, Vector3f.UNIT_Y);
+                rotSpeed = 0.015f;
             case "Goodricke":
                 this.hp = 140;
                 shootGap = 625;
-                rotation.fromAngleAxis(0.01f, Vector3f.UNIT_Y);
+                rotSpeed = 0.01f;
         }
         this.app = (SimpleApplication)app;
         this.physicsSpace = app.getStateManager().
@@ -190,7 +191,18 @@ public class CollegeControl extends AbstractControl {
     
     public void reduceHP(int hp){
         this.hp -= hp;
-        inCombat = true;
+        if(!inCombat){
+            int level = app.getStateManager().
+                    getState(PlayerControlState.class).getLevel(); 
+            hp *= (float)level * 4;
+            rotation.fromAngleAxis(rotSpeed * (float)level, Vector3f.UNIT_Y);
+            shootGap /= (float)level;
+            for (Spatial cannon : cannons) {
+                cannon.getControl(ShooterControl.class).
+                        setBulletSpeed(30f - 3f*level);
+            }
+            inCombat = true;
+        }
     }
     
     public int getHP(){
@@ -199,9 +211,9 @@ public class CollegeControl extends AbstractControl {
     
     public void capture(){
         captured = true;
-        app.getStateManager().getState(PlayerControlState.class).addShooter();
-        Geometry box = (Geometry) collegeNode.getChild("box");
-        box.getMaterial().setColor("Color", ColorRGBA.Green);
+        app.getStateManager().getState(PlayerControlState.class).levelUp();
+        Geometry sphere = (Geometry) collegeNode.getChild("sphere");
+        sphere.getMaterial().setColor("Color", ColorRGBA.Green);
     }
     
     @Override

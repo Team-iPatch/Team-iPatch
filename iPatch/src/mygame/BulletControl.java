@@ -20,7 +20,7 @@ import com.jme3.scene.control.AbstractControl;
 public class BulletControl extends AbstractControl 
                            implements PhysicsCollisionListener {
     
-    private final float speed = 30f;
+    private float speed = 30f;
     public Vector3f direction;
     private final int damage;
     float lifeExpectancy = 2f; //Seconds before it is erased
@@ -39,15 +39,17 @@ public class BulletControl extends AbstractControl
      * @param damage int deciding how much damage the bullet deals on impact
      * @param isEnemy indicates whether the bullet was shot by the player
      * or an enemy
+     * @param speed
      * @param physicsSpace PhysicsSpace to which the bullet will attach its 
      * colliders
      * @param bullet_phys RigidBodyControl the Control will control.
      * @param playerControlState PlayerControlState, used to deal damage
-     */
-    public BulletControl(Vector3f direction, int damage, boolean isEnemy,
+     */    
+    public BulletControl(Vector3f direction, int damage, boolean isEnemy, float speed,
                       PhysicsSpace physicsSpace, RigidBodyControl bullet_phys,
                       PlayerControlState playerControlState){
         this.damage = damage;
+        this.speed = speed;
         this.direction = new Vector3f(direction);
         this.lifetime = 0;
         this.isEnemy = isEnemy;
@@ -56,6 +58,7 @@ public class BulletControl extends AbstractControl
         this.playerControlState = playerControlState;
         physicsSpace.addCollisionListener(this);
     }
+    
     
     @Override
     protected void controlUpdate(float tpf) {

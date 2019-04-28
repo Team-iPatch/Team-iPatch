@@ -23,6 +23,7 @@ import com.jme3.scene.shape.Sphere;
 public class ShooterControl extends AbstractControl {
     Vector3f direction;
     int damage;
+    float bulletSpeed;
     boolean isEnemy;
     private static final Sphere sphere;
     SimpleApplication app;
@@ -42,6 +43,7 @@ public class ShooterControl extends AbstractControl {
      */
     public ShooterControl(Vector3f direction, boolean isEnemy, SimpleApplication app) {
         this.direction = direction;
+        this.bulletSpeed = 30f;
         this.damage = 5;
         this.isEnemy = isEnemy;
         this.app = (SimpleApplication)app;
@@ -67,8 +69,8 @@ public class ShooterControl extends AbstractControl {
 	bullet_geo.addControl(bullet_phys);
 	physicsSpace.add(bullet_phys);
 	bullet_phys.setKinematic(true);
-	bulletControl = new BulletControl(direction, damage, isEnemy, physicsSpace,
-                                          bullet_phys, playerControlState);
+	bulletControl = new BulletControl(direction, damage, isEnemy, bulletSpeed,
+                physicsSpace, bullet_phys, playerControlState);
         bullet_geo.addControl(bulletControl);
     }
     
@@ -86,6 +88,14 @@ public class ShooterControl extends AbstractControl {
      */
     public void setDamage(int dmg){
         this.damage = dmg;
+    }
+    
+    /**
+     * Sets the speed of bullets shot from the cannon
+     * @param bulletSpeed 
+     */
+    public void setBulletSpeed(float bulletSpeed) {
+        this.bulletSpeed = bulletSpeed;
     }
     
     @Override

@@ -53,7 +53,7 @@ public class PlayerControlState extends BaseAppState {
     private Integer gold;
     private Vector3f viewDirection;
     private ShooterControl shooter;
-    private int shooterCount;
+    private float shotTimer;
     private Boolean piercing;
     private int[][] spawnlist;
     private BulletAppState bulletAppState;
@@ -62,6 +62,7 @@ public class PlayerControlState extends BaseAppState {
     private Boolean onQuest;
     private Integer Questcounter;
     private Integer Questprogress;
+    private Integer level;
     
     int weathertimer = 0;
     
@@ -102,7 +103,7 @@ public class PlayerControlState extends BaseAppState {
         // the player is facing
         this.viewDirection = controller.getViewDirection();
         shooter = new ShooterControl( viewDirection, false, this.app);
-        shooterCount = 1;
+        level = 1;
         this.player.addControl(shooter);
         // Caps the frame rate at 60 FPS and initialises the input handler
         this.settings.setFrameRate(60);
@@ -287,10 +288,6 @@ public class PlayerControlState extends BaseAppState {
         return this.shooter;
     }
     
-    public void addShooter(){
-        this.shooterCount += 1;
-    }
-    
     //This is STATIC, problem is we want a new direction independant of movement input
     /**
      * Sets whether the player's bullets pierce.
@@ -338,6 +335,17 @@ public class PlayerControlState extends BaseAppState {
     public void rotateShip(float angle){
         Vector3f dir = controller.getViewDirection();
         controller.setViewDirection(rotate(dir, angle));
+    }
+    
+    /**
+     * Increase the level, associated to difficulty
+     */
+    public void levelUp(){
+        this.level += 1;
+    }
+    
+    public int getLevel(){
+        return level;
     }
     
     /**
@@ -389,6 +397,9 @@ public class PlayerControlState extends BaseAppState {
                 this.reduceHP(2);
                 this.weathertimer = 0;
             }
+            
+            // Keep track of whether enough time passes between shots
+            this.shotTimer -= tpf;
             
             
             // Detaches player spatial from the rootNode, nulls out player and
@@ -448,8 +459,8 @@ public class PlayerControlState extends BaseAppState {
     }
     
     private void shoot(Vector3f direction, float shotSeparation){
-        float shotAngle = (shooterCount / 2) * shotSeparation;
-        for (int i = 0; i < shooterCount; i++){
+        float shotAngle = (level / 2) * shotSeparation;
+        for (int i = 0; i < level; i++){
             shooter.shootBullet(rotate(direction, shotAngle));
             shotAngle -= shotSeparation;
         }
@@ -465,28 +476,20 @@ public class PlayerControlState extends BaseAppState {
     	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
         inputManager.addMapping("Shoot",     new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward");
-    	inputManager.addListener(actionListener, "Shoot","ToggleObjective");
+    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Shoot");
+    	inputManager.addListener(actionListener, "ToggleObjective");
     }
 	
     private final ActionListener actionListener = new ActionListener(){
 	@Override
 	public void onAction(String name, boolean isPressed, float tpf) {
             // Handles player input when not in a game over state.
-            if(player == null || controller == null){
-          
-            } else {
-                if(name.equals("Shoot") && isPressed && !app.getStateManager().getState(NiftyController.class).inmenu) {
-                    // Shoots every cannon attached to the player
-                    shoot(getAimdir(), 0.05f);
-                }
-                if(name.equals("ToggleObjective")){
-                    NiftyController nifty = app.getStateManager().getState(NiftyController.class);
-                    nifty.showObjective(!nifty.objective);
-                }
+            if(player == null || controller == null){}
+            else if(name.equals("ToggleObjective")){
+                NiftyController nifty = app.getStateManager().getState(NiftyController.class);
+                nifty.showObjective(!nifty.objective);
             }
-            
-	}
+        }
     };
     
     private final AnalogListener analogListener = new AnalogListener(){
@@ -511,9 +514,17 @@ public class PlayerControlState extends BaseAppState {
                             currentSpeed = maxSpeed;
                         }
                     }
+                
+                if(name.equals("Shoot") && !app.getStateManager().
+                        getState(NiftyController.class).inmenu) {
+                    // Shoots every cannon attached to the player
+                    if (shotTimer <= 0){
+                        shoot(getAimdir(), 0.05f);
+                        shotTimer = 0.3f;
+                    }
                 }
             }
-
+        }
     };
 }
 
