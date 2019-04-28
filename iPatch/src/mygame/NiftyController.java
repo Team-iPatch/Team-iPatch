@@ -45,11 +45,13 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     String remainingTreasure;
     int totalColleges;
     int totalPoints;
-    Boolean inmenu;
+    Boolean inMenu;
     int collegesdefeated;
     List<String> questList;
     Boolean winner;
     Boolean minigamerunning = false;
+    
+    private Boolean paused = false;
 	
     @Override
     public void bind(Nifty nifty, Screen screen){
@@ -71,7 +73,7 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.treasureCollected = new ArrayList();
         this.totalColleges = 5;
         this.totalPoints = 750;
-        this.inmenu = false;
+        this.inMenu = false;
         this.collegesdefeated = 0;
         this.winner = false;
         showObjective(false);
@@ -101,7 +103,6 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         }
         showShop(false);
         showTPopup(false);
-        this.inmenu = false;
     }
     
     
@@ -115,31 +116,31 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     public void showShop(Boolean inShop){
         this.shop = inShop;
         this.shopName = "none";
-        this.inmenu = inShop;
+        this.inMenu = inShop;
     }
     
     /**
      * Called by Department entities to show that the player is in range. 
      * @param inShop Boolean, usually true.
      * @param shopName Name of the department, choices hardcoded internally.
-     * Currently, either Computer Science or Biology.
+     * Currently, either Computer Science, Biology or Maths.
      */
     public void showShop(Boolean inShop, String shopName){
         this.shop = inShop;
         this.shopName = shopName;
-        this.inmenu = inShop;
+        this.inMenu = inShop;
     }
  
     public void showTPopup(Boolean inTPopup){
         this.tPopup = inTPopup;
         this.tPopupName = "none";
-        this.inmenu = inTPopup;
+        this.inMenu = inTPopup;
     }
     
     public void showTPopup(Boolean inTPopup, String tPopupName){
         this.tPopup = inTPopup;
         this.tPopupName = tPopupName;
-        this.inmenu = inTPopup;
+        this.inMenu = inTPopup;
     }
     
     @Override
@@ -519,6 +520,6 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
      */
     public void win(){
         nifty.gotoScreen("winScreen");
-        winner =true;
+        winner = true;
     }
 }

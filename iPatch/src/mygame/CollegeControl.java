@@ -18,6 +18,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
+import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -100,7 +101,7 @@ public class CollegeControl extends AbstractControl {
         }
         Boolean hasfired = false;
         
-        if(!captured && inCombat && !nifty.inmenu) {
+        if(!captured && inCombat && !nifty.inMenu) {
             Quaternion rot = collegeNode.getLocalRotation();
             switch(name) {
                 case "Derwent":
@@ -183,7 +184,7 @@ public class CollegeControl extends AbstractControl {
                         timeCount = System.currentTimeMillis();
                     } break;
                     
-                default:
+                default:   
                     throw new NotImplementedException();
             }
         }
@@ -194,7 +195,7 @@ public class CollegeControl extends AbstractControl {
         if(!inCombat){
             int level = app.getStateManager().
                     getState(PlayerControlState.class).getLevel(); 
-            hp *= (float)level * 4;
+            hp *= power((float)level, 2);
             rotation.fromAngleAxis(rotSpeed * (float)level, Vector3f.UNIT_Y);
             shootGap /= (float)level;
             for (Spatial cannon : cannons) {

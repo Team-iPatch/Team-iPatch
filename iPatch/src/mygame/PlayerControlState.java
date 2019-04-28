@@ -40,6 +40,7 @@ public class PlayerControlState extends BaseAppState {
     private InputManager inputManager;
     private BetterCharacterControl controller;
     EnemyGenerator enemyGenerator;
+    private NiftyController nifty;
     
     private float currentSpeed;
     private float maxSpeed;
@@ -80,6 +81,7 @@ public class PlayerControlState extends BaseAppState {
     	this.controller = player.getControl(BetterCharacterControl.class);
         this.controller.setGravity(Vector3f.UNIT_Y.mult(-20));
     	this.settings = app.getContext().getSettings();
+        this.nifty = app.getStateManager().getState(NiftyController.class);
         enemyGenerator = new EnemyGenerator(this.app);
         
         // Defines the player's points, gold, and HP
@@ -471,12 +473,13 @@ public class PlayerControlState extends BaseAppState {
      */
     public void initKeys(){
         inputManager.setCursorVisible(true);
-    	inputManager.addMapping("Forward",   new KeyTrigger(KeyInput.KEY_W));
-    	inputManager.addMapping("RotLeft",   new KeyTrigger(KeyInput.KEY_A));
-    	inputManager.addMapping("RotRight",  new KeyTrigger(KeyInput.KEY_D));
+    	inputManager.addMapping("Forward",  new KeyTrigger(KeyInput.KEY_W));
+    	inputManager.addMapping("RotLeft",  new KeyTrigger(KeyInput.KEY_A));
+    	inputManager.addMapping("RotRight", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Shoot",    new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("ToggleObjective", new KeyTrigger(KeyInput.KEY_J));
-        inputManager.addMapping("Shoot",     new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-    	inputManager.addListener(analogListener, "RotLeft", "RotRight", "Forward", "Shoot");
+    	inputManager.addListener(analogListener, "RotLeft", "RotRight", 
+                                                    "Forward", "Shoot");
     	inputManager.addListener(actionListener, "ToggleObjective");
     }
 	
@@ -485,9 +488,11 @@ public class PlayerControlState extends BaseAppState {
 	public void onAction(String name, boolean isPressed, float tpf) {
             // Handles player input when not in a game over state.
             if(player == null || controller == null){}
-            else if(name.equals("ToggleObjective")){
-                NiftyController nifty = app.getStateManager().getState(NiftyController.class);
-                nifty.showObjective(!nifty.objective);
+            else {
+                if(name.equals("ToggleObjective")){
+                    NiftyController nifty = app.getStateManager().getState(NiftyController.class);
+                    nifty.showObjective(!nifty.objective);
+                }
             }
         }
     };
@@ -516,7 +521,7 @@ public class PlayerControlState extends BaseAppState {
                     }
                 
                 if(name.equals("Shoot") && !app.getStateManager().
-                        getState(NiftyController.class).inmenu) {
+                        getState(NiftyController.class).inMenu) {
                     // Shoots every cannon attached to the player
                     if (shotTimer <= 0){
                         shoot(getAimdir(), 0.05f);
