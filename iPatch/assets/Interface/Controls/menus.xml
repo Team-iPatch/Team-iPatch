@@ -24,10 +24,8 @@
 				<control id="QuestLabel" name="label" text=" Quest: " align="center" width="100%"/>   
             </panel>
 			
-            <panel id="ObjectivePanel" childLayout="vertical" width="20%" height="10%" align="right" valign="top" backgroundColor="#00000055" visibletoMouse="false">
-                <control id="PointObjectiveLabel" name="label" text=" Points Required: " align="center" width="100%"/>
+            <panel id="ObjectivePanel" childLayout="vertical" width="20%" height="2%" align="right" valign="top" backgroundColor="#00000055" visibletoMouse="false">
                 <control id="CollegeObjectiveLabel" name="label" text=" Colleges defeated: " align="center" width="100%"/>
-                <control id="TreasureObjectiveLabel" name="label" text=" Treasures found: " align="center" width="100%"/>
             </panel>
 			
             <panel id="shopPanel" childLayout="vertical" width="30%" height="70%" align="center" valign="center" backgroundColor="#59350aaa" visibleToMouse="false">
@@ -72,7 +70,11 @@
     <screen id="winScreen" controller="mygame.NiftyController">
         <layer id="winLayer" childLayout="center">
             <panel id="winPanel" childLayout="center" width="100%" height="100%" align="center" valign="center" backgroundColor="#009698">
-                <control name="label" text="You Win!" align="center"/>
+                <panel id="textAlignPanel" childLayout="vertical" width="100%" height="15%" backgroundColor="#009698">
+                    <control name="label" text="You Win!" width="100%"/>
+                    <control id="pointsLabel" name="label" text="Points obtained: 0" width = "100%"/>
+                    <control id="timeLabel" name="label" text="Time taken: 0" width = "100%"></control>
+                </panel>
             </panel>
         </layer>
     </screen>
