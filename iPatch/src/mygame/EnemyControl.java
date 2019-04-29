@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.bullet.PhysicsSpace;
@@ -30,6 +25,7 @@ public class EnemyControl extends AbstractControl{
         this.physicsSpace = physicsSpace;
     }
     
+    // Added for assessment 4: enemies get stronger with level
     /**
      * Used to manage the health of an enemy Spatial, cleaning up the entity
      * after it is destroyed.

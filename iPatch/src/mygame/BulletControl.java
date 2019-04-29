@@ -31,6 +31,7 @@ public class BulletControl extends AbstractControl
     PlayerControlState playerControlState;
     Spatial lastEnemyHit;
 
+    //Changed for assessment 4: added ability to control projectile speed
     /**
      * BulletControl used to control individual projectiles, typically attached
      * by ShooterControl. Determines various bullet properties and controls its

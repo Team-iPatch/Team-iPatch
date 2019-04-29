@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.app.Application;
@@ -37,6 +32,7 @@ public class EnemyGenerator {
             this.player = app.getStateManager().getState(PlayerControlState.class);
 	}
 	
+        // Changed for assessment 4: removed extraneous parameters
         /**
          * Generates an enemy.
          * @param modelLocation String locating the model to be used, usually

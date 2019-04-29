@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import com.jme3.math.Quaternion;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.Button;
@@ -76,11 +70,9 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
         this.inMenu = false;
         this.collegesdefeated = 0;
         this.winner = false;
+        this.totalTreasures = 2;
         showObjective(false);
         updateCollegesDefeated(0);
-        updateTreasuresFound();
-        Element label = nifty.getScreen("hudScreen").findElementById("PointObjectiveLabel");
-        label.getRenderer(TextRenderer.class).setText(" Points Required: " + totalPoints);
         this.questList = new ArrayList();
     }
 
@@ -95,10 +87,9 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
             updateGold();
             updateShop();
             updateTPopup();
-            updateTreasuresFound();
-			updateQuest();
+            updateQuest();
         }
-        if(collegesdefeated == totalColleges){
+        if(collegesdefeated == totalColleges && !winner){
             this.win();
         }
         showShop(false);
@@ -500,12 +491,10 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     
     public void updateCollegesDefeated(int killnum){
         collegesdefeated += killnum;
-        Element label = nifty.getScreen("hudScreen").findElementById("CollegeObjectiveLabel");
-        label.getRenderer(TextRenderer.class).setText(" Colleges Defeated: " + collegesdefeated + "/"+totalColleges);
-    }
-    public void updateTreasuresFound(){
-        Element label = nifty.getScreen("hudScreen").findElementById("TreasureObjectiveLabel");
-        label.getRenderer(TextRenderer.class).setText(" Treasures Found: " + treasureCollected.size() + "/" + totalTreasures);
+        Element label = nifty.getScreen("hudScreen").
+                        findElementById("CollegeObjectiveLabel");
+        label.getRenderer(TextRenderer.class).setText(" Colleges Defeated: " + 
+                                        collegesdefeated + "/"+totalColleges);
     }
     
     /**
@@ -517,8 +506,18 @@ public class NiftyController extends AbstractAppState implements ScreenControlle
     
     /**
      * Called when player completes all objectives, a win screen.
+     * Added for assessment 4: win screen shows time taken and points obtained
      */
     public void win(){
+        player = stateManager.getState(PlayerControlState.class);
+        Screen winScreen = nifty.getScreen("winScreen");
+        Element pointsLabel = winScreen.findElementById("pointsLabel");
+        pointsLabel.getRenderer(TextRenderer.class).setText("Points obtained: " 
+                                                          + player.getPoints());
+        Element timeLabel = winScreen.findElementById("timeLabel");
+        float timeTaken = player.getTime();
+        timeLabel.getRenderer(TextRenderer.class).setText("Time taken: " + 
+                                                    timeTaken + " seconds");
         nifty.gotoScreen("winScreen");
         winner = true;
     }

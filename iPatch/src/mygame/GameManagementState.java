@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.app.Application;
@@ -115,7 +110,7 @@ public class GameManagementState extends AbstractAppState {
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         Nifty nifty = niftyDisplay.getNifty();
         guiViewPort.addProcessor(niftyDisplay);
-        nifty.fromXml("Interface/Controls/mainMenu.xml", "start", niftyController);
+        nifty.fromXml("Interface/Controls/menus.xml", "start", niftyController);
         nifty.setIgnoreKeyboardEvents(true);
         
     }
@@ -183,6 +178,7 @@ public class GameManagementState extends AbstractAppState {
         this.app.getViewPort().addProcessor(fpp);        
     }
     
+    // Added for assessment 4
     /**
      * Loads the lighting for the scene
      */

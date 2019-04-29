@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.bullet.collision.PhysicsCollisionObject;
@@ -15,8 +10,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.control.AbstractControl;
 
 /**
- *
- * @author chris
+ * Added for assessment 4: whirlpools 
  */
 public class WhirlpoolControl extends AbstractControl {
 
@@ -28,7 +22,12 @@ public class WhirlpoolControl extends AbstractControl {
     private final float rotationSpeed = 0.5f;
 
     private final float animationTime = 2f;
-
+    
+    /**
+     * @param teleportPosition teleport player here after entering whirlpool
+     * @param ghost GhostControl delimiting area where whirlpool is active
+     * @param player 
+     */
     public WhirlpoolControl(Vector3f teleportPosition, GhostControl ghost, PlayerControlState player){
         this.teleportPosition = teleportPosition;
         this.ghost = ghost;

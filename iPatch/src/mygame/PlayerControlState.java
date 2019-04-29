@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package mygame;
 
 import com.jme3.app.Application;
@@ -64,11 +59,13 @@ public class PlayerControlState extends BaseAppState {
     private Integer Questcounter;
     private Integer Questprogress;
     private Integer level;
+    private float timeTaken;
     
     int weathertimer = 0;
     
     @Override 
     protected void initialize(Application app){
+        this.timeTaken = 0f;
         this.currentSpeed = 0f;
         this.maxSpeed = 10f;
         this.acceleration = 0.5f;
@@ -198,12 +195,17 @@ public class PlayerControlState extends BaseAppState {
         this.treasureQuest=false;
     }
     
+    // Added for assessment 4
     /**
      * Increase the player's max speed
      * @param amount 
      */
     public void increaseSpeed(float amount){
         this.maxSpeed += amount;
+    }
+    
+    public float getTime(){
+        return timeTaken;
     }
     
     /**
@@ -307,7 +309,7 @@ public class PlayerControlState extends BaseAppState {
         return this.piercing;
     }
     
-    
+    // Added for assessment 4
     /**
      * Increases the amount of damage dealt by each shot the player fires.
      * @param amount Extra damage dealt by player.
@@ -324,6 +326,8 @@ public class PlayerControlState extends BaseAppState {
         this.bulletAppState = bulletappstate;
     }
     
+    // Added rotate, rotateShip, levelUp, getLevel, setPosition for Assessment 4
+    // They enable whirlpool mechanics and levelling
     public Vector3f rotate(Vector3f vector, float angle){
         Quaternion quat = new Quaternion();
         quat.fromAngleAxis(FastMath.PI*(angle), Vector3f.UNIT_Y);
@@ -379,6 +383,8 @@ public class PlayerControlState extends BaseAppState {
    
     @Override
     public void update(float tpf) {
+        
+        timeTaken += tpf;
         // Handles player movement while player and character controller are
         // both initialised. Does nothing if the player is destroyed.
        
@@ -400,7 +406,7 @@ public class PlayerControlState extends BaseAppState {
                 this.weathertimer = 0;
             }
             
-            // Keep track of whether enough time passes between shots
+            // Added for assessment 4: Keep track of whether enough time passes between shots
             this.shotTimer -= tpf;
             
             
@@ -460,6 +466,7 @@ public class PlayerControlState extends BaseAppState {
         return mouseaim;
     }
     
+    // Added for assessment 4: added multi-shot as crew member upgrade
     private void shoot(Vector3f direction, float shotSeparation){
         float shotAngle = (level / 2) * shotSeparation;
         for (int i = 0; i < level; i++){
@@ -519,7 +526,8 @@ public class PlayerControlState extends BaseAppState {
                             currentSpeed = maxSpeed;
                         }
                     }
-                
+                // Changed for assessment 4: shoot can now be held
+                // In addition, there is a minimum time between shots
                 if(name.equals("Shoot") && !app.getStateManager().
                         getState(NiftyController.class).inMenu) {
                     // Shoots every cannon attached to the player
