@@ -28,7 +28,7 @@ public class BulletControl extends AbstractControl
     boolean isEnemy;
     PhysicsSpace physicsSpace;
     RigidBodyControl bullet_phys; //Remove the physics control on deletion
-    PlayerControlState playerControlState;
+    PlayerControlState player;
     Spatial lastEnemyHit;
 
     //Changed for assessment 4: added ability to control projectile speed
@@ -56,7 +56,7 @@ public class BulletControl extends AbstractControl
         this.isEnemy = isEnemy;
         this.physicsSpace = physicsSpace;
         this.bullet_phys = bullet_phys;
-        this.playerControlState = playerControlState;
+        this.player = playerControlState;
         physicsSpace.addCollisionListener(this);
     }
     
@@ -108,18 +108,18 @@ public class BulletControl extends AbstractControl
                     testNode.getControl(EnemyControl.class).reduceHP(damage);
 
                     if(testNode.getControl(EnemyControl.class).getHP() <= 0){
-                        playerControlState.incrementPoints(10);
-                        playerControlState.incrementGold(5);
-                        //this is a shitty way of implementing rewards but fuck it 
-                        if (playerControlState.isKillQuest()==true &&
-                            playerControlState.getQuestProgress()>0){
-                            playerControlState.Questprogress(1);
+                        // Changed for Assessment 4: points scale with level;
+                        player.incrementPoints(player.getLevel() * 10);
+                        player.incrementGold(5);
+                        if (player.isKillQuest()==true &&
+                            player.getQuestProgress()>0){
+                            player.Questprogress(1);
                         }
                     }
                     
                     // Makes the bullet expire if it hits an enemy and is not
                     // piercing
-                    if(!playerControlState.isPiercing()){
+                    if(!player.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
                 } else if(testNode.getName().equals("college")){
@@ -128,14 +128,14 @@ public class BulletControl extends AbstractControl
                     CollegeControl collegeControl = testNode.getControl(CollegeControl.class);
                     collegeControl.reduceHP(damage);
                     if(collegeControl.getHP() == 0){
-                        playerControlState.incrementGold(50);
-                        playerControlState.incrementPoints(100);
-                        playerControlState.getStateManager().getState(NiftyController.class).updateCollegesDefeated(1);
+                        player.incrementGold(50);
+                        player.incrementPoints(100);
+                        player.getStateManager().getState(NiftyController.class).updateCollegesDefeated(1);
                     }
                     
                     // Makes the bullet expire it it hits an enemy and is not 
                     // piercing
-                    if(!playerControlState.isPiercing()){
+                    if(!player.isPiercing()){
                         this.lifetime = lifeExpectancy;
                     }
                 } else if(testNode.getName().equals("hitBox")){
@@ -148,7 +148,7 @@ public class BulletControl extends AbstractControl
             }
         } else if(testNode != null && testNode.getName().equals("player")){
             // Collision handling for bullets fired by enemies
-            playerControlState.reduceHP(damage);
+            player.reduceHP(damage);
             this.lifetime = lifeExpectancy;
         } else if(testNode != null && testNode.getName().equals("hitBox")) {
             this.lifetime = lifeExpectancy;
