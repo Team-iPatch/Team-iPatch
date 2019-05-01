@@ -43,7 +43,7 @@
                     <interact onClick="completeQuest()"/>
                 </control>
                 
-                <control id="PlayMinigame" name="button" label="Play the minigame for a chance to win money" align="center" visibleToMouse="false" width="80%">
+                <control id="PlayMinigame" name="button" label="Play the minigame for a chance to win money (20 gold)" align="center" visibleToMouse="false" width="80%">
                     <interact onClick="StartMinigame()"/>
                 </control>
                 
