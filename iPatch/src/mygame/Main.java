@@ -15,7 +15,8 @@ public class Main extends SimpleApplication {
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
-        
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
     }
     
     @Override

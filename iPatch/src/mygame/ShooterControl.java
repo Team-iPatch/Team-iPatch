@@ -4,6 +4,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -54,6 +55,9 @@ public class ShooterControl extends AbstractControl {
         // For shooters that cannot pass a reference to their direction
         Geometry bullet_geo = new Geometry("cannon ball", sphere);
         Material mat = new Material(app.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        if(isEnemy){
+            mat.setColor("Color", ColorRGBA.Black);
+        }
         bullet_geo.setMaterial(mat);
         app.getRootNode().attachChild(bullet_geo);
 	bullet_geo.setLocalTranslation(spatial.getWorldTranslation().add(

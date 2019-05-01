@@ -13,7 +13,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
-import static com.sun.org.apache.xalan.internal.lib.ExsltMath.power;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -65,6 +64,7 @@ public class CollegeControl extends AbstractControl {
             case "Vanbrugh":
                 this.hp = 250;
                 shootGap = 750;
+                rotSpeed = 0.01f;
                 break;
             case "Alcuin":
                 this.hp = 160;
@@ -191,7 +191,8 @@ public class CollegeControl extends AbstractControl {
         if(!inCombat){
             int level = app.getStateManager().
                     getState(PlayerControlState.class).getLevel(); 
-            hp *= power((float)level, 2);
+            this.hp *= level;
+            System.out.println(this.hp);
             rotation.fromAngleAxis(rotSpeed * (float)level, Vector3f.UNIT_Y);
             shootGap /= (float)level;
             for (Spatial cannon : cannons) {

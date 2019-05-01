@@ -98,7 +98,7 @@ public class BulletControl extends AbstractControl
         }
         // Tests whether there is a second body in the collision and whether
         // the bullet came from the player
-        if(testNode != null && !isEnemy){
+        if(testNode != null && !isEnemy) {
             // lastEnemyHit is used to prevent piercing bullets from dealing more
             // than a single tick of damage per hit
             if(!testNode.equals(lastEnemyHit)){
